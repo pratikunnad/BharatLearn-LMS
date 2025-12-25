@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BharatLearn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% extends "base.html" %}
+
+{% block content %}
+<h1>Welcome to BharatLearn</h1>
+<p>The Learning Management System</p>
+{% endblock %}
+
+    <a href="/login">Login</a> |
+    <a href="/courses">View Courses</a>
+</body>
+</html>
