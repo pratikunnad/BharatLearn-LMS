@@ -41,12 +41,50 @@ def login():
         conn.close()
 
         if user:
-            return redirect(url_for("dashboard"))
+            if user["role"] == "admin":
+                return redirect(url_for("admin_dashboard"))
+            else:
+                return redirect(url_for("student_dashboard"))
         else:
             error = "Invalid email or password"
 
     return render_template("login.html", error=error)
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    message = None
+
+    if request.method == "POST":
+        name = request.form["name"]
+        email = request.form["email"]
+        password = request.form["password"]
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        try:
+            query = """
+            INSERT INTO users (name, email, password, role)
+            VALUES (%s, %s, %s, 'student')
+            """
+            cursor.execute(query, (name, email, password))
+            conn.commit()
+            message = "Registration successful. Please login."
+        except:
+            message = "Email already exists."
+        finally:
+            cursor.close()
+            conn.close()
+
+    return render_template("register.html", message=message)
+
+@app.route("/admin")
+def admin_dashboard():
+    return render_template("admin_dashboard.html")
+
+@app.route("/student")
+def student_dashboard():
+    return render_template("student_dashboard.html")
 
 @app.route("/dashboard")
 def dashboard():
