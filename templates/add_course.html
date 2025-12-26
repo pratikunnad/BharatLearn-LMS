@@ -1,17 +1,59 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Course | BharatLearn</title>
+</head>
+<body>
+
 <h2>Add New Course</h2>
 
 <form method="POST">
-    <label>Course Title:</label><br>
+    <label>Course Title</label><br>
     <input type="text" name="title" required><br><br>
 
-    <label>Description:</label><br>
+    <label>Description</label><br>
     <textarea name="description" required></textarea><br><br>
+
+    <label>Programming Language</label><br>
+    <select name="programming_language">
+        <option value="Python">Python</option>
+        <option value="Java">Java</option>
+        <option value="Web">Web Development</option>
+        <option value="C++">C++</option>
+    </select><br><br>
+
+    <label>Audio Language</label><br>
+    <select name="audio_language">
+        <option value="English">English</option>
+        <option value="Hindi">Hindi</option>
+    </select><br><br>
+
+    <label>Difficulty</label><br>
+    <select name="difficulty">
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+    </select><br><br>
+
+    <label>Source (Tutor / Platform)</label><br>
+    <input type="text" name="source" placeholder="Udemy, Coursera, YouTube"><br><br>
+
+    <label>Course Link (External URL)</label><br>
+    <input type="url" name="course_link" required><br><br>
+
+    <label>Image URL</label><br>
+    <input type="url" name="image_url"><br><br>
 
     <button type="submit">Add Course</button>
 </form>
 
-    
+<br>
+<a href="/admin/dashboard">Back to Dashboard</a>
+
+</body>
+</html>
+   
 {% endblock %}

@@ -1,12 +1,63 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Courses</h2>
-<ul>
-    <li>Python Basics</li>
-    <li>Java Fundamentals</li>
-    <li>Web Development</li>
-</ul>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Explore Courses | BharatLearn</title>
+</head>
+<body>
+
+<h2>Explore Courses</h2>
+
+<form method="GET">
+    <select name="programming_language">
+        <option value="">Programming Language</option>
+        <option value="Python">Python</option>
+        <option value="Java">Java</option>
+        <option value="Web">Web</option>
+    </select>
+
+    <select name="audio_language">
+        <option value="">Audio Language</option>
+        <option value="English">English</option>
+        <option value="Hindi">Hindi</option>
+    </select>
+
+    <select name="difficulty">
+        <option value="">Difficulty</option>
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+    </select>
+
+    <button type="submit">Filter</button>
+</form>
+
+<hr>
+
+{% for course in courses %}
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <h3>{{ course.title }}</h3>
+        <p>{{ course.description }}</p>
+        <p><b>Language:</b> {{ course.programming_language }}</p>
+        <p><b>Audio:</b> {{ course.audio_language }}</p>
+        <p><b>Difficulty:</b> {{ course.difficulty }}</p>
+        <p><b>Source:</b> {{ course.source }}</p>
+
+        {% if course.image_url %}
+            <img src="{{ course.image_url }}" width="200">
+        {% endif %}
+
+        <br><br>
+        <a href="{{ course.course_link }}" target="_blank">
+            Go to Course
+        </a>
+    </div>
+{% endfor %}
+
+</body>
+</html>
 
 <a href="/">Back to Home</a>
 {% endblock %}

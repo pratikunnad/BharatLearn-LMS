@@ -89,21 +89,59 @@ def dashboard():
 
 @app.route("/courses")
 def courses():
-    return render_template("courses.html")
+    programming_language = request.args.get("programming_language")
+    audio_language = request.args.get("audio_language")
+    difficulty = request.args.get("difficulty")
+
+    query = "SELECT * FROM courses WHERE 1=1"
+    params = []
+
+    if programming_language:
+        query += " AND programming_language = %s"
+        params.append(programming_language)
+
+    if audio_language:
+        query += " AND audio_language = %s"
+        params.append(audio_language)
+
+    if difficulty:
+        query += " AND difficulty = %s"
+        params.append(difficulty)
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(query, params)
+    courses = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return render_template("courses.html", courses=courses)
+
 
 @app.route("/admin/add-course", methods=["GET", "POST"])
 def add_course():
     if request.method == "POST":
         title = request.form["title"]
         description = request.form["description"]
+        programming_language = request.form["programming_language"]
+        audio_language = request.form["audio_language"]
+        difficulty = request.form["difficulty"]
+        source = request.form["source"]
+        course_link = request.form["course_link"]
+        image_url = request.form["image_url"]
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute(
-            "INSERT INTO courses (title, description) VALUES (%s, %s)",
-            (title, description)
-        )
+        cursor.execute("""
+            INSERT INTO courses 
+            (title, description, programming_language, audio_language, difficulty, source, course_link, image_url)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, (
+            title, description, programming_language,
+            audio_language, difficulty, source,
+            course_link, image_url
+        ))
 
         conn.commit()
         cursor.close()
@@ -112,6 +150,7 @@ def add_course():
         return redirect("/admin/dashboard")
 
     return render_template("add_course.html")
+
 
 @app.route("/student/courses")
 def view_courses():
