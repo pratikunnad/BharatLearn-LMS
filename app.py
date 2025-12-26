@@ -78,10 +78,6 @@ def register():
 
     return render_template("register.html", message=message)
 
-@app.route("/admin")
-def admin_dashboard():
-    return render_template("admin_dashboard.html")
-
 @app.route("/student")
 def student_dashboard():
     return render_template("student_dashboard.html")
@@ -94,6 +90,54 @@ def dashboard():
 @app.route("/courses")
 def courses():
     return render_template("courses.html")
+
+@app.route("/admin/add-course", methods=["GET", "POST"])
+def add_course():
+    if request.method == "POST":
+        title = request.form["title"]
+        description = request.form["description"]
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO courses (title, description) VALUES (%s, %s)",
+            (title, description)
+        )
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return redirect("/admin/dashboard")
+
+    return render_template("add_course.html")
+
+@app.route("/student/courses")
+def view_courses():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM courses")
+    courses = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("student_courses.html", courses=courses)
+
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM courses")
+    courses = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("admin_dashboard.html", courses=courses)
 
 
 if __name__ == "__main__":

@@ -9,4 +9,16 @@
     <li>Manage Students</li>
     <li>View Enrollments</li>
 </ul>
+
+<a href="/admin/add-course">Add Course</a>
+
+<h3>All Courses</h3>
+<ul>
+{% for course in courses %}
+    <li>
+        <strong>{{ course.title }}</strong> – {{ course.description }}
+    </li>
+{% endfor %}
+</ul>
+
 {% endblock %}
