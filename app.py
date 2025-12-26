@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask import session
 import mysql.connector
 
 app = Flask(__name__)
+
+app.secret_key = "bharatlearn_secret_key"
 
 # --------------------
 # DATABASE CONNECTION
@@ -40,7 +43,10 @@ def login():
         cursor.close()
         conn.close()
 
-        if user:
+        if user and user["password"] == password:
+            session["user_id"] = user["id"]
+            session["role"] = user["role"]
+
             if user["role"] == "admin":
                 return redirect(url_for("admin_dashboard"))
             else:
@@ -80,6 +86,8 @@ def register():
 
 @app.route("/student")
 def student_dashboard():
+    if "role" not in session or session["role"] != "student":
+        return redirect("/login")
     return render_template("student_dashboard.html")
 
 @app.route("/dashboard")
@@ -89,6 +97,9 @@ def dashboard():
 
 @app.route("/courses")
 def courses():
+    if "role" not in session:
+        return redirect("/login")
+    
     programming_language = request.args.get("programming_language")
     audio_language = request.args.get("audio_language")
     difficulty = request.args.get("difficulty")
@@ -120,6 +131,9 @@ def courses():
 
 @app.route("/admin/add-course", methods=["GET", "POST"])
 def add_course():
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/login")
+    
     if request.method == "POST":
         title = request.form["title"]
         description = request.form["description"]
@@ -167,6 +181,9 @@ def view_courses():
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/login")
+    
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -177,6 +194,12 @@ def admin_dashboard():
     conn.close()
 
     return render_template("admin_dashboard.html", courses=courses)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
+
 
 
 if __name__ == "__main__":

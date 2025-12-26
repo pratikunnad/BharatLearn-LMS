@@ -5,12 +5,9 @@
 <p>Welcome Admin 👨‍💼</p>
 
 <ul>
-    <li>Manage Courses</li>
-    <li>Manage Students</li>
-    <li>View Enrollments</li>
+    <li><a href="/admin/add-course">Add Course</a></li>
+    <li><a href="/courses">View Courses</a></li>
 </ul>
-
-<a href="/admin/add-course">Add Course</a>
 
 <h3>All Courses</h3>
 <ul>
@@ -20,5 +17,8 @@
     </li>
 {% endfor %}
 </ul>
+
+<a href="/logout">Logout</a>
+
 
 {% endblock %}
