@@ -17,3 +17,54 @@ nav a {
 nav a:hover {
     text-decoration: underline;
 }
+
+.course-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.course-card {
+  padding: 16px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+
+.course-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.tag {
+  display: inline-block;
+  background: #eef;
+  padding: 4px 8px;
+  margin: 5px 4px 0 0;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.btn {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  background: #007bff;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.course-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+  background-color: #f2f2f2;
+}

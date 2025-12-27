@@ -36,25 +36,27 @@
 
 <hr>
 
-{% for course in courses %}
-    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
-        <h3>{{ course.title }}</h3>
-        <p>{{ course.description }}</p>
-        <p><b>Language:</b> {{ course.programming_language }}</p>
-        <p><b>Audio:</b> {{ course.audio_language }}</p>
-        <p><b>Difficulty:</b> {{ course.difficulty }}</p>
-        <p><b>Source:</b> {{ course.source }}</p>
+<div class="course-container">
+  {% for course in courses %}
+  <div class="course-card">
+    <img src="/static/images/default-course.png" style="width:300px;height:200px;">
 
-        {% if course.image_url %}
-            <img src="{{ course.image_url }}" width="200">
-        {% endif %}
 
-        <br><br>
-        <a href="{{ course.course_link }}" target="_blank">
-            Go to Course
-        </a>
-    </div>
-{% endfor %}
+    <h3>{{ course.title }}</h3>
+    <p>{{ course.description }}</p>
+
+    <span class="tag">{{ course.language }}</span>
+    <span class="tag">{{ course.difficulty }}</span>
+
+    <p class="source">Source: {{ course.source }}</p>
+
+    <a href="{{ course.course_link }}" target="_blank" class="btn">
+      Visit Course
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
 
 </body>
 </html>

@@ -13,6 +13,8 @@
 {% endblock %}
 
     <a href="/login">Login</a> |
-    <a href="/courses">View Courses</a>
+    {% if session.get("role") == "student" %}
+  <a href="/courses">Courses</a>
+{% endif %}
 </body>
 </html>
