@@ -97,52 +97,53 @@ def dashboard():
 
 @app.route("/courses")
 def courses():
+    # Pagination
     page = request.args.get("page", 1, type=int)
     limit = 6
     offset = (page - 1) * limit
 
-    programming_language = request.args.get("programming_language")
-    difficulty = request.args.get("difficulty")
-    source = request.args.get("source")
+    # Filters
+    selected_programming_language = request.args.get("programming_language", "").strip()
+    selected_difficulty = request.args.get("difficulty", "").strip()
+    selected_source = request.args.get("source", "").strip()
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # Base queries
-    base_query = "SELECT * FROM courses WHERE 1=1"
-    count_query = "SELECT COUNT(*) AS total FROM courses WHERE 1=1"
+    base_query = "FROM courses WHERE 1=1"
+    params = []
 
-    filters = []
-
-    # Apply filters
-    if programming_language:
+    if selected_programming_language:
         base_query += " AND programming_language = %s"
-        count_query += " AND programming_language = %s"
-        filters.append(programming_language)
+        params.append(selected_programming_language)
 
-    if difficulty:
+    if selected_difficulty:
         base_query += " AND difficulty = %s"
-        count_query += " AND difficulty = %s"
-        filters.append(difficulty)
+        params.append(selected_difficulty)
 
-    if source:
+    if selected_source:
         base_query += " AND source = %s"
-        count_query += " AND source = %s"
-        filters.append(source)
+        params.append(selected_source)
 
-    # Pagination
-    base_query += " LIMIT %s OFFSET %s"
-    data_params = filters + [limit, offset]
-
-    # Fetch courses
-    cursor.execute(base_query, data_params)
-    courses = cursor.fetchall()
-
-    # Fetch total count
-    cursor.execute(count_query, filters)
+    # ✅ Total count (FILTERED)
+    count_query = "SELECT COUNT(*) AS total " + base_query
+    cursor.execute(count_query, params)
     total = cursor.fetchone()["total"]
 
-    total_pages = (total + limit - 1) // limit
+    total_pages = max(1, (total + limit - 1) // limit)
+
+    # ✅ Prevent invalid page numbers
+    if page > total_pages:
+        page = total_pages
+        offset = (page - 1) * limit
+
+    # ✅ Fetch paginated data
+    data_query = (
+        "SELECT * " + base_query +
+        " ORDER BY id DESC LIMIT %s OFFSET %s"
+    )
+    cursor.execute(data_query, params + [limit, offset])
+    courses = cursor.fetchall()
 
     cursor.close()
     conn.close()
@@ -151,7 +152,10 @@ def courses():
         "courses.html",
         courses=courses,
         page=page,
-        total_pages=total_pages
+        total_pages=total_pages,
+        selected_programming_language=selected_programming_language,
+        selected_difficulty=selected_difficulty,
+        selected_source=selected_source
     )
 
 

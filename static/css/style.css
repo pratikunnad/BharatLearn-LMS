@@ -68,3 +68,15 @@ nav a:hover {
   border-radius: 8px;
   background-color: #f2f2f2;
 }
+
+.no-courses {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #555;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}

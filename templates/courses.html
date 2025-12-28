@@ -1,104 +1,84 @@
 {% extends "base.html" %}
-
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Explore Courses | BharatLearn</title>
-</head>
-<body>
 
 <h2>Explore Courses</h2>
 
-<form method="get" action="/courses" class="filters">
+<!-- Filters -->
+<form method="get" action="{{ url_for('courses') }}" class="filters">
+
   <select name="programming_language">
     <option value="">All Languages</option>
-    <option value="Python">Python</option>
-    <option value="Java">Java</option>
+    <option value="Python" {{ 'selected' if selected_programming_language == 'Python' }}>Python</option>
+    <option value="Java" {{ 'selected' if selected_programming_language == 'Java' }}>Java</option>
+    <option value="C++" {{ 'selected' if selected_programming_language == 'C++' }}>C++</option>
   </select>
 
   <select name="difficulty">
     <option value="">All Levels</option>
-    <option value="Beginner">Beginner</option>
-    <option value="Intermediate">Intermediate</option>
-    <option value="Advanced">Advanced</option>
+    <option value="Beginner" {{ 'selected' if selected_difficulty == 'Beginner' }}>Beginner</option>
+    <option value="Intermediate" {{ 'selected' if selected_difficulty == 'Intermediate' }}>Intermediate</option>
+    <option value="Advance" {{ 'selected' if selected_difficulty == 'Advance' }}>Advance</option>
   </select>
 
   <select name="source">
     <option value="">All Sources</option>
-    <option value="FreeCodeCamp">FreeCodeCamp</option>
-    <option value="Coursera">Coursera</option>
-    <option value="YouTube">YouTube</option>
+    <option value="YouTube" {{ 'selected' if selected_source == 'YouTube' }}>YouTube</option>
+    <option value="Udemy" {{ 'selected' if selected_source == 'Udemy' }}>Udemy</option>
+    <option value="Coursera" {{ 'selected' if selected_source == 'Coursera' }}>Coursera</option>
+    <option value="FreeCodeCamp" {{ 'selected' if selected_source == 'FreeCodeCamp' }}>FreeCodeCamp</option>
   </select>
 
   <button type="submit">Filter</button>
-  
-  {% if courses %}
-  {% for course in courses %}
-    <!-- course card -->
-  {% endfor %}
-{% else %}
-  <p style="margin-top:20px; color: gray;">
-    No courses found for the selected filters.
-  </p>
-{% endif %}
-
 </form>
 
 <hr>
 
+<!-- Courses -->
 <div class="course-container">
-  {% for course in courses %}
-  <div class="course-card">
-  <img src="{{ url_for('static', filename='images/default-course.png') }}">
-  <h3>{{ course.title }}</h3>
-  <p>{{ course.description }}</p>
-
-  <span class="badge">{{ course.programming_language }}</span>
-  <span class="badge">{{ course.difficulty }}</span>
-
-  <p>Source: {{ course.source }}</p>
-
-  <a href="{{ course.link }}" target="_blank" class="btn">
-    Visit Course
-  </a>
+  {% if courses %}
+    {% for course in courses %}
+      <div class="course-card">
+        <img src="{{ url_for('static', filename='images/default-course.png') }}">
+        <h3>{{ course.title }}</h3>
+        <p>{{ course.description }}</p>
+        <span class="badge">{{ course.programming_language }}</span>
+        <span class="badge">{{ course.difficulty }}</span>
+        <span class="badge">{{ course.source }}</span>
+        <a href="{{ course.link }}" target="_blank" class="btn">Visit Course</a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No courses found 😕</p>
+  {% endif %}
 </div>
-{% endfor %}
+
+<!-- Pagination -->
 <div class="pagination">
+
   {% if page > 1 %}
     <a href="{{ url_for('courses',
-    page=page-1,
-    language=request.args.get('language'),
-    difficulty=request.args.get('difficulty'),
-    source=request.args.get('source')
-) }}">Previous</a>
+        page=page-1,
+        programming_language=selected_programming_language,
+        difficulty=selected_difficulty,
+        source=selected_source) }}">
+      Previous
+    </a>
   {% endif %}
 
   <span>Page {{ page }} of {{ total_pages }}</span>
 
   {% if page < total_pages %}
-    <a href="{{ url_for('courses', page=page+1) }}">Next</a>
+    <a href="{{ url_for('courses',
+        page=page+1,
+        programming_language=selected_programming_language,
+        difficulty=selected_difficulty,
+        source=selected_source) }}">
+      Next
+    </a>
   {% endif %}
 
-  {% if courses %}
-  {% for course in courses %}
-    <!-- course card -->
-  {% endfor %}
-{% else %}
-  <p style="text-align:center; color:gray;">
-    No courses found for selected filters.
-  </p>
-{% endif %}
-
 </div>
-
-</div>
-
-
-</body>
-</html>
 
 <a href="/">Back to Home</a>
+
 {% endblock %}
-
-
