@@ -97,27 +97,24 @@ def dashboard():
 
 @app.route("/courses")
 def courses():
-    if "role" not in session:
-        return redirect("/login")
-    
     programming_language = request.args.get("programming_language")
-    audio_language = request.args.get("audio_language")
     difficulty = request.args.get("difficulty")
+    source = request.args.get("source")
 
     query = "SELECT * FROM courses WHERE 1=1"
     params = []
 
     if programming_language:
-        query += " AND programming_language = %s"
+        query += " AND LOWER(programming_language) = LOWER(%s)"
         params.append(programming_language)
 
-    if audio_language:
-        query += " AND audio_language = %s"
-        params.append(audio_language)
-
     if difficulty:
-        query += " AND difficulty = %s"
+        query += " AND LOWER(difficulty) = LOWER(%s)"
         params.append(difficulty)
+
+    if source:
+        query += " AND LOWER(source) = LOWER(%s)"
+        params.append(source)
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)

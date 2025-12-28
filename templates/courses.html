@@ -10,28 +10,39 @@
 
 <h2>Explore Courses</h2>
 
-<form method="GET">
-    <select name="programming_language">
-        <option value="">Programming Language</option>
-        <option value="Python">Python</option>
-        <option value="Java">Java</option>
-        <option value="Web">Web</option>
-    </select>
+<form method="get" action="/courses" class="filters">
+  <select name="programming_language">
+    <option value="">All Languages</option>
+    <option value="Python">Python</option>
+    <option value="Java">Java</option>
+  </select>
 
-    <select name="audio_language">
-        <option value="">Audio Language</option>
-        <option value="English">English</option>
-        <option value="Hindi">Hindi</option>
-    </select>
+  <select name="difficulty">
+    <option value="">All Levels</option>
+    <option value="Beginner">Beginner</option>
+    <option value="Intermediate">Intermediate</option>
+    <option value="Advanced">Advanced</option>
+  </select>
 
-    <select name="difficulty">
-        <option value="">Difficulty</option>
-        <option value="Beginner">Beginner</option>
-        <option value="Intermediate">Intermediate</option>
-        <option value="Advanced">Advanced</option>
-    </select>
+  <select name="source">
+    <option value="">All Sources</option>
+    <option value="FreeCodeCamp">FreeCodeCamp</option>
+    <option value="Coursera">Coursera</option>
+    <option value="YouTube">YouTube</option>
+  </select>
 
-    <button type="submit">Filter</button>
+  <button type="submit">Filter</button>
+  
+  {% if courses %}
+  {% for course in courses %}
+    <!-- course card -->
+  {% endfor %}
+{% else %}
+  <p style="margin-top:20px; color: gray;">
+    No courses found for the selected filters.
+  </p>
+{% endif %}
+
 </form>
 
 <hr>
@@ -39,21 +50,20 @@
 <div class="course-container">
   {% for course in courses %}
   <div class="course-card">
-    <img src="/static/images/default-course.png" style="width:300px;height:200px;">
+  <img src="{{ url_for('static', filename='images/default-course.png') }}">
+  <h3>{{ course.title }}</h3>
+  <p>{{ course.description }}</p>
 
+  <span class="badge">{{ course.programming_language }}</span>
+  <span class="badge">{{ course.difficulty }}</span>
 
-    <h3>{{ course.title }}</h3>
-    <p>{{ course.description }}</p>
+  <p>Source: {{ course.source }}</p>
 
-    <span class="tag">{{ course.language }}</span>
-    <span class="tag">{{ course.difficulty }}</span>
+  <a href="{{ course.link }}" target="_blank" class="btn">
+    Visit Course
+  </a>
+</div>
 
-    <p class="source">Source: {{ course.source }}</p>
-
-    <a href="{{ course.course_link }}" target="_blank" class="btn">
-      Visit Course
-    </a>
-  </div>
   {% endfor %}
 </div>
 
