@@ -29,6 +29,9 @@
   </select>
 
   <button type="submit">Filter</button>
+
+  <!-- Clear Filters -->
+  <a href="/courses" class="clear-btn">Clear Filters</a>
 </form>
 
 <hr>
@@ -44,7 +47,16 @@
         <span class="badge">{{ course.programming_language }}</span>
         <span class="badge">{{ course.difficulty }}</span>
         <span class="badge">{{ course.source }}</span>
-        <a href="{{ course.link }}" target="_blank" class="btn">Visit Course</a>
+
+        {% if course['course_link'] %}
+    <a href="{{ course['course_link'] }}" target="_blank" class="btn">
+      Visit Course
+    </a>
+  {% else %}
+    <span class="btn disabled">No Link Available</span>
+  {% endif %}
+
+      
       </div>
     {% endfor %}
   {% else %}
