@@ -97,33 +97,63 @@ def dashboard():
 
 @app.route("/courses")
 def courses():
+    page = request.args.get("page", 1, type=int)
+    limit = 6
+    offset = (page - 1) * limit
+
     programming_language = request.args.get("programming_language")
     difficulty = request.args.get("difficulty")
     source = request.args.get("source")
 
-    query = "SELECT * FROM courses WHERE 1=1"
-    params = []
-
-    if programming_language:
-        query += " AND LOWER(programming_language) = LOWER(%s)"
-        params.append(programming_language)
-
-    if difficulty:
-        query += " AND LOWER(difficulty) = LOWER(%s)"
-        params.append(difficulty)
-
-    if source:
-        query += " AND LOWER(source) = LOWER(%s)"
-        params.append(source)
-
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute(query, params)
+
+    # Base queries
+    base_query = "SELECT * FROM courses WHERE 1=1"
+    count_query = "SELECT COUNT(*) AS total FROM courses WHERE 1=1"
+
+    filters = []
+
+    # Apply filters
+    if programming_language:
+        base_query += " AND programming_language = %s"
+        count_query += " AND programming_language = %s"
+        filters.append(programming_language)
+
+    if difficulty:
+        base_query += " AND difficulty = %s"
+        count_query += " AND difficulty = %s"
+        filters.append(difficulty)
+
+    if source:
+        base_query += " AND source = %s"
+        count_query += " AND source = %s"
+        filters.append(source)
+
+    # Pagination
+    base_query += " LIMIT %s OFFSET %s"
+    data_params = filters + [limit, offset]
+
+    # Fetch courses
+    cursor.execute(base_query, data_params)
     courses = cursor.fetchall()
+
+    # Fetch total count
+    cursor.execute(count_query, filters)
+    total = cursor.fetchone()["total"]
+
+    total_pages = (total + limit - 1) // limit
+
     cursor.close()
     conn.close()
 
-    return render_template("courses.html", courses=courses)
+    return render_template(
+        "courses.html",
+        courses=courses,
+        page=page,
+        total_pages=total_pages
+    )
+
 
 
 @app.route("/admin/add-course", methods=["GET", "POST"])

@@ -63,8 +63,35 @@
     Visit Course
   </a>
 </div>
+{% endfor %}
+<div class="pagination">
+  {% if page > 1 %}
+    <a href="{{ url_for('courses',
+    page=page-1,
+    language=request.args.get('language'),
+    difficulty=request.args.get('difficulty'),
+    source=request.args.get('source')
+) }}">Previous</a>
+  {% endif %}
 
+  <span>Page {{ page }} of {{ total_pages }}</span>
+
+  {% if page < total_pages %}
+    <a href="{{ url_for('courses', page=page+1) }}">Next</a>
+  {% endif %}
+
+  {% if courses %}
+  {% for course in courses %}
+    <!-- course card -->
   {% endfor %}
+{% else %}
+  <p style="text-align:center; color:gray;">
+    No courses found for selected filters.
+  </p>
+{% endif %}
+
+</div>
+
 </div>
 
 
