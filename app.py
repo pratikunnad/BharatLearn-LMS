@@ -97,12 +97,14 @@ def dashboard():
 
 @app.route("/courses")
 def courses():
+    
     # Pagination
     page = request.args.get("page", 1, type=int)
     limit = 6
     offset = (page - 1) * limit
 
     # Filters
+    search = request.args.get("search", "").strip()
     selected_programming_language = request.args.get("programming_language", "").strip()
     selected_difficulty = request.args.get("difficulty", "").strip()
     selected_source = request.args.get("source", "").strip()
@@ -112,6 +114,11 @@ def courses():
 
     base_query = "FROM courses WHERE 1=1"
     params = []
+
+    # SEARCH
+    if search:
+        base_query += " AND (title LIKE %s OR description LIKE %s)"
+        params.extend([f"%{search}%", f"%{search}%"])
 
     if selected_programming_language:
         base_query += " AND programming_language = %s"
@@ -125,19 +132,19 @@ def courses():
         base_query += " AND source = %s"
         params.append(selected_source)
 
-    # ✅ Total count (FILTERED)
+    # Total count (FILTERED)
     count_query = "SELECT COUNT(*) AS total " + base_query
     cursor.execute(count_query, params)
     total = cursor.fetchone()["total"]
 
     total_pages = max(1, (total + limit - 1) // limit)
 
-    # ✅ Prevent invalid page numbers
+    # Prevent invalid page numbers
     if page > total_pages:
         page = total_pages
         offset = (page - 1) * limit
 
-    # ✅ Fetch paginated data
+    # Fetch paginated data
     data_query = (
         "SELECT * " + base_query +
         " ORDER BY id DESC LIMIT %s OFFSET %s"
@@ -153,12 +160,11 @@ def courses():
         courses=courses,
         page=page,
         total_pages=total_pages,
+        search=search,
         selected_programming_language=selected_programming_language,
         selected_difficulty=selected_difficulty,
         selected_source=selected_source
     )
-
-
 
 @app.route("/admin/add-course", methods=["GET", "POST"])
 def add_course():

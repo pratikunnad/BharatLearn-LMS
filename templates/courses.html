@@ -3,6 +3,18 @@
 
 <h2>Explore Courses</h2>
 
+<form method="get" action="/courses">
+    <input
+        type="text"
+        name="search"
+        placeholder="Search courses..."
+        value="{{ search }}"
+    >
+    <button type="submit">Search</button>
+    <a href="/courses" class="clear-btn">Clear</a>
+</form>
+
+
 <!-- Filters -->
 <form method="get" action="{{ url_for('courses') }}" class="filters">
 
@@ -41,7 +53,16 @@
   {% if courses %}
     {% for course in courses %}
       <div class="course-card">
-        <img src="{{ url_for('static', filename='images/default-course.png') }}">
+        {% if course.image_url %}
+    {% if course.image_url.startswith('http') %}
+        <img src="{{ course.image_url }}" alt="Course Image">
+    {% else %}
+        <img src="{{ url_for('static', filename='images/' ~ course.image_url) }}" alt="Course Image">
+    {% endif %}
+{% else %}
+    <img src="{{ url_for('static', filename='images/default-course.png') }}" alt="Course Image">
+{% endif %}
+
         <h3>{{ course.title }}</h3>
         <p>{{ course.description }}</p>
         <span class="badge">{{ course.programming_language }}</span>
