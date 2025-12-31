@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Enrollments</title>
+</head>
+<body>
+
+<h2>My Enrolled Courses</h2>
+
+{% if courses %}
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        {% for course in courses %}
+            <div style="border: 1px solid #ccc; padding: 15px; width: 250px;">
+                {% if course.image_url %}
+    {% if course.image_url.startswith('http') %}
+        <img src="{{ course.image_url }}" alt="Course Image">
+    {% else %}
+        <img src="{{ url_for('static', filename='images/' ~ course.image_url) }}" alt="Course Image">
+    {% endif %}
+{% else %}
+    <img src="{{ url_for('static', filename='images/default-course.png') }}" alt="Course Image">
+{% endif %}
+                <h3>{{ course.title }}</h3>
+                <p>{{ course.description }}</p>
+
+                <a href="{{ course.course_link }}" target="_blank">
+                    Visit Course
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>You have not enrolled in any courses yet.</p>
+{% endif %}
+
+<a href="/student/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

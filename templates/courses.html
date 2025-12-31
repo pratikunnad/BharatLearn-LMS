@@ -69,6 +69,17 @@
         <span class="badge">{{ course.difficulty }}</span>
         <span class="badge">{{ course.source }}</span>
 
+        {% if course.is_enrolled %}
+    <form action="{{ url_for('unenroll', course_id=course.id) }}" method="post">
+        <button class="btn btn-success" disabled>Enrolled</button>
+        <button class="btn btn-danger">Unenroll</button>
+    </form>
+{% else %}
+    <form action="{{ url_for('enroll', course_id=course.id) }}" method="post">
+        <button class="btn btn-primary">Enroll</button>
+    </form>
+{% endif %}
+
         {% if course['course_link'] %}
     <a href="{{ course['course_link'] }}" target="_blank" class="btn">
       Visit Course
@@ -76,8 +87,6 @@
   {% else %}
     <span class="btn disabled">No Link Available</span>
   {% endif %}
-
-      
       </div>
     {% endfor %}
   {% else %}

@@ -84,20 +84,22 @@ def register():
 
     return render_template("register.html", message=message)
 
-@app.route("/student")
+@app.route("/student/dashboard")
 def student_dashboard():
     if "role" not in session or session["role"] != "student":
         return redirect("/login")
     return render_template("student_dashboard.html")
 
-@app.route("/dashboard")
-def dashboard():
-    return render_template("dashboard.html")
+@app.route("/some-route")
+def some_function():
+    # ALL CODE MUST BE HERE
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    return render_template("file.html")
 
 
 @app.route("/courses")
 def courses():
-    
     # Pagination
     page = request.args.get("page", 1, type=int)
     limit = 6
@@ -109,47 +111,68 @@ def courses():
     selected_difficulty = request.args.get("difficulty", "").strip()
     selected_source = request.args.get("source", "").strip()
 
+    user_id = session.get("user_id")
+
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    base_query = "FROM courses WHERE 1=1"
+    # Base query (alias is IMPORTANT)
+    base_query = "FROM courses c WHERE 1=1"
     params = []
 
-    # SEARCH
+    # Search
     if search:
-        base_query += " AND (title LIKE %s OR description LIKE %s)"
+        base_query += " AND (c.title LIKE %s OR c.description LIKE %s)"
         params.extend([f"%{search}%", f"%{search}%"])
 
     if selected_programming_language:
-        base_query += " AND programming_language = %s"
+        base_query += " AND c.programming_language = %s"
         params.append(selected_programming_language)
 
     if selected_difficulty:
-        base_query += " AND difficulty = %s"
+        base_query += " AND c.difficulty = %s"
         params.append(selected_difficulty)
 
     if selected_source:
-        base_query += " AND source = %s"
+        base_query += " AND c.source = %s"
         params.append(selected_source)
 
-    # Total count (FILTERED)
+    # Total count
     count_query = "SELECT COUNT(*) AS total " + base_query
     cursor.execute(count_query, params)
     total = cursor.fetchone()["total"]
 
     total_pages = max(1, (total + limit - 1) // limit)
 
-    # Prevent invalid page numbers
     if page > total_pages:
         page = total_pages
         offset = (page - 1) * limit
 
-    # Fetch paginated data
-    data_query = (
-        "SELECT * " + base_query +
-        " ORDER BY id DESC LIMIT %s OFFSET %s"
-    )
-    cursor.execute(data_query, params + [limit, offset])
+    # Fetch courses with enrollment status
+    if user_id:
+        data_query = """
+            SELECT c.*,
+            IF(
+                EXISTS (
+                    SELECT 1 FROM enrollments e
+                    WHERE e.course_id = c.id AND e.user_id = %s
+                ),
+                1, 0
+            ) AS is_enrolled
+        """ + base_query + """
+            ORDER BY c.id DESC
+            LIMIT %s OFFSET %s
+        """
+        cursor.execute(data_query, [user_id] + params + [limit, offset])
+    else:
+        data_query = """
+            SELECT c.*, 0 AS is_enrolled
+        """ + base_query + """
+            ORDER BY c.id DESC
+            LIMIT %s OFFSET %s
+        """
+        cursor.execute(data_query, params + [limit, offset])
+
     courses = cursor.fetchall()
 
     cursor.close()
@@ -165,6 +188,80 @@ def courses():
         selected_difficulty=selected_difficulty,
         selected_source=selected_source
     )
+
+
+@app.route("/enroll/<int:course_id>", methods=["POST"])
+def enroll(course_id):
+    if "user_id" not in session or session.get("role") != "student":
+        return redirect("/login")
+
+    user_id = session["user_id"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "INSERT INTO enrollments (user_id, course_id) VALUES (%s, %s)",
+            (user_id, course_id)
+        )
+        conn.commit()
+    except mysql.connector.IntegrityError:
+        # Already enrolled (safe to ignore)
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect("/my-enrollments")
+
+
+@app.route("/my-enrollments")
+def my_enrollments():
+    if "user_id" not in session or session.get("role") != "student":
+        return redirect("/login")
+
+    user_id = session["user_id"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+        SELECT courses.*
+        FROM enrollments
+        JOIN courses ON enrollments.course_id = courses.id
+        WHERE enrollments.user_id = %s
+        ORDER BY enrollments.enrolled_at DESC
+    """
+    cursor.execute(query, (user_id,))
+    courses = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("my_enrollments.html", courses=courses)
+
+@app.route("/unenroll/<int:course_id>", methods=["POST"])
+def unenroll(course_id):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM enrollments WHERE user_id=%s AND course_id=%s",
+        (user_id, course_id)
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for("courses"))
+
 
 @app.route("/admin/add-course", methods=["GET", "POST"])
 def add_course():

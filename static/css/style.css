@@ -94,3 +94,23 @@ nav a:hover {
   background: #bbb;
 }
 
+.enroll-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.enrolled-btn {
+    background-color: #28a745;
+    color: white;
+    cursor: not-allowed;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    color: white;
+}
