@@ -1,41 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin - Enrollments</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
 
-<h2>Student Enrollments</h2>
+<h2>Admin – Course Enrollments</h2>
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>Student</th>
-        <th>Email</th>
-        <th>Course</th>
-        <th>Enrolled At</th>
-        <th>Action</th>
-    </tr>
-
-    {% for e in enrollments %}
-    <tr>
-        <td>{{ e.student_name }}</td>
-        <td>{{ e.email }}</td>
-        <td>{{ e.course_title }}</td>
-        <td>{{ e.enrolled_at }}</td>
-        <td>
-            <form method="POST" action="{{ url_for('admin_unenroll', enrollment_id=e.enrollment_id) }}">
-                <button type="submit" style="background:red;color:white;">
-                    Unenroll
-                </button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
+{% if enrollments %}
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>Course</th>
+            <th>Enrolled On</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for e in enrollments %}
+        <tr>
+            <td>{{ e.student_name }}</td>
+            <td>{{ e.student_email }}</td>
+            <td>{{ e.course_title }}</td>
+            <td>{{ e.enrolled_at.strftime("%d %b %Y") }}</td>
+            <td>
+                <form
+                    action="{{ url_for('admin_unenroll', enrollment_id=e.enrollment_id) }}"
+                    method="post"
+                    onsubmit="return confirm('Are you sure you want to unenroll this student?');"
+                >
+                    <button type="submit" class="btn btn-danger">
+                        Unenroll
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+{% else %}
+<p>No enrollments found.</p>
+{% endif %}
 
 <br>
-<a href="/admin/dashboard">⬅ Back to Dashboard</a>
+<a href="/admin/dashboard">⬅ Back to Admin Dashboard</a>
 
-</body>
-</html>
+{% endblock %}

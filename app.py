@@ -353,10 +353,8 @@ def admin_enrollments():
     cursor.execute("""
         SELECT 
             e.id AS enrollment_id,
-            u.id AS user_id,
             u.name AS student_name,
-            u.email,
-            c.id AS course_id,
+            u.email AS student_email,
             c.title AS course_title,
             e.enrolled_at
         FROM enrollments e
@@ -370,10 +368,7 @@ def admin_enrollments():
     cursor.close()
     conn.close()
 
-    return render_template(
-        "admin_enrollments.html",
-        enrollments=enrollments
-    )
+    return render_template("admin_enrollments.html", enrollments=enrollments)
 
 @app.route("/admin/unenroll/<int:enrollment_id>", methods=["POST"])
 def admin_unenroll(enrollment_id):
@@ -393,6 +388,68 @@ def admin_unenroll(enrollment_id):
     conn.close()
 
     return redirect("/admin/enrollments")
+
+
+@app.route("/admin/enrollment-analytics")
+def admin_enrollment_analytics():
+    # Optional: protect with admin check
+    if session.get("role") != "admin":
+        return redirect("/login")
+    
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Total enrollments
+    cursor.execute("SELECT COUNT(*) AS total_enrollments FROM enrollments")
+    total_enrollments = cursor.fetchone()["total_enrollments"]
+
+    # Total unique students
+    cursor.execute("SELECT COUNT(DISTINCT user_id) AS total_students FROM enrollments")
+    total_students = cursor.fetchone()["total_students"]
+
+    # Total courses enrolled
+    cursor.execute("SELECT COUNT(DISTINCT course_id) AS total_courses FROM enrollments")
+    total_courses = cursor.fetchone()["total_courses"]
+
+    # Today's enrollments
+    cursor.execute("""
+        SELECT COUNT(*) AS today_enrollments
+        FROM enrollments
+        WHERE DATE(enrolled_at) = CURDATE()
+    """)
+    today_enrollments = cursor.fetchone()["today_enrollments"]
+
+    # Enrollments per course
+    cursor.execute("""
+    SELECT c.title AS title, COUNT(e.id) AS total
+    FROM courses c
+    LEFT JOIN enrollments e ON c.id = e.course_id
+    GROUP BY c.id, c.title
+    ORDER BY total DESC
+""")
+    course_data = cursor.fetchall()
+
+    # Enrollments by difficulty
+    cursor.execute("""
+    SELECT c.difficulty AS difficulty, COUNT(e.id) AS total
+    FROM courses c
+    LEFT JOIN enrollments e ON c.id = e.course_id
+    GROUP BY c.difficulty
+""")
+    difficulty_data = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "admin_enrollment_analytics.html",
+        total_enrollments=total_enrollments,
+        total_students=total_students,
+        total_courses=total_courses,
+        today_enrollments=today_enrollments,
+        course_data=course_data,
+        difficulty_data=difficulty_data
+    )
 
 
 if __name__ == "__main__":
