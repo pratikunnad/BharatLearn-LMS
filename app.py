@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask import session
 import mysql.connector
 
@@ -192,48 +192,55 @@ def courses():
 
 @app.route("/enroll/<int:course_id>", methods=["POST"])
 def enroll(course_id):
-    if "user_id" not in session or session.get("role") != "student":
-        return redirect("/login")
+    if "user_id" not in session:
+        return jsonify({"success": False}), 401
 
     user_id = session["user_id"]
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    try:
-        cursor.execute(
-            "INSERT INTO enrollments (user_id, course_id) VALUES (%s, %s)",
-            (user_id, course_id)
-        )
-        conn.commit()
-    except mysql.connector.IntegrityError:
-        # Already enrolled (safe to ignore)
-        pass
-    finally:
+    # prevent duplicate enroll
+    cursor.execute(
+        "SELECT 1 FROM enrollments WHERE user_id=%s AND course_id=%s",
+        (user_id, course_id)
+    )
+    if cursor.fetchone():
         cursor.close()
         conn.close()
+        return jsonify({"success": True})
 
-    return redirect("/my-enrollments")
+    cursor.execute(
+        "INSERT INTO enrollments (user_id, course_id, enrolled_at) VALUES (%s, %s, NOW())",
+        (user_id, course_id)
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return jsonify({"success": True})
+
 
 
 @app.route("/my-enrollments")
 def my_enrollments():
-    if "user_id" not in session or session.get("role") != "student":
+    if "user_id" not in session:
         return redirect("/login")
-
-    user_id = session["user_id"]
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
     query = """
-        SELECT courses.*
-        FROM enrollments
-        JOIN courses ON enrollments.course_id = courses.id
-        WHERE enrollments.user_id = %s
-        ORDER BY enrollments.enrolled_at DESC
+        SELECT 
+            c.*,
+            e.enrolled_at
+        FROM enrollments e
+        JOIN courses c ON c.id = e.course_id
+        WHERE e.user_id = %s
+        ORDER BY e.enrolled_at DESC
     """
-    cursor.execute(query, (user_id,))
+    cursor.execute(query, (session["user_id"],))
     courses = cursor.fetchall()
 
     cursor.close()
@@ -260,7 +267,7 @@ def unenroll(course_id):
     cursor.close()
     conn.close()
 
-    return redirect(url_for("courses"))
+    return redirect("/my-enrollments")
 
 
 @app.route("/admin/add-course", methods=["GET", "POST"])
@@ -334,6 +341,58 @@ def logout():
     session.clear()
     return redirect("/login")
 
+
+@app.route("/admin/enrollments")
+def admin_enrollments():
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT 
+            e.id AS enrollment_id,
+            u.id AS user_id,
+            u.name AS student_name,
+            u.email,
+            c.id AS course_id,
+            c.title AS course_title,
+            e.enrolled_at
+        FROM enrollments e
+        JOIN users u ON e.user_id = u.id
+        JOIN courses c ON e.course_id = c.id
+        ORDER BY e.enrolled_at DESC
+    """)
+
+    enrollments = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "admin_enrollments.html",
+        enrollments=enrollments
+    )
+
+@app.route("/admin/unenroll/<int:enrollment_id>", methods=["POST"])
+def admin_unenroll(enrollment_id):
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM enrollments WHERE id = %s",
+        (enrollment_id,)
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect("/admin/enrollments")
 
 
 if __name__ == "__main__":

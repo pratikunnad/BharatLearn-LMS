@@ -99,7 +99,7 @@ nav a:hover {
     color: white;
 }
 
-.enrolled-btn {
+.btn-success {
     background-color: #28a745;
     color: white;
     cursor: not-allowed;

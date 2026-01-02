@@ -1,9 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
 
+<script>
+document.querySelectorAll(".enroll-btn").forEach(button => {
+    button.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const courseId = this.dataset.courseId;
+
+        fetch(`/enroll/${courseId}`, {
+            method: "POST"
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // redirect to My Enrollments
+                window.location.href = data.redirect;
+            }
+        });
+    });
+});
+</script>
+
 <h2>Explore Courses</h2>
 
-<form method="get" action="/courses">
+<!-- Search -->
+<form method="get" action="{{ url_for('courses') }}">
     <input
         type="text"
         name="search"
@@ -11,9 +33,8 @@
         value="{{ search }}"
     >
     <button type="submit">Search</button>
-    <a href="/courses" class="clear-btn">Clear</a>
+    <a href="{{ url_for('courses') }}" class="clear-btn">Clear</a>
 </form>
-
 
 <!-- Filters -->
 <form method="get" action="{{ url_for('courses') }}" class="filters">
@@ -40,87 +61,105 @@
     <option value="FreeCodeCamp" {{ 'selected' if selected_source == 'FreeCodeCamp' }}>FreeCodeCamp</option>
   </select>
 
-  <button type="submit">Filter</button>
-
-  <!-- Clear Filters -->
-  <a href="/courses" class="clear-btn">Clear Filters</a>
+  <button type="submit">Apply</button>
+  <a href="{{ url_for('courses') }}" class="clear-btn">Clear</a>
 </form>
 
 <hr>
 
 <!-- Courses -->
 <div class="course-container">
-  {% if courses %}
+{% if courses %}
     {% for course in courses %}
-      <div class="course-card">
+    <div class="course-card">
+
         {% if course.image_url %}
-    {% if course.image_url.startswith('http') %}
-        <img src="{{ course.image_url }}" alt="Course Image">
-    {% else %}
-        <img src="{{ url_for('static', filename='images/' ~ course.image_url) }}" alt="Course Image">
-    {% endif %}
-{% else %}
-    <img src="{{ url_for('static', filename='images/default-course.png') }}" alt="Course Image">
-{% endif %}
+            {% if course.image_url.startswith('http') %}
+                <img src="{{ course.image_url }}" alt="Course Image">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/' ~ course.image_url) }}" alt="Course Image">
+            {% endif %}
+        {% else %}
+            <img src="{{ url_for('static', filename='images/default-course.png') }}" alt="Course Image">
+        {% endif %}
 
         <h3>{{ course.title }}</h3>
         <p>{{ course.description }}</p>
+
         <span class="badge">{{ course.programming_language }}</span>
         <span class="badge">{{ course.difficulty }}</span>
         <span class="badge">{{ course.source }}</span>
 
+        <!-- Enroll / Unenroll -->
         {% if course.is_enrolled %}
-    <form action="{{ url_for('unenroll', course_id=course.id) }}" method="post">
-        <button class="btn btn-success" disabled>Enrolled</button>
-        <button class="btn btn-danger">Unenroll</button>
-    </form>
+    <button class="btn btn-success" disabled>
+        Enrolled
+    </button>
 {% else %}
-    <form action="{{ url_for('enroll', course_id=course.id) }}" method="post">
-        <button class="btn btn-primary">Enroll</button>
-    </form>
+    <button
+        class="btn btn-primary enroll-btn"
+        data-course-id="{{ course.id }}"
+    >
+        Enroll
+    </button>
 {% endif %}
 
-        {% if course['course_link'] %}
-    <a href="{{ course['course_link'] }}" target="_blank" class="btn">
-      Visit Course
-    </a>
-  {% else %}
-    <span class="btn disabled">No Link Available</span>
-  {% endif %}
-      </div>
+
+    </div>
     {% endfor %}
-  {% else %}
+{% else %}
     <p>No courses found 😕</p>
-  {% endif %}
+{% endif %}
 </div>
 
 <!-- Pagination -->
 <div class="pagination">
 
-  {% if page > 1 %}
-    <a href="{{ url_for('courses',
-        page=page-1,
-        programming_language=selected_programming_language,
-        difficulty=selected_difficulty,
-        source=selected_source) }}">
-      Previous
-    </a>
-  {% endif %}
+{% if page > 1 %}
+<a href="{{ url_for('courses',
+    page=page-1,
+    search=search,
+    programming_language=selected_programming_language,
+    difficulty=selected_difficulty,
+    source=selected_source) }}">
+  Previous
+</a>
+{% endif %}
 
-  <span>Page {{ page }} of {{ total_pages }}</span>
+<span>Page {{ page }} of {{ total_pages }}</span>
 
-  {% if page < total_pages %}
-    <a href="{{ url_for('courses',
-        page=page+1,
-        programming_language=selected_programming_language,
-        difficulty=selected_difficulty,
-        source=selected_source) }}">
-      Next
-    </a>
-  {% endif %}
+{% if page < total_pages %}
+<a href="{{ url_for('courses',
+    page=page+1,
+    search=search,
+    programming_language=selected_programming_language,
+    difficulty=selected_difficulty,
+    source=selected_source) }}">
+  Next
+</a>
+{% endif %}
 
 </div>
 
 <a href="/">Back to Home</a>
+
+<!-- AJAX Enroll -->
+<script>
+document.querySelectorAll(".enroll-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+        const courseId = this.dataset.courseId;
+        const button = this;
+
+        fetch(`/enroll/${courseId}`, { method: "POST" })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("You have successfully enrolled in this course!");
+                    window.location.href = "/my-enrollments";
+                }
+            });
+    });
+});
+</script>
 
 {% endblock %}

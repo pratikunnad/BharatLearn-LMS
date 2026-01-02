@@ -2,37 +2,89 @@
 <html>
 <head>
     <title>My Enrollments</title>
+    <style>
+        .course-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            width: 260px;
+            border-radius: 6px;
+        }
+        .enrolled-badge {
+            background: green;
+            color: white;
+            padding: 4px 8px;
+            font-size: 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+        .unenroll-btn {
+            background: red;
+            color: white;
+            padding: 6px 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+    </style>
 </head>
+
+<script>
+function confirmUnenroll() {
+    return confirm("Are you sure you want to unenroll from this course?");
+}
+</script>
+
 <body>
 
 <h2>My Enrolled Courses</h2>
 
 {% if courses %}
-    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-        {% for course in courses %}
-            <div style="border: 1px solid #ccc; padding: 15px; width: 250px;">
-                {% if course.image_url %}
-    {% if course.image_url.startswith('http') %}
-        <img src="{{ course.image_url }}" alt="Course Image">
-    {% else %}
-        <img src="{{ url_for('static', filename='images/' ~ course.image_url) }}" alt="Course Image">
-    {% endif %}
-{% else %}
-    <img src="{{ url_for('static', filename='images/default-course.png') }}" alt="Course Image">
-{% endif %}
-                <h3>{{ course.title }}</h3>
-                <p>{{ course.description }}</p>
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for course in courses %}
+    <div class="course-card">
 
-                <a href="{{ course.course_link }}" target="_blank">
-                    Visit Course
-                </a>
-            </div>
-        {% endfor %}
+        {% if course.image_url %}
+            {% if course.image_url.startswith('http') %}
+                <img src="{{ course.image_url }}" width="100%">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/' ~ course.image_url) }}" width="100%">
+            {% endif %}
+        {% else %}
+            <img src="{{ url_for('static', filename='images/default-course.png') }}" width="100%">
+        {% endif %}
+
+        <div class="enrolled-badge">Enrolled</div>
+
+        <h3>{{ course.title }}</h3>
+        <p>{{ course.description }}</p>
+
+        <p>
+            <strong>Enrolled on:</strong><br>
+            {{ course.enrolled_at.strftime("%d %b %Y, %I:%M %p") }}
+        </p>
+
+        <a href="{{ course.course_link }}" target="_blank">Visit Course</a><br>
+
+        <form
+        action="{{ url_for('unenroll', course_id=course.id) }}"
+        method="post"
+        onsubmit="return confirmUnenroll();"
+        style="margin-top:8px;"
+    >
+        <button type="submit" class="btn btn-danger">
+            Unenroll
+        </button>
+    </form>
     </div>
+    {% endfor %}
+</div>
 {% else %}
-    <p>You have not enrolled in any courses yet.</p>
+<p>You have not enrolled in any courses yet.</p>
 {% endif %}
 
+<br>
 <a href="/student/dashboard">Back to Dashboard</a>
 
 </body>
