@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>👨‍🎓 Student‑wise Enrollment Analytics</h2>
+
+<div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:30px;">
+
+    <div class="card">
+        <h3>Total Students</h3>
+        <p>{{ total_students }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Students Enrolled</h3>
+        <p>{{ enrolled_students }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Students Not Enrolled</h3>
+        <p>{{ students_without_enrollments }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Avg Enrollments / Student</h3>
+        <p>{{ avg_enrollments }}</p>
+    </div>
+
+</div>
+
+<h3>📋 Student‑wise Enrollment Details</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>Total Enrollments</th>
+            <th>Enrolled Courses</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in student_data %}
+        <tr>
+            <td>{{ s.name }}</td>
+            <td>{{ s.email }}</td>
+            <td>{{ s.total_enrollments }}</td>
+            <td>{{ s.courses or "—" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+<a href="/admin/dashboard">⬅ Back to Admin Dashboard</a>
+
+<style>
+.card {
+    border: 1px solid #ccc;
+    padding: 20px;
+    width: 220px;
+    border-radius: 6px;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background: #f2f2f2;
+}
+</style>
+
+{% endblock %}

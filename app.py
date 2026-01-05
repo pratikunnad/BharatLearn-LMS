@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from flask import session
 import mysql.connector
 
@@ -110,14 +110,19 @@ def courses():
     selected_programming_language = request.args.get("programming_language", "").strip()
     selected_difficulty = request.args.get("difficulty", "").strip()
     selected_source = request.args.get("source", "").strip()
+    sort = request.args.get("sort", "newest").strip()
 
     user_id = session.get("user_id")
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # Base query (alias is IMPORTANT)
-    base_query = "FROM courses c WHERE 1=1"
+    # Base query
+    base_query = """
+        FROM courses c
+        LEFT JOIN enrollments e ON c.id = e.course_id
+        WHERE 1=1
+    """
     params = []
 
     # Search
@@ -137,8 +142,14 @@ def courses():
         base_query += " AND c.source = %s"
         params.append(selected_source)
 
+    # Sorting (✅ FIXED)
+    if sort == "popular":
+        order_by = "ORDER BY COUNT(e.id) DESC"
+    else:
+        order_by = "ORDER BY c.id DESC"
+
     # Total count
-    count_query = "SELECT COUNT(*) AS total " + base_query
+    count_query = "SELECT COUNT(DISTINCT c.id) AS total " + base_query
     cursor.execute(count_query, params)
     total = cursor.fetchone()["total"]
 
@@ -148,27 +159,28 @@ def courses():
         page = total_pages
         offset = (page - 1) * limit
 
-    # Fetch courses with enrollment status
+    # Fetch courses
     if user_id:
-        data_query = """
-            SELECT c.*,
-            IF(
-                EXISTS (
-                    SELECT 1 FROM enrollments e
-                    WHERE e.course_id = c.id AND e.user_id = %s
-                ),
-                1, 0
-            ) AS is_enrolled
-        """ + base_query + """
-            ORDER BY c.id DESC
+        data_query = f"""
+            SELECT
+                c.*,
+                COUNT(e.id) AS enroll_count,
+                MAX(CASE WHEN e.user_id = %s THEN 1 ELSE 0 END) AS is_enrolled
+            {base_query}
+            GROUP BY c.id
+            {order_by}
             LIMIT %s OFFSET %s
         """
         cursor.execute(data_query, [user_id] + params + [limit, offset])
     else:
-        data_query = """
-            SELECT c.*, 0 AS is_enrolled
-        """ + base_query + """
-            ORDER BY c.id DESC
+        data_query = f"""
+            SELECT
+                c.*,
+                COUNT(e.id) AS enroll_count,
+                0 AS is_enrolled
+            {base_query}
+            GROUP BY c.id
+            {order_by}
             LIMIT %s OFFSET %s
         """
         cursor.execute(data_query, params + [limit, offset])
@@ -186,7 +198,8 @@ def courses():
         search=search,
         selected_programming_language=selected_programming_language,
         selected_difficulty=selected_difficulty,
-        selected_source=selected_source
+        selected_source=selected_source,
+        sort=sort
     )
 
 
@@ -450,6 +463,61 @@ def admin_enrollment_analytics():
         course_data=course_data,
         difficulty_data=difficulty_data
     )
+
+@app.route("/admin/student-analytics")
+def student_analytics():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Total students
+    cursor.execute("SELECT COUNT(*) AS total FROM users WHERE role='student'")
+    total_students = cursor.fetchone()["total"]
+
+    # Students with enrollments
+    cursor.execute("""
+        SELECT COUNT(DISTINCT user_id) AS total
+        FROM enrollments
+    """)
+    enrolled_students = cursor.fetchone()["total"]
+
+    # Students without enrollments
+    students_without_enrollments = total_students - enrolled_students
+
+    # Average enrollments per student
+    cursor.execute("""
+        SELECT COUNT(*) / COUNT(DISTINCT user_id) AS avg_enrollments
+        FROM enrollments
+    """)
+    avg_enrollments = cursor.fetchone()["avg_enrollments"] or 0
+
+    # Student-wise enrollment details
+    cursor.execute("""
+        SELECT 
+            u.id,
+            u.name,
+            u.email,
+            COUNT(e.id) AS total_enrollments,
+            GROUP_CONCAT(c.title SEPARATOR ', ') AS courses
+        FROM users u
+        LEFT JOIN enrollments e ON u.id = e.user_id
+        LEFT JOIN courses c ON e.course_id = c.id
+        WHERE u.role = 'student'
+        GROUP BY u.id
+        ORDER BY total_enrollments DESC
+    """)
+    student_data = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template(
+        "student_wise_analytics.html",
+        total_students=total_students,
+        enrolled_students=enrolled_students,
+        students_without_enrollments=students_without_enrollments,
+        avg_enrollments=round(avg_enrollments, 2),
+        student_data=student_data
+    )
+
 
 
 if __name__ == "__main__":

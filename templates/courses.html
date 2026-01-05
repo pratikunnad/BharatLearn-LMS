@@ -61,6 +61,11 @@ document.querySelectorAll(".enroll-btn").forEach(button => {
     <option value="FreeCodeCamp" {{ 'selected' if selected_source == 'FreeCodeCamp' }}>FreeCodeCamp</option>
   </select>
 
+    <select name="sort">
+        <option value="newest" {{ 'selected' if sort == 'newest' }}>Newest</option>
+        <option value="popular" {{ 'selected' if sort == 'popular' }}>Most Popular</option>
+    </select>
+
   <button type="submit">Apply</button>
   <a href="{{ url_for('courses') }}" class="clear-btn">Clear</a>
 </form>
