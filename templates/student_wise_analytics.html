@@ -1,82 +1,170 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>👨‍🎓 Student‑wise Enrollment Analytics</h2>
-
-<div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:30px;">
-
-    <div class="card">
-        <h3>Total Students</h3>
-        <p>{{ total_students }}</p>
-    </div>
-
-    <div class="card">
-        <h3>Students Enrolled</h3>
-        <p>{{ enrolled_students }}</p>
-    </div>
-
-    <div class="card">
-        <h3>Students Not Enrolled</h3>
-        <p>{{ students_without_enrollments }}</p>
-    </div>
-
-    <div class="card">
-        <h3>Avg Enrollments / Student</h3>
-        <p>{{ avg_enrollments }}</p>
-    </div>
-
-</div>
-
-<h3>📋 Student‑wise Enrollment Details</h3>
-
-<table>
-    <thead>
-        <tr>
-            <th>Student Name</th>
-            <th>Email</th>
-            <th>Total Enrollments</th>
-            <th>Enrolled Courses</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for s in student_data %}
-        <tr>
-            <td>{{ s.name }}</td>
-            <td>{{ s.email }}</td>
-            <td>{{ s.total_enrollments }}</td>
-            <td>{{ s.courses or "—" }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<br>
-<a href="/admin/dashboard">⬅ Back to Admin Dashboard</a>
-
 <style>
-.card {
-    border: 1px solid #ccc;
-    padding: 20px;
-    width: 220px;
-    border-radius: 6px;
-    background: #f9f9f9;
-    text-align: center;
+/* PAGE WRAPPER */
+.analytics-container {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
+/* PAGE TITLE */
+.analytics-container h2 {
+    margin-bottom: 25px;
+    color: #0a3d62;
+}
+
+/* STATS CARDS */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 22px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+}
+
+.stat-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0a3d62;
+}
+
+/* TABLE SECTION */
+.table-container {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.table-container h3 {
+    margin-bottom: 15px;
+    color: #0a3d62;
+}
+
+/* TABLE */
 table {
-    width: 90%;
+    width: 100%;
     border-collapse: collapse;
 }
 
-th, td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: center;
+thead {
+    background: #0a3d62;
+    color: #ffffff;
 }
 
-th {
-    background: #f2f2f2;
+th, td {
+    padding: 12px 14px;
+    text-align: center;
+    font-size: 14px;
+}
+
+tbody tr {
+    border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+    background: #f7f9fc;
+}
+
+td {
+    color: #333;
+}
+
+/* COURSE LIST COLUMN */
+td:last-child {
+    font-size: 13px;
+    color: #555;
+}
+
+/* BACK LINK */
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #0a3d62;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    text-decoration: underline;
 }
 </style>
+
+<div class="analytics-container">
+
+    <h2>👨‍🎓 Student‑wise Enrollment Analytics</h2>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Students</h3>
+            <p>{{ total_students }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Students Enrolled</h3>
+            <p>{{ enrolled_students }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Students Not Enrolled</h3>
+            <p>{{ students_without_enrollments }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Avg Enrollments / Student</h3>
+            <p>{{ avg_enrollments }}</p>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-container">
+        <h3>📋 Student‑wise Enrollment Details</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Total Enrollments</th>
+                    <th>Enrolled Courses</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in student_data %}
+                <tr>
+                    <td>{{ s.name }}</td>
+                    <td>{{ s.email }}</td>
+                    <td>{{ s.total_enrollments }}</td>
+                    <td>{{ s.courses or "—" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/admin/dashboard" class="back-link">⬅ Back to Admin Dashboard</a>
+
+</div>
 
 {% endblock %}

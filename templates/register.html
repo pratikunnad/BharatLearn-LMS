@@ -1,24 +1,127 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Student Registration</h2>
 
-<form method="POST">
-    <label>Name:</label><br>
-    <input type="text" name="name" required><br><br>
+<style>
+/* PAGE WRAPPER */
+.register-wrapper {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
+/* CARD */
+.register-card {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    padding: 35px 30px;
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
 
-    <label>Password:</label><br>
-    <input type="password" name="password" required><br><br>
+/* HEADING */
+.register-card h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #0a3d62;
+}
 
-    <button type="submit">Register</button>
-</form>
+/* FORM */
+.register-card label {
+    font-weight: 500;
+    font-size: 14px;
+}
 
-{% if message %}
-<p style="color:green;">{{ message }}</p>
-{% endif %}
+.register-card input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
 
-<p>Already registered? <a href="/login">Login here</a></p>
+.register-card input:focus {
+    outline: none;
+    border-color: #0a3d62;
+}
+
+/* BUTTON */
+.register-card button {
+    width: 100%;
+    padding: 12px;
+    background: #0a3d62;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.register-card button:hover {
+    background: #083358;
+}
+
+/* MESSAGE */
+.success-msg {
+    text-align: center;
+    color: green;
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+/* FOOT LINKS */
+.register-footer {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.register-footer a {
+    color: #0a3d62;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-footer a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<div class="register-wrapper">
+    <div class="register-card">
+
+        <h2>📝 Student Registration</h2>
+
+        <form method="POST">
+
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Enter your name" required>
+
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter your email" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Create a password" required>
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        {% if message %}
+        <p class="success-msg">{{ message }}</p>
+        {% endif %}
+
+        <div class="register-footer">
+            Already registered?
+            <a href="/login">Login here</a>
+        </div>
+
+    </div>
+</div>
+
 {% endblock %}

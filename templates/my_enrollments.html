@@ -1,31 +1,149 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Enrollments</title>
+    <meta charset="UTF-8">
+    <title>My Enrollments | BharatLearn</title>
+
     <style>
+        /* RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 30px 0;
+            color: #0a3d62;
+        }
+
+        /* COURSE GRID */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            padding: 0 40px 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* CARD */
         .course-card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            width: 260px;
-            border-radius: 6px;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: transform 0.25s, box-shadow 0.25s;
+            display: flex;
+            flex-direction: column;
         }
+
+        .course-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 35px rgba(0,0,0,0.12);
+        }
+
+        .course-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 18px;
+            flex: 1;
+        }
+
         .enrolled-badge {
-            background: green;
-            color: white;
-            padding: 4px 8px;
+            display: inline-block;
+            background: #28a745;
+            color: #fff;
             font-size: 12px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
-        .unenroll-btn {
-            background: red;
-            color: white;
-            padding: 6px 10px;
+
+        .course-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #0a3d62;
+        }
+
+        .course-card p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .enroll-date {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 14px;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .visit-link {
             text-decoration: none;
-            border-radius: 4px;
-            display: inline-block;
-            margin-top: 8px;
+            font-size: 14px;
+            color: #1e90ff;
+            font-weight: 600;
+        }
+
+        .visit-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* EMPTY STATE */
+        .empty {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: 40px;
+        }
+
+        /* BACK LINK */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin: 30px 0;
+            text-decoration: none;
+            color: #0a3d62;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -38,54 +156,59 @@ function confirmUnenroll() {
 
 <body>
 
-<h2>My Enrolled Courses</h2>
+<h2>🎓 My Enrolled Courses</h2>
 
 {% if courses %}
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+<div class="course-grid">
     {% for course in courses %}
     <div class="course-card">
 
         {% if course.image_url %}
             {% if course.image_url.startswith('http') %}
-                <img src="{{ course.image_url }}" width="100%">
+                <img src="{{ course.image_url }}">
             {% else %}
-                <img src="{{ url_for('static', filename='images/' ~ course.image_url) }}" width="100%">
+                <img src="{{ url_for('static', filename='images/' ~ course.image_url) }}">
             {% endif %}
         {% else %}
-            <img src="{{ url_for('static', filename='images/default-course.png') }}" width="100%">
+            <img src="{{ url_for('static', filename='images/default-course.png') }}">
         {% endif %}
 
-        <div class="enrolled-badge">Enrolled</div>
+        <div class="card-body">
+            <span class="enrolled-badge">Enrolled</span>
 
-        <h3>{{ course.title }}</h3>
-        <p>{{ course.description }}</p>
+            <h3>{{ course.title }}</h3>
+            <p>{{ course.description }}</p>
 
-        <p>
-            <strong>Enrolled on:</strong><br>
-            {{ course.enrolled_at.strftime("%d %b %Y, %I:%M %p") }}
-        </p>
+            <div class="enroll-date">
+                <strong>Enrolled on:</strong><br>
+                {{ course.enrolled_at.strftime("%d %b %Y, %I:%M %p") }}
+            </div>
 
-        <a href="{{ course.course_link }}" target="_blank">Visit Course</a><br>
+            <div class="card-actions">
+                <a href="{{ course.course_link }}" target="_blank" class="visit-link">
+                    Visit Course →
+                </a>
 
-        <form
-        action="{{ url_for('unenroll', course_id=course.id) }}"
-        method="post"
-        onsubmit="return confirmUnenroll();"
-        style="margin-top:8px;"
-    >
-        <button type="submit" class="btn btn-danger">
-            Unenroll
-        </button>
-    </form>
+                <form
+                    action="{{ url_for('unenroll', course_id=course.id) }}"
+                    method="post"
+                    onsubmit="return confirmUnenroll();"
+                >
+                    <button type="submit" class="btn-danger">
+                        Unenroll
+                    </button>
+                </form>
+            </div>
+        </div>
+
     </div>
     {% endfor %}
 </div>
 {% else %}
-<p>You have not enrolled in any courses yet.</p>
+<p class="empty">You have not enrolled in any courses yet 😕</p>
 {% endif %}
 
-<br>
-<a href="/student/dashboard">Back to Dashboard</a>
+<a href="/student/dashboard" class="back-link">⬅ Back to Dashboard</a>
 
 </body>
 </html>

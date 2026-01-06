@@ -1,6 +1,78 @@
+/* GLOBAL */
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    background: #f5f7fb;
+    color: #333;
+}
+
+/* HERO */
+.hero {
+    height: 80vh;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+}
+
+/* FEATURES */
+.features {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    padding: 60px 10%;
+}
+
+.feature-card {
+    background: white;
+    padding: 25px;
+    width: 280px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: transform 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+}
+
+.info h2 {
+    margin-bottom: 15px;
+}
+
+/* FOOTER */
+.footer {
+    background: #111827;
+    color: #d1d5db;
+    padding: 25px;
+    text-align: center;
+}
+
+.footer-links {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #9ca3af;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: white;
 }
 
 header h2 {
@@ -111,6 +183,11 @@ nav a:hover {
 }
 
 .btn-primary {
-    background-color: #0d6efd;
-    color: white;
+    padding: 12px 30px;
+    background: white;
+    color: #4f46e5;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: 0.3s;
 }

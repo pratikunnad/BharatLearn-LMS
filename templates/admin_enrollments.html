@@ -1,46 +1,158 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Admin – Course Enrollments</h2>
+<style>
+/* PAGE CONTAINER */
+.admin-enrollments {
+    padding: 30px;
+}
 
-{% if enrollments %}
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
-    <thead>
-        <tr>
-            <th>Student Name</th>
-            <th>Email</th>
-            <th>Course</th>
-            <th>Enrolled On</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for e in enrollments %}
-        <tr>
-            <td>{{ e.student_name }}</td>
-            <td>{{ e.student_email }}</td>
-            <td>{{ e.course_title }}</td>
-            <td>{{ e.enrolled_at.strftime("%d %b %Y") }}</td>
-            <td>
-                <form
-                    action="{{ url_for('admin_unenroll', enrollment_id=e.enrollment_id) }}"
-                    method="post"
-                    onsubmit="return confirm('Are you sure you want to unenroll this student?');"
-                >
-                    <button type="submit" class="btn btn-danger">
-                        Unenroll
-                    </button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>No enrollments found.</p>
-{% endif %}
+/* PAGE TITLE */
+.admin-enrollments h2 {
+    margin-bottom: 20px;
+    color: #0a3d62;
+}
 
-<br>
-<a href="/admin/dashboard">⬅ Back to Admin Dashboard</a>
+/* TABLE */
+.enrollment-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.enrollment-table th {
+    background: #0a3d62;
+    color: #ffffff;
+    padding: 14px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.enrollment-table td {
+    padding: 14px;
+    font-size: 14px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.enrollment-table tr:hover {
+    background: #f9fbff;
+}
+
+/* BADGES */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-course {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.badge-date {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+/* BUTTON */
+.btn-danger {
+    background: #dc3545;
+    color: #ffffff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+
+.btn-danger:hover {
+    background: #b52a37;
+}
+
+/* EMPTY STATE */
+.empty-state {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+
+/* BACK LINK */
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #0a3d62;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+</style>
+
+<div class="admin-enrollments">
+
+    <h2>📋 Admin – Course Enrollments</h2>
+
+    {% if enrollments %}
+    <table class="enrollment-table">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Course</th>
+                <th>Enrolled On</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in enrollments %}
+            <tr>
+                <td><strong>{{ e.student_name }}</strong></td>
+                <td>{{ e.student_email }}</td>
+                <td>
+                    <span class="badge badge-course">
+                        {{ e.course_title }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge badge-date">
+                        {{ e.enrolled_at.strftime("%d %b %Y") }}
+                    </span>
+                </td>
+                <td>
+                    <form
+                        action="{{ url_for('admin_unenroll', enrollment_id=e.enrollment_id) }}"
+                        method="post"
+                        onsubmit="return confirm('Are you sure you want to unenroll this student?');"
+                    >
+                        <button type="submit" class="btn-danger">
+                            Unenroll
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="empty-state">
+            <p>No enrollments found.</p>
+        </div>
+    {% endif %}
+
+    <a href="/admin/dashboard" class="back-link">⬅ Back to Admin Dashboard</a>
+
+</div>
 
 {% endblock %}

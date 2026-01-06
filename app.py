@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from flask import session
 import mysql.connector
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -20,8 +21,19 @@ def get_db_connection():
 # --------------------
 # ROUTES
 # --------------------
+
+@app.context_processor
+def inject_year():
+    return {"current_year": datetime.now().year}
+
+
 @app.route("/")
 def home():
+    if session.get("user_id"):
+        if session.get("role") == "student":
+            return redirect("/student/dashboard")
+        elif session.get("role") == "admin":
+            return redirect("/admin/dashboard")
     return render_template("home.html")
 
 
@@ -322,16 +334,7 @@ def add_course():
 
 @app.route("/student/courses")
 def view_courses():
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("SELECT * FROM courses")
-    courses = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
-    return render_template("student_courses.html", courses=courses)
+    return redirect(url_for("courses"))
 
 @app.route("/admin/dashboard")
 def admin_dashboard():

@@ -1,59 +1,139 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Course | BharatLearn</title>
-</head>
-<body>
 
-<h2>Add New Course</h2>
+<style>
+/* PAGE WRAPPER */
+.add-course-container {
+    max-width: 700px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 35px 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
 
-<form method="POST">
-    <label>Course Title</label><br>
-    <input type="text" name="title" required><br><br>
+/* TITLE */
+.add-course-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #0a3d62;
+}
 
-    <label>Description</label><br>
-    <textarea name="description" required></textarea><br><br>
+/* FORM */
+.add-course-container label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+}
 
-    <label>Programming Language</label><br>
-    <select name="programming_language">
-        <option value="Python">Python</option>
-        <option value="Java">Java</option>
-        <option value="Web">Web Development</option>
-        <option value="C++">C++</option>
-    </select><br><br>
+.add-course-container input,
+.add-course-container textarea,
+.add-course-container select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 18px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
 
-    <label>Audio Language</label><br>
-    <select name="audio_language">
-        <option value="English">English</option>
-        <option value="Hindi">Hindi</option>
-    </select><br><br>
+.add-course-container input:focus,
+.add-course-container textarea:focus,
+.add-course-container select:focus {
+    outline: none;
+    border-color: #0a3d62;
+}
 
-    <label>Difficulty</label><br>
-    <select name="difficulty">
-        <option value="Beginner">Beginner</option>
-        <option value="Intermediate">Intermediate</option>
-        <option value="Advance">Advanced</option>
-    </select><br><br>
+/* TEXTAREA */
+.add-course-container textarea {
+    resize: vertical;
+    min-height: 90px;
+}
 
-    <label>Source (Tutor / Platform)</label><br>
-    <input type="text" name="source" placeholder="Udemy, Coursera, YouTube"><br><br>
+/* BUTTON */
+.add-course-container button {
+    width: 100%;
+    padding: 12px;
+    background: #0a3d62;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+}
 
-    <label>Course Link (External URL)</label><br>
-    <input type="url" name="course_link" required><br><br>
+.add-course-container button:hover {
+    background: #094067;
+    transform: translateY(-1px);
+}
 
-    <label>Image URL</label><br>
-    <input type="text" name="image_url"><br><br>
+/* BACK LINK */
+.back-link {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #0a3d62;
+    font-weight: 500;
+}
 
-    <button type="submit">Add Course</button>
-</form>
+.back-link:hover {
+    text-decoration: underline;
+}
+</style>
 
-<br>
-<a href="/admin/dashboard">Back to Dashboard</a>
+<div class="add-course-container">
 
-</body>
-</html>
-   
+    <h2>➕ Add New Course</h2>
+
+    <form method="POST">
+
+        <label>Course Title</label>
+        <input type="text" name="title" required>
+
+        <label>Description</label>
+        <textarea name="description" required></textarea>
+
+        <label>Programming Language</label>
+        <select name="programming_language">
+            <option value="Python">Python</option>
+            <option value="Java">Java</option>
+            <option value="Web">Web Development</option>
+            <option value="C++">C++</option>
+        </select>
+
+        <label>Audio Language</label>
+        <select name="audio_language">
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+        </select>
+
+        <label>Difficulty</label>
+        <select name="difficulty">
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advance">Advanced</option>
+        </select>
+
+        <label>Source (Tutor / Platform)</label>
+        <input type="text" name="source" placeholder="Udemy, Coursera, YouTube">
+
+        <label>Course Link (External URL)</label>
+        <input type="url" name="course_link" required>
+
+        <label>Image URL</label>
+        <input type="text" name="image_url">
+
+        <button type="submit">Add Course</button>
+    </form>
+
+    <a href="/admin/dashboard" class="back-link">⬅ Back to Dashboard</a>
+
+</div>
+
 {% endblock %}

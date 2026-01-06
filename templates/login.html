@@ -1,22 +1,139 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h2>Login to BharatLearn</h2>
 
-<form method="POST">
-    <input type="email" name="email" placeholder="Email" required><br><br>
-    <input type="password" name="password" placeholder="Password" required><br><br>
-    <button type="submit">Login</button>
-</form>
+<style>
+/* PAGE WRAPPER */
+.login-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-<p>
-    New student?
-    <a href="{{ url_for('register') }}">Register here</a>
-</p>
+/* LOGIN CARD */
+.login-card {
+    background: #ffffff;
+    width: 380px;
+    padding: 35px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    text-align: center;
+}
 
+/* TITLE */
+.login-card h2 {
+    margin-bottom: 8px;
+    color: #0a3d62;
+}
 
-{% if error %}
-<p style="color:red;">{{ error }}</p>
-{% endif %}
-<a href="/">Back to Home</a>
+.login-card p.subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* FORM */
+.login-card form {
+    text-align: left;
+}
+
+.login-card label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 12px;
+    margin: 6px 0 18px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.login-card input:focus {
+    outline: none;
+    border-color: #0a3d62;
+}
+
+/* BUTTON */
+.login-card button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.login-card button:hover {
+    transform: translateY(-2px);
+}
+
+/* ERROR */
+.error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* FOOTER LINKS */
+.login-footer {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.login-footer a {
+    color: #0a3d62;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<div class="login-page">
+    <div class="login-card">
+
+        <h2>Welcome Back 👋</h2>
+        <p class="subtitle">Login to continue learning on BharatLearn</p>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter your email" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter your password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="login-footer">
+            <p>
+                New student?
+                <a href="{{ url_for('register') }}">Register here</a>
+            </p>
+            <p>
+                <a href="/">← Back to Home</a>
+            </p>
+        </div>
+
+    </div>
+</div>
+
 {% endblock %}
