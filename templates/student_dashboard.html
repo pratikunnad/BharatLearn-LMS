@@ -1,42 +1,104 @@
 {% extends "base.html" %}
-
 {% block content %}
 
 <style>
-/* PAGE WRAPPER */
-.student-dashboard {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
+/* ===== DASHBOARD LAYOUT ===== */
+.dashboard-layout {
+    display: flex;
+    min-height: calc(100vh - 80px);
+    background: #f7f9fc;
 }
 
-/* HEADER */
-.student-dashboard h2 {
-    font-size: 28px;
-    color: #0a3d62;
-    margin-bottom: 8px;
+body.dark .dashboard-layout {
+    background: #0f172a;
 }
 
-.student-dashboard p {
-    color: #555;
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 240px;
+    background: #0a3d62;
+    color: #ffffff;
+    padding: 30px 20px;
+}
+
+body.dark .sidebar {
+    background: #020617;
+}
+
+.sidebar h3 {
+    font-size: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: rgba(255,255,255,0.15);
+}
+
+.sidebar .logout {
+    margin-top: 40px;
+    background: rgba(255,255,255,0.1);
+}
+
+/* ===== MAIN CONTENT ===== */
+.dashboard-content {
+    flex: 1;
+    padding: 40px;
+}
+
+.dashboard-header {
     margin-bottom: 30px;
 }
 
-/* DASHBOARD GRID */
+.dashboard-header h2 {
+    font-size: 28px;
+    color: #0a3d62;
+    margin-bottom: 6px;
+}
+
+body.dark .dashboard-header h2 {
+    color: #60a5fa;
+}
+
+.dashboard-header p {
+    color: #555;
+}
+
+body.dark .dashboard-header p {
+    color: #cbd5f5;
+}
+
+/* ===== CARDS ===== */
 .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 25px;
 }
 
-/* CARD */
 .dashboard-card {
     background: #ffffff;
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 8px 22px rgba(0,0,0,0.08);
     transition: transform 0.2s, box-shadow 0.2s;
-    text-align: center;
+}
+
+body.dark .dashboard-card {
+    background: #020617;
+    box-shadow: 0 8px 22px rgba(255,255,255,0.05);
 }
 
 .dashboard-card:hover {
@@ -44,9 +106,13 @@
     box-shadow: 0 12px 28px rgba(0,0,0,0.12);
 }
 
-.dashboard-card h3 {
-    color: #0a3d62;
+.dashboard-card h4 {
     margin-bottom: 10px;
+    color: #0a3d62;
+}
+
+body.dark .dashboard-card h4 {
+    color: #60a5fa;
 }
 
 .dashboard-card p {
@@ -55,7 +121,10 @@
     margin-bottom: 18px;
 }
 
-/* BUTTON */
+body.dark .dashboard-card p {
+    color: #cbd5f5;
+}
+
 .dashboard-card a {
     display: inline-block;
     padding: 10px 18px;
@@ -64,54 +133,49 @@
     text-decoration: none;
     border-radius: 6px;
     font-size: 14px;
-    font-weight: 500;
     transition: background 0.2s;
 }
 
 .dashboard-card a:hover {
     background: #08324f;
 }
-
-/* LOGOUT */
-.logout-section {
-    margin-top: 40px;
-    text-align: center;
-}
-
-.logout-section a {
-    color: #d63031;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.logout-section a:hover {
-    text-decoration: underline;
-}
 </style>
 
-<div class="student-dashboard">
-    <h2>Student Dashboard 🎓</h2>
-    <p>Welcome to BharatLearn. Manage your learning journey from here.</p>
+<div class="dashboard-layout">
 
-    <div class="dashboard-cards">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h3>BharatLearn</h3>
 
-        <div class="dashboard-card">
-            <h3>📚 Explore Courses</h3>
-            <p>Browse available courses and enroll in new skills.</p>
-            <a href="/courses">View Courses</a>
+        <a href="/student/dashboard" class="active">Dashboard</a>
+        <a href="/courses">Explore Courses</a>
+        <a href="/my-enrollments">My Enrollments</a>
+
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-content">
+        <div class="dashboard-header">
+            <h2>Student Dashboard</h2>
+            <p>Manage your learning activities and track your progress.</p>
         </div>
 
-        <div class="dashboard-card">
-            <h3>🎯 My Enrollments</h3>
-            <p>View courses you are enrolled in and continue learning.</p>
-            <a href="/my-enrollments">My Enrollments</a>
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <h4>Explore Courses</h4>
+                <p>Browse all available courses and enroll in new skills.</p>
+                <a href="/courses">View Courses</a>
+            </div>
+
+            <div class="dashboard-card">
+                <h4>My Enrollments</h4>
+                <p>Access courses you are currently enrolled in.</p>
+                <a href="/my-enrollments">View Enrollments</a>
+            </div>
         </div>
+    </main>
 
-    </div>
-
-    <div class="logout-section">
-        <a href="/logout">🚪 Logout</a>
-    </div>
 </div>
 
 {% endblock %}

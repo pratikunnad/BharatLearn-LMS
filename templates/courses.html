@@ -235,9 +235,18 @@ button:hover {
 </div>
 
 {% if session.get("role") == "student" %}
-    <a href="/student/dashboard">⬅ Back to Dashboard</a>
+    <div class="back-btn-wrapper">
+    <a href="/student/dashboard" class="back-btn">
+        ← Back to Dashboard
+    </a>
+</div>
 {% elif session.get("role") == "admin" %}
-    <a href="/admin/dashboard">⬅ Back to Dashboard</a>
+    <div class="back-btn-wrapper">
+    <a href="/admin/dashboard" class="back-btn">
+        ← Back to Admin Dashboard
+    </a>
+</div>
+
 {% else %}
     <a href="/">⬅ Back to Home</a>
 {% endif %}

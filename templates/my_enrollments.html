@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>My Enrollments | BharatLearn</title>
+{% extends "base.html" %}
+
+{% block content %}
 
     <style>
         /* RESET */
@@ -146,15 +144,12 @@
             text-decoration: underline;
         }
     </style>
-</head>
 
 <script>
 function confirmUnenroll() {
     return confirm("Are you sure you want to unenroll from this course?");
 }
 </script>
-
-<body>
 
 <h2>🎓 My Enrolled Courses</h2>
 
@@ -208,7 +203,11 @@ function confirmUnenroll() {
 <p class="empty">You have not enrolled in any courses yet 😕</p>
 {% endif %}
 
-<a href="/student/dashboard" class="back-link">⬅ Back to Dashboard</a>
+<div class="back-btn-wrapper">
+    <a href="/student/dashboard" class="back-btn">
+        ← Back to Dashboard
+    </a>
+</div>
 
-</body>
-</html>
+
+{% endblock %}
