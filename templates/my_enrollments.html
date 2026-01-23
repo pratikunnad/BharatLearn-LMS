@@ -137,27 +137,28 @@ h2 {
     margin-top: 40px;
 }
 
-/* BACK TO DASHBOARD BUTTON */
+/* ===== BACK BUTTON ===== */
 .back-btn-wrapper {
+    margin-top: 40px;
     text-align: center;
-    margin: 40px 0;
 }
 
 .back-btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 12px 26px;
-    background: #0a3d62;
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
     color: #ffffff;
-    border-radius: 8px;
+    border-radius: 30px;
     text-decoration: none;
     font-weight: 600;
-    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .back-btn:hover {
-    background: #08324f;
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
 /* DARK MODE */

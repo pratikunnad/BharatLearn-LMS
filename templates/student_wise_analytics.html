@@ -151,32 +151,28 @@ body.dark td:last-child {
     color: #cbd5f5;
 }
 
-/* BACK BUTTON */
-.back-link {
+/* ===== BACK BUTTON ===== */
+.back-btn-wrapper {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.back-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-top: 25px;
-    padding: 10px 18px;
-    background: #0a3d62;
+    padding: 12px 26px;
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
     color: #ffffff;
+    border-radius: 30px;
     text-decoration: none;
     font-weight: 600;
-    border-radius: 6px;
-    transition: background 0.2s, transform 0.15s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.back-link:hover {
-    background: #08324f;
+.back-btn:hover {
     transform: translateY(-2px);
-}
-
-body.dark .back-link {
-    background: #1e40af;
-}
-
-body.dark .back-link:hover {
-    background: #1d4ed8;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 </style>
 
@@ -233,9 +229,11 @@ body.dark .back-link:hover {
         </table>
     </div>
 
-    <a href="/admin/dashboard" class="back-link">
-        ← Back to Admin Dashboard
-    </a>
+    <div class="back-btn-wrapper">
+        <a href="/admin/dashboard" class="back-btn">
+            ← Back to Admin Dashboard
+        </a>
+    </div>
 
 </div>
 

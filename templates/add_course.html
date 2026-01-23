@@ -141,24 +141,28 @@ body.dark .help-text {
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* FOOTER ACTIONS */
-.form-footer {
-    margin-top: 28px;
+/* ===== BACK BUTTON ===== */
+.back-btn-wrapper {
+    margin-top: 40px;
     text-align: center;
 }
 
-.form-footer a {
-    color: #0a3d62;
-    font-weight: 500;
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 26px;
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    color: #ffffff;
+    border-radius: 30px;
     text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-body.dark .form-footer a {
-    color: #60a5fa;
-}
-
-.form-footer a:hover {
-    text-decoration: underline;
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 </style>
 
@@ -209,7 +213,7 @@ body.dark .form-footer a {
                     <select name="difficulty">
                         <option value="Beginner">Beginner</option>
                         <option value="Intermediate">Intermediate</option>
-                        <option value="Advance">Advanced</option>
+                        <option value="Advance">Advance</option>
                     </select>
                 </div>
 
@@ -235,9 +239,11 @@ body.dark .form-footer a {
         </form>
 
         <!-- FOOTER -->
-        <div class="form-footer">
-            <a href="/admin/dashboard">← Back to Admin Dashboard</a>
-        </div>
+        <div class="back-btn-wrapper">
+        <a href="/admin/dashboard" class="back-btn">
+            ← Back to Admin Dashboard
+        </a>
+    </div>
 
     </div>
 </div>
