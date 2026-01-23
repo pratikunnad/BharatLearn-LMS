@@ -2,100 +2,156 @@
 {% block content %}
 
 <style>
-/* PAGE WRAPPER */
+/* ================= LOGIN PAGE ================= */
 .login-page {
-    min-height: 80vh;
+    min-height: 85vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px;
 }
 
-/* LOGIN CARD */
+/* ================= LOGIN CARD ================= */
 .login-card {
-    background: #ffffff;
-    width: 380px;
-    padding: 35px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    width: 100%;
+    max-width: 400px;
+    padding: 35px 32px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    animation: fadeUp 0.45s ease;
+}
+
+body.dark .login-card {
+    background: rgba(2, 6, 23, 0.9);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+/* ================= ANIMATION ================= */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= TITLE ================= */
+.login-header {
     text-align: center;
-}
-
-/* TITLE */
-.login-card h2 {
-    margin-bottom: 8px;
-    color: #0a3d62;
-}
-
-.login-card p.subtitle {
-    font-size: 14px;
-    color: #666;
     margin-bottom: 25px;
 }
 
-/* FORM */
+.login-header h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0a3d62;
+}
+
+body.dark .login-header h2 {
+    color: #60a5fa;
+}
+
+.login-header p {
+    font-size: 14px;
+    opacity: 0.85;
+    margin-top: 6px;
+}
+
+/* ================= FORM ================= */
 .login-card form {
-    text-align: left;
+    margin-top: 20px;
 }
 
 .login-card label {
+    display: block;
     font-size: 14px;
     font-weight: 600;
-    color: #333;
+    margin-bottom: 6px;
 }
 
-.login-card input {
+/* Input wrapper for icons */
+.input-group {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.input-group input {
     width: 100%;
-    padding: 12px;
-    margin: 6px 0 18px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    padding: 12px 44px 12px 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
     font-size: 14px;
+    transition: border 0.2s, box-shadow 0.2s;
 }
 
-.login-card input:focus {
+.input-group input:focus {
     outline: none;
     border-color: #0a3d62;
+    box-shadow: 0 0 0 3px rgba(10,61,98,0.15);
 }
 
-/* BUTTON */
+/* Show password button */
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.7;
+}
+
+.toggle-password:hover {
+    opacity: 1;
+}
+
+/* ================= BUTTON ================= */
 .login-card button {
     width: 100%;
-    padding: 12px;
+    padding: 13px;
+    margin-top: 8px;
+    border-radius: 8px;
+    border: none;
     background: linear-gradient(135deg, #0a3d62, #1e90ff);
     color: white;
     font-size: 15px;
     font-weight: 600;
-    border: none;
-    border-radius: 6px;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .login-card button:hover {
     transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.25);
 }
 
-/* ERROR */
+/* ================= ERROR ================= */
 .error {
-    background: #f8d7da;
-    color: #721c24;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 15px;
+    background: #fdecea;
+    color: #7f1d1d;
+    padding: 10px 12px;
+    border-radius: 8px;
     font-size: 14px;
+    margin-bottom: 16px;
     text-align: center;
 }
 
-/* FOOTER LINKS */
+/* ================= FOOTER ================= */
 .login-footer {
-    margin-top: 20px;
+    margin-top: 22px;
+    text-align: center;
     font-size: 14px;
 }
 
 .login-footer a {
     color: #0a3d62;
+    font-weight: 600;
     text-decoration: none;
-    font-weight: 500;
 }
 
 .login-footer a:hover {
@@ -106,27 +162,39 @@
 <div class="login-page">
     <div class="login-card">
 
-        <h2>Welcome Back 👋</h2>
-        <p class="subtitle">Login to continue learning on BharatLearn</p>
+        <!-- HEADER -->
+        <div class="login-header">
+            <h2>Welcome Back</h2>
+            <p>Login to continue learning on BharatLearn</p>
+        </div>
 
+        <!-- ERROR MESSAGE -->
         {% if error %}
             <div class="error">{{ error }}</div>
         {% endif %}
 
+        <!-- LOGIN FORM -->
         <form method="POST">
+
             <label>Email</label>
-            <input type="email" name="email" placeholder="Enter your email" required>
+            <div class="input-group">
+                <input type="email" name="email" placeholder="Enter your email" required>
+            </div>
 
             <label>Password</label>
-            <input type="password" name="password" placeholder="Enter your password" required>
+            <div class="input-group">
+                <input type="password" name="password" id="password" placeholder="Enter your password" required>
+                <span class="toggle-password" onclick="togglePassword()">👁️</span>
+            </div>
 
             <button type="submit">Login</button>
         </form>
 
+        <!-- FOOTER LINKS -->
         <div class="login-footer">
             <p>
                 New student?
-                <a href="{{ url_for('register') }}">Register here</a>
+                <a href="{{ url_for('register') }}">Create an account</a>
             </p>
             <p>
                 <a href="/">← Back to Home</a>
@@ -135,5 +203,13 @@
 
     </div>
 </div>
+
+<script>
+/* Show / Hide Password */
+function togglePassword() {
+    const pwd = document.getElementById("password");
+    pwd.type = pwd.type === "password" ? "text" : "password";
+}
+</script>
 
 {% endblock %}

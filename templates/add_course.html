@@ -1,143 +1,245 @@
 {% extends "base.html" %}
-
 {% block content %}
 
 <style>
+/* =====================================================
+   ADD COURSE – ADMIN FORM (BharatLearn)
+   ===================================================== */
+
 /* PAGE WRAPPER */
-.add-course-container {
-    max-width: 700px;
-    margin: 40px auto;
+.add-course-wrapper {
+    max-width: 760px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+/* CARD */
+.add-course-card {
     background: #ffffff;
-    padding: 35px 40px;
-    border-radius: 10px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    padding: 38px 42px;
+    border-radius: 14px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
 }
 
-/* TITLE */
-.add-course-container h2 {
+/* DARK MODE */
+body.dark .add-course-card {
+    background: #020617;
+    box-shadow: 0 12px 35px rgba(255,255,255,0.05);
+}
+
+/* HEADER */
+.add-course-header {
     text-align: center;
-    margin-bottom: 25px;
-    color: #0a3d62;
+    margin-bottom: 35px;
 }
 
-/* FORM */
-.add-course-container label {
-    font-weight: 600;
+.add-course-header h2 {
+    font-size: 26px;
+    color: #0a3d62;
+    margin-bottom: 6px;
+}
+
+body.dark .add-course-header h2 {
+    color: #60a5fa;
+}
+
+.add-course-header p {
+    font-size: 14px;
+    color: #666;
+}
+
+body.dark .add-course-header p {
+    color: #cbd5f5;
+}
+
+/* FORM GROUP */
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
     display: block;
+    font-size: 14px;
+    font-weight: 600;
     margin-bottom: 6px;
     color: #333;
 }
 
-.add-course-container input,
-.add-course-container textarea,
-.add-course-container select {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin-bottom: 18px;
-    font-size: 14px;
-    transition: border-color 0.2s;
+body.dark .form-group label {
+    color: #e5e7eb;
 }
 
-.add-course-container input:focus,
-.add-course-container textarea:focus,
-.add-course-container select:focus {
+/* INPUTS */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+body.dark .form-group input,
+body.dark .form-group textarea,
+body.dark .form-group select {
+    background: #020617;
+    border-color: #1e293b;
+    color: #e5e7eb;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
     outline: none;
     border-color: #0a3d62;
+    box-shadow: 0 0 0 2px rgba(10,61,98,0.15);
 }
 
 /* TEXTAREA */
-.add-course-container textarea {
+.form-group textarea {
     resize: vertical;
-    min-height: 90px;
+    min-height: 100px;
 }
 
-/* BUTTON */
-.add-course-container button {
+/* HELP TEXT */
+.help-text {
+    font-size: 12px;
+    margin-top: 4px;
+    color: #6b7280;
+}
+
+body.dark .help-text {
+    color: #9ca3af;
+}
+
+/* TWO COLUMN GRID */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+/* SUBMIT BUTTON */
+.submit-btn {
     width: 100%;
-    padding: 12px;
-    background: #0a3d62;
-    color: white;
+    margin-top: 10px;
+    padding: 14px;
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    color: #ffffff;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.add-course-container button:hover {
-    background: #094067;
-    transform: translateY(-1px);
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* BACK LINK */
-.back-link {
-    display: block;
-    margin-top: 20px;
+/* FOOTER ACTIONS */
+.form-footer {
+    margin-top: 28px;
     text-align: center;
-    text-decoration: none;
+}
+
+.form-footer a {
     color: #0a3d62;
     font-weight: 500;
+    text-decoration: none;
 }
 
-.back-link:hover {
+body.dark .form-footer a {
+    color: #60a5fa;
+}
+
+.form-footer a:hover {
     text-decoration: underline;
 }
 </style>
 
-<div class="add-course-container">
+<div class="add-course-wrapper">
+    <div class="add-course-card">
 
-    <h2>➕ Add New Course</h2>
+        <!-- HEADER -->
+        <div class="add-course-header">
+            <h2>Add New Course</h2>
+            <p>Create and publish a new learning resource for students</p>
+        </div>
 
-    <form method="POST">
+        <!-- FORM -->
+        <form method="POST">
 
-        <label>Course Title</label>
-        <input type="text" name="title" required>
+            <div class="form-group">
+                <label>Course Title</label>
+                <input type="text" name="title" placeholder="e.g. Python for Beginners" required>
+            </div>
 
-        <label>Description</label>
-        <textarea name="description" required></textarea>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" placeholder="Brief overview of what students will learn" required></textarea>
+            </div>
 
-        <label>Programming Language</label>
-        <select name="programming_language">
-            <option value="Python">Python</option>
-            <option value="Java">Java</option>
-            <option value="Web">Web Development</option>
-            <option value="C++">C++</option>
-        </select>
+            <div class="form-grid">
 
-        <label>Audio Language</label>
-        <select name="audio_language">
-            <option value="English">English</option>
-            <option value="Hindi">Hindi</option>
-        </select>
+                <div class="form-group">
+                    <label>Programming Language</label>
+                    <select name="programming_language">
+                        <option value="Python">Python</option>
+                        <option value="Java">Java</option>
+                        <option value="Web">Web Development</option>
+                        <option value="C++">C++</option>
+                    </select>
+                </div>
 
-        <label>Difficulty</label>
-        <select name="difficulty">
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advance">Advanced</option>
-        </select>
+                <div class="form-group">
+                    <label>Audio Language</label>
+                    <select name="audio_language">
+                        <option value="English">English</option>
+                        <option value="Hindi">Hindi</option>
+                    </select>
+                </div>
 
-        <label>Source (Tutor / Platform)</label>
-        <input type="text" name="source" placeholder="Udemy, Coursera, YouTube">
+                <div class="form-group">
+                    <label>Difficulty Level</label>
+                    <select name="difficulty">
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advance">Advanced</option>
+                    </select>
+                </div>
 
-        <label>Course Link (External URL)</label>
-        <input type="url" name="course_link" required>
+                <div class="form-group">
+                    <label>Source / Platform</label>
+                    <input type="text" name="source" placeholder="Udemy, Coursera, YouTube">
+                </div>
 
-        <label>Image URL</label>
-        <input type="text" name="image_url">
+            </div>
 
-        <button type="submit">Add Course</button>
-    </form>
+            <div class="form-group">
+                <label>Course Link (External URL)</label>
+                <input type="url" name="course_link" placeholder="https://example.com/course" required>
+                <div class="help-text">Students will be redirected to this link</div>
+            </div>
 
-    <div class="back-btn-wrapper">
-    <a href="/admin/dashboard" class="back-btn">
-        ← Back to Admin Dashboard
-    </a>
-</div>
+            <div class="form-group">
+                <label>Image URL (Optional)</label>
+                <input type="text" name="image_url" placeholder="https://image-link.jpg">
+            </div>
 
+            <button type="submit" class="submit-btn">Add Course</button>
+        </form>
+
+        <!-- FOOTER -->
+        <div class="form-footer">
+            <a href="/admin/dashboard">← Back to Admin Dashboard</a>
+        </div>
+
+    </div>
 </div>
 
 {% endblock %}

@@ -1,148 +1,244 @@
 {% extends "base.html" %}
-
 {% block content %}
+
 <style>
-/* DASHBOARD LAYOUT */
-.admin-container {
+/* ================= ROOT ================= */
+.admin-wrapper {
     display: flex;
-    min-height: 85vh;
+    min-height: calc(100vh - 80px);
+    background: #f7f9fc;
 }
 
-/* SIDEBAR */
-.sidebar {
+body.dark .admin-wrapper {
+    background: #0f172a;
+}
+
+/* ================= SIDEBAR ================= */
+.admin-sidebar {
     width: 260px;
-    background: #0a3d62;
+    background: linear-gradient(180deg, #0a3d62, #083358);
     color: #fff;
-    padding: 25px 20px;
+    padding: 30px 20px;
 }
 
-.sidebar h2 {
-    font-size: 22px;
-    margin-bottom: 25px;
+body.dark .admin-sidebar {
+    background: #020617;
+}
+
+.admin-sidebar h2 {
     text-align: center;
+    margin-bottom: 35px;
+    font-size: 22px;
+    font-weight: 700;
 }
 
-.sidebar a {
-    display: block;
+.admin-sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding: 12px 15px;
     margin-bottom: 10px;
     color: #ffffff;
     text-decoration: none;
-    border-radius: 6px;
-    transition: background 0.2s;
-    font-weight: 500;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: background 0.25s, transform 0.2s;
 }
 
-.sidebar a:hover {
+.admin-sidebar a:hover,
+.admin-sidebar a.active {
     background: rgba(255,255,255,0.15);
+    transform: translateX(4px);
 }
 
-/* MAIN CONTENT */
-.main-content {
+.admin-sidebar .logout {
+    margin-top: 40px;
+    background: rgba(255,255,255,0.1);
+}
+
+/* ================= MAIN ================= */
+.admin-main {
     flex: 1;
-    padding: 30px 40px;
-    background: #f7f9fc;
+    padding: 40px;
 }
 
-/* HEADER */
-.dashboard-header {
-    margin-bottom: 25px;
+/* ================= HEADER ================= */
+.admin-header {
+    margin-bottom: 30px;
 }
 
-.dashboard-header h2 {
+.admin-header h2 {
     font-size: 28px;
     color: #0a3d62;
 }
 
-.dashboard-header p {
-    margin-top: 5px;
+body.dark .admin-header h2 {
+    color: #60a5fa;
+}
+
+.admin-header p {
+    margin-top: 6px;
     color: #555;
 }
 
-/* COURSE LIST */
-.course-list {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+body.dark .admin-header p {
+    color: #cbd5f5;
 }
 
-.course-list h3 {
-    margin-bottom: 15px;
+/* ================= STATS ================= */
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+body.dark .stat-card {
+    background: #020617;
+}
+
+.stat-card h4 {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.stat-card span {
+    font-size: 28px;
+    font-weight: 700;
     color: #0a3d62;
 }
 
-.course-list ul {
+body.dark .stat-card span {
+    color: #60a5fa;
+}
+
+/* ================= COURSE LIST ================= */
+.course-box {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+body.dark .course-box {
+    background: #020617;
+}
+
+.course-box h3 {
+    margin-bottom: 20px;
+    color: #0a3d62;
+}
+
+body.dark .course-box h3 {
+    color: #60a5fa;
+}
+
+.course-box ul {
     list-style: none;
     padding-left: 0;
 }
 
-.course-list li {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
+.course-box li {
+    padding: 14px 10px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-.course-list li:last-child {
+body.dark .course-box li {
+    border-color: #1e293b;
+}
+
+.course-box li:last-child {
     border-bottom: none;
 }
 
-.course-list strong {
-    color: #333;
+.course-box strong {
+    color: #1f2937;
 }
 
-/* LOGOUT */
-.logout {
-    margin-top: 30px;
+body.dark .course-box strong {
+    color: #e5e7eb;
 }
 
-.logout a {
-    color: #c0392b;
-    font-weight: 600;
-    text-decoration: none;
-}
+/* ================= MOBILE ================= */
+@media (max-width: 900px) {
+    .admin-wrapper {
+        flex-direction: column;
+    }
 
-.logout a:hover {
-    text-decoration: underline;
+    .admin-sidebar {
+        width: 100%;
+    }
 }
 </style>
 
-<div class="admin-container">
+<div class="admin-wrapper">
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="admin-sidebar">
         <h2>Admin Panel</h2>
 
-        <a href="/admin/add-course">➕ Add Course</a>
-        <a href="/courses">📚 View Courses</a>
-        <a href="{{ url_for('admin_enrollments') }}">🧾 View Enrollments</a>
-        <a href="/admin/enrollment-analytics">📊 Enrollment Analytics</a>
-        <a href="/admin/student-analytics">👨‍🎓 Student Analytics</a>
+        <a href="/admin/dashboard" class="active">Dashboard</a>
+        <a href="/admin/add-course">Add Course</a>
+        <a href="/courses">View Courses</a>
+        <a href="{{ url_for('admin_enrollments') }}">Enrollments</a>
+        <a href="/admin/enrollment-analytics">Analytics</a>
+        <a href="/admin/student-analytics">Students</a>
 
-        <div class="logout">
-            <a href="/logout">🚪 Logout</a>
-        </div>
-    </div>
+        <a href="/logout" class="logout">Logout</a>
+    </aside>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="admin-main">
 
-        <div class="dashboard-header">
+        <!-- HEADER -->
+        <div class="admin-header">
             <h2>Admin Dashboard</h2>
-            <p>Welcome Admin 👨‍💼</p>
+            <p>Manage courses, students, and analytics efficiently.</p>
         </div>
 
-        <div class="course-list">
+        <!-- STATS -->
+        <section class="admin-stats">
+            <div class="stat-card">
+                <h4>Total Courses</h4>
+                <span>{{ courses|length }}</span>
+            </div>
+
+            <div class="stat-card">
+                <h4>Total Enrollments</h4>
+                <span>{{ total_enrollments or 0 }}</span>
+            </div>
+
+            <div class="stat-card">
+                <h4>Total Students</h4>
+                <span>{{ total_students or 0 }}</span>
+            </div>
+        </section>
+
+        <!-- COURSE LIST -->
+        <section class="course-box">
             <h3>All Courses</h3>
             <ul>
                 {% for course in courses %}
                 <li>
-                    <strong>{{ course.title }}</strong> – {{ course.description }}
+                    <strong>{{ course.title }}</strong><br>
+                    <small>{{ course.description }}</small>
                 </li>
+                {% else %}
+                <li>No courses available.</li>
                 {% endfor %}
             </ul>
-        </div>
+        </section>
 
-    </div>
+    </main>
+
 </div>
 
 {% endblock %}

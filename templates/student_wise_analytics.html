@@ -6,6 +6,7 @@
 .analytics-container {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 20px;
 }
 
 /* PAGE TITLE */
@@ -14,7 +15,11 @@
     color: #0a3d62;
 }
 
-/* STATS CARDS */
+body.dark .analytics-container h2 {
+    color: #60a5fa;
+}
+
+/* STATS GRID */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -22,6 +27,7 @@
     margin-bottom: 40px;
 }
 
+/* STAT CARD */
 .stat-card {
     background: #ffffff;
     border-radius: 10px;
@@ -36,19 +42,34 @@
 }
 
 .stat-card h3 {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     color: #555;
     margin-bottom: 10px;
+    text-transform: uppercase;
 }
 
 .stat-card p {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 700;
     color: #0a3d62;
 }
 
-/* TABLE SECTION */
+/* DARK MODE STATS */
+body.dark .stat-card {
+    background: #020617;
+    box-shadow: 0 6px 18px rgba(255,255,255,0.05);
+}
+
+body.dark .stat-card h3 {
+    color: #cbd5f5;
+}
+
+body.dark .stat-card p {
+    color: #60a5fa;
+}
+
+/* TABLE CONTAINER */
 .table-container {
     background: #ffffff;
     padding: 25px;
@@ -59,6 +80,15 @@
 .table-container h3 {
     margin-bottom: 15px;
     color: #0a3d62;
+}
+
+body.dark .table-container {
+    background: #020617;
+    box-shadow: 0 6px 18px rgba(255,255,255,0.05);
+}
+
+body.dark .table-container h3 {
+    color: #60a5fa;
 }
 
 /* TABLE */
@@ -73,7 +103,7 @@ thead {
 }
 
 th, td {
-    padding: 12px 14px;
+    padding: 14px;
     text-align: center;
     font-size: 14px;
 }
@@ -90,29 +120,69 @@ td {
     color: #333;
 }
 
+/* DARK MODE TABLE */
+body.dark thead {
+    background: #020617;
+}
+
+body.dark th {
+    color: #e5e7eb;
+}
+
+body.dark td {
+    color: #cbd5f5;
+}
+
+body.dark tbody tr {
+    border-bottom: 1px solid #1e293b;
+}
+
+body.dark tbody tr:hover {
+    background: #020617;
+}
+
 /* COURSE LIST COLUMN */
 td:last-child {
     font-size: 13px;
     color: #555;
 }
 
-/* BACK LINK */
+body.dark td:last-child {
+    color: #cbd5f5;
+}
+
+/* BACK BUTTON */
 .back-link {
-    display: inline-block;
-    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 25px;
+    padding: 10px 18px;
+    background: #0a3d62;
+    color: #ffffff;
     text-decoration: none;
-    color: #0a3d62;
     font-weight: 600;
+    border-radius: 6px;
+    transition: background 0.2s, transform 0.15s;
 }
 
 .back-link:hover {
-    text-decoration: underline;
+    background: #08324f;
+    transform: translateY(-2px);
+}
+
+body.dark .back-link {
+    background: #1e40af;
+}
+
+body.dark .back-link:hover {
+    background: #1d4ed8;
 }
 </style>
 
 <div class="analytics-container">
 
-    <h2>👨‍🎓 Student‑wise Enrollment Analytics</h2>
+    <h2>Student-wise Enrollment Analytics</h2>
 
     <!-- STATS -->
     <div class="stats-grid">
@@ -139,7 +209,7 @@ td:last-child {
 
     <!-- TABLE -->
     <div class="table-container">
-        <h3>📋 Student‑wise Enrollment Details</h3>
+        <h3>Student-wise Enrollment Details</h3>
 
         <table>
             <thead>
@@ -163,7 +233,9 @@ td:last-child {
         </table>
     </div>
 
-    <a href="/admin/dashboard" class="back-link">⬅ Back to Admin Dashboard</a>
+    <a href="/admin/dashboard" class="back-link">
+        ← Back to Admin Dashboard
+    </a>
 
 </div>
 

@@ -1,91 +1,152 @@
 {% extends "base.html" %}
-
 {% block content %}
 
 <style>
-/* PAGE WRAPPER */
-.register-wrapper {
-    min-height: 80vh;
+/* =========================
+   PAGE WRAPPER
+========================= */
+.register-page {
+    min-height: 90vh;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-/* CARD */
+/* =========================
+   REGISTER CARD
+========================= */
 .register-card {
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
     background: #ffffff;
-    padding: 35px 30px;
-    border-radius: 10px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
 }
 
-/* HEADING */
-.register-card h2 {
+/* DARK MODE SUPPORT */
+body.dark .register-card {
+    background: #020617;
+}
+
+/* =========================
+   CARD HEADER
+========================= */
+.register-header {
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    padding: 30px 25px;
     text-align: center;
-    margin-bottom: 25px;
-    color: #0a3d62;
+    color: white;
 }
 
-/* FORM */
-.register-card label {
-    font-weight: 500;
+.register-header h2 {
+    margin-bottom: 6px;
+    font-size: 24px;
+}
+
+.register-header p {
     font-size: 14px;
+    opacity: 0.9;
 }
 
-.register-card input {
-    width: 100%;
-    padding: 10px 12px;
-    margin-top: 6px;
+/* =========================
+   FORM BODY
+========================= */
+.register-body {
+    padding: 30px 28px;
+}
+
+/* FORM GROUP */
+.form-group {
     margin-bottom: 16px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+}
+
+.form-group label {
+    display: block;
     font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
 }
 
-.register-card input:focus {
-    outline: none;
-    border-color: #0a3d62;
+body.dark .form-group label {
+    color: #e5e7eb;
 }
 
-/* BUTTON */
-.register-card button {
+.form-group input {
     width: 100%;
     padding: 12px;
-    background: #0a3d62;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #1e90ff;
+    box-shadow: 0 0 0 2px rgba(30,144,255,0.15);
+}
+
+/* =========================
+   PASSWORD HINT
+========================= */
+.password-hint {
+    font-size: 12px;
+    color: #666;
+    margin-top: -8px;
+    margin-bottom: 12px;
+}
+
+body.dark .password-hint {
+    color: #94a3b8;
+}
+
+/* =========================
+   SUBMIT BUTTON
+========================= */
+.register-btn {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
     color: white;
-    border: none;
-    border-radius: 6px;
     font-size: 15px;
     font-weight: 600;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.register-card button:hover {
-    background: #083358;
+.register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* MESSAGE */
+/* =========================
+   SUCCESS MESSAGE
+========================= */
 .success-msg {
     text-align: center;
-    color: green;
-    margin-top: 12px;
-    font-weight: 500;
+    color: #16a34a;
+    font-weight: 600;
+    margin-top: 15px;
 }
 
-/* FOOT LINKS */
+/* =========================
+   FOOTER LINKS
+========================= */
 .register-footer {
     text-align: center;
-    margin-top: 18px;
+    margin-top: 22px;
     font-size: 14px;
 }
 
 .register-footer a {
-    color: #0a3d62;
+    color: #1e90ff;
+    font-weight: 600;
     text-decoration: none;
-    font-weight: 500;
 }
 
 .register-footer a:hover {
@@ -93,37 +154,60 @@
 }
 </style>
 
-<div class="register-wrapper">
+<div class="register-page">
+
     <div class="register-card">
 
-        <h2>📝 Student Registration</h2>
-
-        <form method="POST">
-
-            <label>Name</label>
-            <input type="text" name="name" placeholder="Enter your name" required>
-
-            <label>Email</label>
-            <input type="email" name="email" placeholder="Enter your email" required>
-
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Create a password" required>
-
-            <label>Confirm Password</label>
-            <input type="password" name="confirm_password" placeholder="Enter Password Again" required>
-
-            <button type="submit">Create Account</button>
-        </form>
-
-        {% if message %}
-        <p class="success-msg">{{ message }}</p>
-        {% endif %}
-
-        <div class="register-footer">
-            Already registered?
-            <a href="/login">Login here</a>
+        <!-- HEADER -->
+        <div class="register-header">
+            <h2>Create Your Account</h2>
+            <p>Join BharatLearn and start learning today</p>
         </div>
 
+        <!-- FORM BODY -->
+        <div class="register-body">
+
+            <form method="POST">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Create a strong password" required>
+                </div>
+
+                <p class="password-hint">
+                    Must be at least 6 characters
+                </p>
+
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" name="confirm_password" placeholder="Re-enter password" required>
+                </div>
+
+                <button type="submit" class="register-btn">
+                    Create Account
+                </button>
+            </form>
+
+            {% if message %}
+                <p class="success-msg">{{ message }}</p>
+            {% endif %}
+
+            <div class="register-footer">
+                Already have an account?
+                <a href="/login">Login here</a>
+            </div>
+
+        </div>
     </div>
 </div>
 

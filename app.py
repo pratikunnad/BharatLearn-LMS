@@ -39,34 +39,36 @@ def home():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    error = None
+
     if request.method == "POST":
-        email = request.form["email"].strip().lower()
-        password = request.form["password"]
+        email = request.form["email"].strip()
+        password = request.form["password"].strip()
 
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
+        # ✅ Only check email
         cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
         user = cursor.fetchone()
 
         cursor.close()
         conn.close()
 
-        # ❌ Invalid email or password
-        if not user or not check_password_hash(user["password"], password):
-            flash("Invalid email or password", "danger")
-            return redirect("/login")
+        # ✅ Check password in Python
+        if user and user["password"] == password:
+            session["user_id"] = user["id"]
+            session["role"] = user["role"]
 
-        # ✅ Login success
-        session["user_id"] = user["id"]
-        session["role"] = user["role"]
-
-        if user["role"] == "admin":
-            return redirect("/admin/dashboard")
+            if user["role"] == "admin":
+                return redirect(url_for("admin_dashboard"))
+            else:
+                return redirect(url_for("student_dashboard"))
         else:
-            return redirect("/student/dashboard")
+            error = "Invalid email or password"
 
-    return render_template("login.html")
+    return render_template("login.html", error=error)
+
 
 def admin_required():
     if "role" not in session or session["role"] != "admin":
@@ -75,36 +77,40 @@ def admin_required():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    message = None
+
     if request.method == "POST":
         name = request.form["name"].strip()
-        email = request.form["email"].strip().lower()
-        password = request.form["password"]
+        email = request.form["email"].strip()
+        password = request.form["password"].strip()
+        confirm_password = request.form["confirm_password"].strip()
 
-        hashed_password = generate_password_hash(password)
+        # ❌ Password mismatch check
+        if password != confirm_password:
+            message = "Passwords do not match."
+            return render_template("register.html", message=message)
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
         try:
-            cursor.execute(
-                """
+            cursor.execute("""
                 INSERT INTO users (name, email, password, role)
                 VALUES (%s, %s, %s, 'student')
-                """,
-                (name, email, hashed_password)
-            )
-            conn.commit()
-            flash("Registration successful. Please login.", "success")
-            return redirect("/login")
+            """, (name, email, password))
 
-        except mysql.connector.IntegrityError:
-            flash("Email already exists.", "danger")
+            conn.commit()
+            message = "Registration successful. Please login."
+
+        except:
+            message = "Email already exists."
 
         finally:
             cursor.close()
             conn.close()
 
-    return render_template("register.html")
+    return render_template("register.html", message=message)
+
 
 
 @app.route("/student/dashboard")

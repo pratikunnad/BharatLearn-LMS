@@ -2,53 +2,73 @@
 {% block content %}
 
 <style>
-/* PAGE CONTAINER */
+/* ===== PAGE CONTAINER ===== */
 .admin-enrollments {
-    padding: 30px;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 10px 20px 40px;
 }
 
-/* PAGE TITLE */
+/* ===== PAGE TITLE ===== */
 .admin-enrollments h2 {
-    margin-bottom: 20px;
+    font-size: 26px;
+    margin-bottom: 25px;
     color: #0a3d62;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* TABLE */
+/* ===== TABLE WRAPPER ===== */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+/* ===== TABLE ===== */
 .enrollment-table {
     width: 100%;
     border-collapse: collapse;
     background: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    min-width: 900px;
+}
+
+.enrollment-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .enrollment-table th {
-    background: #0a3d62;
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
     color: #ffffff;
-    padding: 14px;
-    font-size: 14px;
+    padding: 15px;
+    font-size: 13px;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .enrollment-table td {
-    padding: 14px;
+    padding: 15px;
     font-size: 14px;
     text-align: center;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #eef2f7;
+    vertical-align: middle;
 }
 
 .enrollment-table tr:hover {
-    background: #f9fbff;
+    background: #f5f9ff;
 }
 
-/* BADGES */
+/* ===== BADGES ===== */
 .badge {
-    padding: 6px 12px;
+    padding: 6px 14px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
     display: inline-block;
+    white-space: nowrap;
 }
 
 .badge-course {
@@ -61,101 +81,195 @@
     color: #2e7d32;
 }
 
-/* BUTTON */
+/* ===== UNENROLL BUTTON ===== */
 .btn-danger {
-    background: #dc3545;
+    background: linear-gradient(135deg, #dc3545, #b52a37);
     color: #ffffff;
     border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
+    padding: 8px 16px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 13px;
-    transition: background 0.2s;
+    font-weight: 600;
+    transition: transform 0.15s, box-shadow 0.15s;
 }
 
 .btn-danger:hover {
-    background: #b52a37;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(220,53,69,0.35);
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+    background: #ffffff;
+    padding: 45px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    font-size: 16px;
+    color: #666;
+}
+
+/* ===== BACK BUTTON ===== */
+.back-btn-wrapper {
+    text-align: center;
+    margin-top: 35px;
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 12px 26px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(30,144,255,0.35);
+}
+
+/* ===============================
+   DARK MODE FIX – ADMIN ENROLLMENTS
+   =============================== */
+
+body.dark .admin-enrollments {
+    background: #020617;
+}
+
+/* TABLE */
+body.dark .enrollment-table {
+    background: #020617;
+    color: #e5e7eb;
+}
+
+body.dark .enrollment-table th {
+    background: linear-gradient(90deg, #1e3a8a, #2563eb);
+    color: #ffffff;
+}
+
+body.dark .enrollment-table td {
+    background: #020617;
+    color: #e5e7eb;
+    border-bottom: 1px solid #1e293b;
+}
+
+/* ROW HOVER */
+body.dark .enrollment-table tr:hover td {
+    background: #020617;
+}
+
+/* STUDENT NAME & EMAIL */
+body.dark .enrollment-table strong {
+    color: #ffffff;
+}
+
+/* BADGES */
+body.dark .badge-course {
+    background: #1e40af;
+    color: #bfdbfe;
+}
+
+body.dark .badge-date {
+    background: #064e3b;
+    color: #a7f3d0;
+}
+
+/* BUTTON */
+body.dark .btn-danger {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: #ffffff;
+}
+
+body.dark .btn-danger:hover {
+    background: linear-gradient(135deg, #b91c1c, #991b1b);
 }
 
 /* EMPTY STATE */
-.empty-state {
-    background: #ffffff;
-    padding: 40px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+body.dark .empty-state {
+    background: #020617;
+    color: #e5e7eb;
+    box-shadow: 0 8px 22px rgba(255,255,255,0.05);
 }
 
-/* BACK LINK */
-.back-link {
-    display: inline-block;
-    margin-top: 20px;
-    text-decoration: none;
-    color: #0a3d62;
-    font-weight: 500;
+/* PAGE TITLE */
+body.dark .admin-enrollments h2 {
+    color: #60a5fa;
 }
 
-.back-link:hover {
-    text-decoration: underline;
+/* BACK BUTTON */
+body.dark .back-btn {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: #ffffff;
 }
+
+body.dark .back-btn:hover {
+    background: linear-gradient(135deg, #1e40af, #1e3a8a);
+}
+
 </style>
 
 <div class="admin-enrollments">
 
-    <h2>📋 Admin – Course Enrollments</h2>
+    <h2>Course Enrollments</h2>
 
     {% if enrollments %}
-    <table class="enrollment-table">
-        <thead>
-            <tr>
-                <th>Student Name</th>
-                <th>Email</th>
-                <th>Course</th>
-                <th>Enrolled On</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for e in enrollments %}
-            <tr>
-                <td><strong>{{ e.student_name }}</strong></td>
-                <td>{{ e.student_email }}</td>
-                <td>
-                    <span class="badge badge-course">
-                        {{ e.course_title }}
-                    </span>
-                </td>
-                <td>
-                    <span class="badge badge-date">
-                        {{ e.enrolled_at.strftime("%d %b %Y") }}
-                    </span>
-                </td>
-                <td>
-                    <form
-                        action="{{ url_for('admin_unenroll', enrollment_id=e.enrollment_id) }}"
-                        method="post"
-                        onsubmit="return confirm('Are you sure you want to unenroll this student?');"
-                    >
-                        <button type="submit" class="btn-danger">
-                            Unenroll
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-wrapper">
+        <table class="enrollment-table">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Course</th>
+                    <th>Enrolled On</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in enrollments %}
+                <tr>
+                    <td><strong>{{ e.student_name }}</strong></td>
+                    <td>{{ e.student_email }}</td>
+                    <td>
+                        <span class="badge badge-course">
+                            {{ e.course_title }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-date">
+                            {{ e.enrolled_at.strftime("%d %b %Y") }}
+                        </span>
+                    </td>
+                    <td>
+                        <form
+                            action="{{ url_for('admin_unenroll', enrollment_id=e.enrollment_id) }}"
+                            method="post"
+                            onsubmit="return confirm('Are you sure you want to unenroll this student?');"
+                        >
+                            <button type="submit" class="btn-danger">
+                                Unenroll
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% else %}
         <div class="empty-state">
-            <p>No enrollments found.</p>
+            No enrollments found.
         </div>
     {% endif %}
 
     <div class="back-btn-wrapper">
-    <a href="/admin/dashboard" class="back-btn">
-        ← Back to Admin Dashboard
-    </a>
-</div>
+        <a href="/admin/dashboard" class="back-btn">
+            ← Back to Admin Dashboard
+        </a>
+    </div>
 
 </div>
 
