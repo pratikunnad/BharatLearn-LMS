@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
-from flask import session
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
 import mysql.connector
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -39,62 +39,73 @@ def home():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    error = None
-
     if request.method == "POST":
-        email = request.form["email"]
+        email = request.form["email"].strip().lower()
         password = request.form["password"]
 
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        query = "SELECT * FROM users WHERE email=%s AND password=%s"
-        cursor.execute(query, (email, password))
+        cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
         user = cursor.fetchone()
 
         cursor.close()
         conn.close()
 
-        if user and user["password"] == password:
-            session["user_id"] = user["id"]
-            session["role"] = user["role"]
+        # ❌ Invalid email or password
+        if not user or not check_password_hash(user["password"], password):
+            flash("Invalid email or password", "danger")
+            return redirect("/login")
 
-            if user["role"] == "admin":
-                return redirect(url_for("admin_dashboard"))
-            else:
-                return redirect(url_for("student_dashboard"))
+        # ✅ Login success
+        session["user_id"] = user["id"]
+        session["role"] = user["role"]
+
+        if user["role"] == "admin":
+            return redirect("/admin/dashboard")
         else:
-            error = "Invalid email or password"
+            return redirect("/student/dashboard")
 
-    return render_template("login.html", error=error)
+    return render_template("login.html")
+
+def admin_required():
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/login")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    message = None
-
     if request.method == "POST":
-        name = request.form["name"]
-        email = request.form["email"]
+        name = request.form["name"].strip()
+        email = request.form["email"].strip().lower()
         password = request.form["password"]
+
+        hashed_password = generate_password_hash(password)
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
         try:
-            query = """
-            INSERT INTO users (name, email, password, role)
-            VALUES (%s, %s, %s, 'student')
-            """
-            cursor.execute(query, (name, email, password))
+            cursor.execute(
+                """
+                INSERT INTO users (name, email, password, role)
+                VALUES (%s, %s, %s, 'student')
+                """,
+                (name, email, hashed_password)
+            )
             conn.commit()
-            message = "Registration successful. Please login."
-        except:
-            message = "Email already exists."
+            flash("Registration successful. Please login.", "success")
+            return redirect("/login")
+
+        except mysql.connector.IntegrityError:
+            flash("Email already exists.", "danger")
+
         finally:
             cursor.close()
             conn.close()
 
-    return render_template("register.html", message=message)
+    return render_template("register.html")
+
 
 @app.route("/student/dashboard")
 def student_dashboard():
@@ -355,6 +366,7 @@ def admin_dashboard():
 @app.route("/logout")
 def logout():
     session.clear()
+    flash("Logged out successfully", "info")
     return redirect("/login")
 
 
@@ -525,3 +537,4 @@ def student_analytics():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    
