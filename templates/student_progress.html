@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ===== PAGE WRAPPER ===== */
+.progress-wrapper {
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* ===== STATS ===== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+body.dark .stat-card {
+    background: #020617;
+}
+
+.stat-card h3 {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.stat-card p {
+    font-size: 32px;
+    font-weight: 700;
+    color: #0a3d62;
+}
+
+body.dark .stat-card p {
+    color: #60a5fa;
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+    font-size: 20px;
+    margin: 40px 0 20px;
+    color: #0a3d62;
+}
+
+body.dark .section-title {
+    color: #60a5fa;
+}
+
+/* ===== CHARTS ===== */
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.chart-box {
+    background: #ffffff;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+body.dark .chart-box {
+    background: #020617;
+}
+
+/* BACK BUTTON */
+.back-btn-wrapper {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.back-btn {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #0a3d62, #2563eb);
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+}
+</style>
+
+<div class="progress-wrapper">
+
+    <h2 class="page-title">📈 My Learning Progress</h2>
+
+    <!-- ===== STATS ===== -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Enrolled Courses</h3>
+            <p>{{ total_courses }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Completed Courses</h3>
+            <p>{{ completed_courses }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>In Progress</h3>
+            <p>{{ pending_courses }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Completion %</h3>
+            <p>{{ completion_percent }}%</p>
+        </div>
+    </div>
+
+    <!-- ===== CHARTS ===== -->
+    <h3 class="section-title">Progress Overview</h3>
+
+    <div class="chart-grid">
+        <div class="chart-box">
+            <canvas id="progressPie"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <canvas id="courseBar"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== DATA ===== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Safe JSON data -->
+<script id="progress-data" type="application/json">
+{
+    "completed": {{ completed_courses }},
+    "pending": {{ pending_courses }}
+}
+</script>
+
+<script id="course-data" type="application/json">
+{{ course_progress | tojson | safe }}
+</script>
+
+<script>
+/* ---------- Read data safely ---------- */
+const progressData = JSON.parse(
+    document.getElementById("progress-data").textContent
+);
+
+const courseData = JSON.parse(
+    document.getElementById("course-data").textContent
+);
+
+/* ---------- PIE CHART ---------- */
+new Chart(document.getElementById("progressPie"), {
+    type: "pie",
+    data: {
+        labels: ["Completed", "In Progress"],
+        datasets: [{
+            data: [progressData.completed, progressData.pending],
+            backgroundColor: ["#22c55e", "#f97316"]
+        }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                position: "bottom"
+            }
+        }
+    }
+});
+
+/* ---------- BAR CHART ---------- */
+new Chart(document.getElementById("courseBar"), {
+    type: "bar",
+    data: {
+        labels: courseData.map(c => c.title),
+        datasets: [{
+            label: "Course Status",
+            data: courseData.map(c => c.completed ? 1 : 0),
+            backgroundColor: "#0a3d62"
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 1,
+                ticks: {
+                    stepSize: 1,
+                    callback: value => value === 1 ? "Completed" : "Pending"
+                }
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: ctx =>
+                        ctx.raw === 1 ? "Completed" : "In Progress"
+                }
+            }
+        }
+    }
+});
+</script>
+
+<div class="back-btn-wrapper">
+    <a href="/student/dashboard" class="back-btn">← Back to Dashboard</a>
+</div>
+
+{% endblock %}

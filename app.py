@@ -273,18 +273,19 @@ def my_enrollments():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    query = """
-        SELECT 
+    cursor.execute("""
+        SELECT
+            e.id AS enrollment_id,
             c.*,
-            e.enrolled_at
+            e.enrolled_at,
+            e.completed
         FROM enrollments e
         JOIN courses c ON c.id = e.course_id
         WHERE e.user_id = %s
         ORDER BY e.enrolled_at DESC
-    """
-    cursor.execute(query, (session["user_id"],))
-    courses = cursor.fetchall()
+    """, (session["user_id"],))
 
+    courses = cursor.fetchall()
     cursor.close()
     conn.close()
 
@@ -538,6 +539,72 @@ def student_analytics():
         avg_enrollments=round(avg_enrollments, 2),
         student_data=student_data
     )
+
+# --------------------
+# STUDENT PROGRESS (✅ FIXED)
+# --------------------
+@app.route("/student/progress")
+def student_progress():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT COUNT(*) AS total FROM enrollments WHERE user_id=%s", (user_id,))
+    total_courses = cursor.fetchone()["total"]
+
+    cursor.execute("""
+        SELECT COUNT(*) AS completed
+        FROM enrollments
+        WHERE user_id=%s AND completed=1
+    """, (user_id,))
+    completed_courses = cursor.fetchone()["completed"]
+
+    pending_courses = total_courses - completed_courses
+    completion_percent = round((completed_courses / total_courses) * 100, 1) if total_courses else 0
+
+    cursor.execute("""
+        SELECT c.title, e.completed
+        FROM enrollments e
+        JOIN courses c ON c.id = e.course_id
+        WHERE e.user_id=%s
+    """, (user_id,))
+    course_progress = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "student_progress.html",
+        total_courses=total_courses,
+        completed_courses=completed_courses,
+        pending_courses=pending_courses,
+        completion_percent=completion_percent,
+        course_progress=course_progress
+    )
+
+
+@app.route("/student/mark-completed/<int:enrollment_id>", methods=["POST"])
+def mark_completed(enrollment_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE enrollments
+        SET completed=1, completed_at=NOW()
+        WHERE id=%s AND user_id=%s
+    """, (enrollment_id, session["user_id"]))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect("/my-enrollments")
+
+
+
 
 
 

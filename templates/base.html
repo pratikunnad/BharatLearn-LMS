@@ -3,34 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>BharatLearn</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Global CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
-        /* =========================================================
-           ROOT VARIABLES (Design System)
-        ========================================================= */
+        /* ================= DESIGN TOKENS ================= */
         :root {
             --primary: #0a3d62;
-            --primary-light: #2563eb;
+            --primary-light: #3b82f6;
             --danger: #dc2626;
 
             --bg-light: #f7f9fc;
-            --bg-dark: #0f172a;
+            --bg-dark: #020617;
+
+            --card-light: #ffffff;
+            --card-dark: #020617;
 
             --text-light: #1f2937;
             --text-dark: #e5e7eb;
+            --muted-light: #6b7280;
+            --muted-dark: #94a3b8;
 
-            --radius: 10px;
+            --border-light: #e5e7eb;
+            --border-dark: #1e293b;
+
+            --radius: 12px;
             --transition: 0.25s ease;
         }
 
-        /* =========================================================
-           RESET
-        ========================================================= */
+        /* ================= RESET ================= */
         * {
             margin: 0;
             padding: 0;
@@ -42,7 +45,6 @@
             background: var(--bg-light);
             color: var(--text-light);
             transition: background var(--transition), color var(--transition);
-            animation: fadeIn 0.4s ease;
         }
 
         body.dark {
@@ -50,14 +52,7 @@
             color: var(--text-dark);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* =========================================================
-           SCROLL PROGRESS BAR
-        ========================================================= */
+        /* ================= SCROLL BAR ================= */
         .scroll-progress {
             position: fixed;
             top: 0;
@@ -68,26 +63,23 @@
             z-index: 2000;
         }
 
-        /* =========================================================
-           NAVBAR
-        ========================================================= */
+        /* ================= NAVBAR ================= */
         .navbar {
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.92);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e5e7eb;
-            transition: box-shadow var(--transition);
+            border-bottom: 1px solid var(--border-light);
         }
 
         body.dark .navbar {
-            background: rgba(2,6,23,0.9);
-            border-color: #1e293b;
+            background: rgba(2,6,23,0.95);
+            border-color: var(--border-dark);
         }
 
         .navbar.scrolled {
-            box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.15);
         }
 
         .nav-container {
@@ -106,9 +98,7 @@
             text-decoration: none;
         }
 
-        .logo img {
-            height: 38px;
-        }
+        .logo img { height: 38px; }
 
         .logo span {
             font-size: 20px;
@@ -116,13 +106,9 @@
             color: var(--primary);
         }
 
-        body.dark .logo span {
-            color: #60a5fa;
-        }
+        body.dark .logo span { color: #60a5fa; }
 
-        /* =========================================================
-           NAV LINKS
-        ========================================================= */
+        /* ================= NAV LINKS ================= */
         .nav-links {
             display: flex;
             gap: 22px;
@@ -139,11 +125,9 @@
         }
 
         .nav-links a:hover {
-            color: var(--primary);
-            transform: translateY(-2px);
+            color: var(--primary-light);
         }
 
-        /* Active link */
         .nav-links a.active {
             color: var(--primary-light);
             font-weight: 600;
@@ -170,9 +154,7 @@
             font-weight: 600;
         }
 
-        /* =========================================================
-           BUTTONS
-        ========================================================= */
+        /* ================= BUTTONS ================= */
         .theme-btn,
         .menu-toggle {
             background: none;
@@ -182,24 +164,19 @@
             color: inherit;
         }
 
-        /* =========================================================
-           PAGE WRAPPER
-        ========================================================= */
+        /* ================= PAGE ================= */
         .page-container {
             max-width: 1200px;
             margin: auto;
-            padding: 24px;
+            padding: 28px 24px;
         }
 
-        /* =========================================================
-           FLASH MESSAGES
-        ========================================================= */
+        /* ================= FLASH MESSAGES ================= */
         .alert {
             padding: 14px 16px;
             border-radius: var(--radius);
             margin-bottom: 12px;
             font-weight: 500;
-            animation: slideDown 0.4s ease;
         }
 
         .alert-success { background: #e6f4ea; color: #166534; }
@@ -207,45 +184,41 @@
         .alert-warning { background: #fff8e1; color: #854d0e; }
         .alert-info { background: #e8f4fd; color: #0c4a6e; }
 
-        @keyframes slideDown {
-            from { transform: translateY(-12px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        body.dark .alert-success { background: #052e1a; color: #bbf7d0; }
+        body.dark .alert-danger { background: #3f1212; color: #fecaca; }
+        body.dark .alert-warning { background: #3a2a0a; color: #fde68a; }
+        body.dark .alert-info { background: #082f49; color: #bae6fd; }
 
         hr {
             border: none;
             height: 1px;
-            background: #e5e7eb;
+            background: var(--border-light);
             margin: 24px 0;
         }
 
-        /* =========================================================
-           MOBILE
-        ========================================================= */
-        .menu-toggle {
-            display: none;
-        }
+        body.dark hr { background: var(--border-dark); }
+
+        /* ================= MOBILE ================= */
+        .menu-toggle { display: none; }
 
         @media (max-width: 900px) {
-            .menu-toggle {
-                display: block;
-            }
+            .menu-toggle { display: block; }
 
             .nav-links {
                 position: absolute;
                 top: 70px;
                 right: 20px;
                 flex-direction: column;
-                background: #ffffff;
+                background: var(--card-light);
                 width: 220px;
                 padding: 18px;
                 border-radius: var(--radius);
-                box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+                box-shadow: 0 14px 35px rgba(0,0,0,0.25);
                 display: none;
             }
 
             body.dark .nav-links {
-                background: #020617;
+                background: var(--card-dark);
             }
 
             .nav-links.show {
@@ -257,10 +230,9 @@
 
 <body>
 
-<!-- Scroll Progress -->
 <div class="scroll-progress" id="scrollProgress"></div>
 
-<!-- ================= NAVBAR ================= -->
+<!-- NAVBAR -->
 <div class="navbar">
     <div class="nav-container">
 
@@ -276,14 +248,12 @@
 
             {% if session.get("user_id") %}
                 {% if session.get("role") == "student" %}
-                    <a href="/student/dashboard"
-                       class="{% if 'student' in request.path %}active{% endif %}">
-                       Dashboard
+                    <a href="/student/dashboard" class="{% if 'student' in request.path %}active{% endif %}">
+                        Dashboard
                     </a>
                 {% else %}
-                    <a href="/admin/dashboard"
-                       class="{% if 'admin' in request.path %}active{% endif %}">
-                       Admin
+                    <a href="/admin/dashboard" class="{% if 'admin' in request.path %}active{% endif %}">
+                        Admin
                     </a>
                 {% endif %}
                 <a href="/logout" class="logout-btn">Logout</a>
@@ -297,7 +267,7 @@
     </div>
 </div>
 
-<!-- ================= PAGE CONTENT ================= -->
+<!-- PAGE -->
 <div class="page-container">
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -311,12 +281,10 @@
     <hr>
 
     {% block content %}{% endblock %}
-
 </div>
 
-<!-- ================= SCRIPTS ================= -->
+<!-- ================= JS ================= -->
 <script>
-/* ---------------- Theme ---------------- */
 function toggleTheme() {
     document.body.classList.toggle("dark");
     const dark = document.body.classList.contains("dark");
@@ -331,31 +299,20 @@ window.onload = () => {
     }
 };
 
-/* ---------------- Mobile Menu ---------------- */
 function toggleMenu() {
     document.getElementById("navLinks").classList.toggle("show");
 }
 
-/* Close menu on link click (mobile UX) */
-document.querySelectorAll(".nav-links a").forEach(link => {
-    link.addEventListener("click", () => {
-        document.getElementById("navLinks").classList.remove("show");
-    });
-});
-
-/* ---------------- Navbar shadow ---------------- */
 window.addEventListener("scroll", () => {
     document.querySelector(".navbar")
         .classList.toggle("scrolled", window.scrollY > 10);
 
-    /* Scroll progress */
     const scrollTop = document.documentElement.scrollTop;
     const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     document.getElementById("scrollProgress").style.width =
         (scrollTop / height) * 100 + "%";
 });
 
-/* ---------------- Flash auto dismiss ---------------- */
 setTimeout(() => {
     document.querySelectorAll(".alert").forEach(alert => {
         alert.style.opacity = "0";

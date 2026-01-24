@@ -1,31 +1,30 @@
 {% extends "base.html" %}
-
 {% block content %}
 
 <style>
 /* PAGE TITLE */
-h2 {
+.page-title {
     text-align: center;
     margin: 30px 0;
-    color: #0a3d62;
+    color: var(--primary);
+    font-size: 26px;
+    font-weight: 700;
 }
 
 /* COURSE GRID */
 .course-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-    padding: 0 40px 40px;
-    max-width: 1200px;
-    margin: auto;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 26px;
+    padding-bottom: 40px;
 }
 
 /* COURSE CARD */
 .course-card {
     background: #ffffff;
-    border-radius: 10px;
+    border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
     transition: transform 0.25s, box-shadow 0.25s;
     display: flex;
     flex-direction: column;
@@ -33,51 +32,55 @@ h2 {
 
 .course-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 16px 35px rgba(0,0,0,0.12);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.12);
 }
 
 .course-card img {
     width: 100%;
-    height: 160px;
+    height: 170px;
     object-fit: cover;
 }
 
+/* CARD BODY */
 .card-body {
-    padding: 18px;
+    padding: 20px;
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-/* ENROLLED BADGE */
-.enrolled-badge {
+/* BADGES */
+.badge {
     display: inline-block;
-    background: #28a745;
-    color: #fff;
     font-size: 12px;
-    padding: 4px 12px;
+    padding: 5px 12px;
     border-radius: 20px;
-    margin-bottom: 10px;
     font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.badge-enrolled {
+    background: #22c55e;
+    color: #ffffff;
+}
+
+.badge-completed {
+    background: #2563eb;
+    color: #ffffff;
 }
 
 /* TEXT */
 .course-card h3 {
     font-size: 18px;
     margin-bottom: 8px;
-    color: #0a3d62;
+    color: var(--primary);
 }
 
 .course-card p {
     font-size: 14px;
     color: #555;
-    margin-bottom: 12px;
     line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    margin-bottom: 12px;
 }
 
 .enroll-date {
@@ -86,89 +89,77 @@ h2 {
     margin-bottom: 18px;
 }
 
-/* CARD ACTIONS */
+/* ACTIONS */
 .card-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
+    display: grid;
+    gap: 10px;
     margin-top: auto;
 }
 
-/* VISIT COURSE BUTTON */
+/* BUTTONS */
 .visit-btn {
-    padding: 8px 16px;
-    border-radius: 6px;
-    background: linear-gradient(135deg, #1e90ff, #0a3d62);
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #2563eb, #0a3d62);
     color: #ffffff;
     font-size: 13px;
     font-weight: 600;
     text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.visit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(30,144,255,0.4);
+.btn-complete {
+    padding: 9px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #22c55e;
+    color: white;
 }
 
-/* UNENROLL BUTTON */
+.btn-complete:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
 .btn-danger {
-    background: #dc3545;
+    background: #dc2626;
     color: white;
     border: none;
-    padding: 7px 14px;
-    border-radius: 6px;
+    padding: 9px;
+    border-radius: 8px;
     font-size: 13px;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
 }
 
-.btn-danger:hover {
-    background: #c82333;
-    transform: translateY(-1px);
-}
-
-/* EMPTY STATE */
+/* EMPTY */
 .empty {
     text-align: center;
     font-size: 16px;
-    color: #666;
     margin-top: 40px;
+    color: #64748b;
 }
 
-/* ===== BACK BUTTON ===== */
+/* BACK BUTTON */
 .back-btn-wrapper {
     margin-top: 40px;
     text-align: center;
 }
 
 .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #0a3d62, #2563eb);
+    color: white;
     border-radius: 30px;
     text-decoration: none;
     font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
 /* DARK MODE */
 body.dark .course-card {
     background: #020617;
-    box-shadow: 0 10px 25px rgba(255,255,255,0.05);
-}
-
-body.dark .course-card h3 {
-    color: #60a5fa;
 }
 
 body.dark .course-card p,
@@ -176,73 +167,75 @@ body.dark .enroll-date {
     color: #cbd5f5;
 }
 
-body.dark .back-btn {
-    background: #1e293b;
+body.dark .course-card h3 {
+    color: #60a5fa;
 }
 </style>
 
-<script>
-function confirmUnenroll() {
-    return confirm("Are you sure you want to unenroll from this course?");
-}
-</script>
-
-<h2>My Enrolled Courses</h2>
+<h2 class="page-title">My Enrolled Courses</h2>
 
 {% if courses %}
 <div class="course-grid">
-    {% for course in courses %}
-    <div class="course-card">
+{% for course in courses %}
+<div class="course-card">
 
-        {% if course.image_url %}
-            {% if course.image_url.startswith('http') %}
-                <img src="{{ course.image_url }}">
-            {% else %}
-                <img src="{{ url_for('static', filename='images/' ~ course.image_url) }}">
-            {% endif %}
+    {% if course.image_url %}
+        {% if course.image_url.startswith('http') %}
+            <img src="{{ course.image_url }}">
         {% else %}
-            <img src="{{ url_for('static', filename='images/default-course.png') }}">
+            <img src="{{ url_for('static', filename='images/' ~ course.image_url) }}">
+        {% endif %}
+    {% else %}
+        <img src="{{ url_for('static', filename='images/default-course.png') }}">
+    {% endif %}
+
+    <div class="card-body">
+
+        {% if course.completed %}
+            <span class="badge badge-completed">✔ Completed</span>
+        {% else %}
+            <span class="badge badge-enrolled">Enrolled</span>
         {% endif %}
 
-        <div class="card-body">
-            <span class="enrolled-badge">Enrolled</span>
+        <h3>{{ course.title }}</h3>
+        <p>{{ course.description }}</p>
 
-            <h3>{{ course.title }}</h3>
-            <p>{{ course.description }}</p>
-
-            <div class="enroll-date">
-                <strong>Enrolled on:</strong><br>
-                {{ course.enrolled_at.strftime("%d %b %Y, %I:%M %p") }}
-            </div>
-
-            <div class="card-actions">
-                <a href="{{ course.course_link }}" target="_blank" class="visit-btn">
-                    ▶ Visit Course
-                </a>
-
-                <form
-                    action="{{ url_for('unenroll', course_id=course.id) }}"
-                    method="post"
-                    onsubmit="return confirmUnenroll();"
-                >
-                    <button type="submit" class="btn-danger">
-                        Unenroll
-                    </button>
-                </form>
-            </div>
+        <div class="enroll-date">
+            Enrolled on {{ course.enrolled_at.strftime("%d %b %Y") }}
         </div>
 
+        <div class="card-actions">
+
+            <a href="{{ course.course_link }}" target="_blank" class="visit-btn">
+                ▶ Visit Course
+            </a>
+
+            <form method="POST"
+                action="{{ url_for('mark_completed', enrollment_id=course.enrollment_id) }}">
+                <button class="btn-complete"
+                        {% if course.completed %}disabled{% endif %}>
+                    ✓ Mark as Completed
+                </button>
+            </form>
+
+
+            <form method="POST"
+                  action="{{ url_for('unenroll', course_id=course.id) }}"
+                  onsubmit="return confirm('Unenroll from this course?');">
+                <button class="btn-danger">Unenroll</button>
+            </form>
+
+        </div>
     </div>
-    {% endfor %}
+</div>
+{% endfor %}
 </div>
 {% else %}
 <p class="empty">You have not enrolled in any courses yet 😕</p>
 {% endif %}
 
 <div class="back-btn-wrapper">
-    <a href="/student/dashboard" class="back-btn">
-        ← Back to Dashboard
-    </a>
+    <a href="/student/dashboard" class="back-btn">← Back to Dashboard</a>
 </div>
 
 {% endblock %}
