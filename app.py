@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
 import mysql.connector
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -112,12 +112,69 @@ def register():
     return render_template("register.html", message=message)
 
 
-
 @app.route("/student/dashboard")
 def student_dashboard():
-    if "role" not in session or session["role"] != "student":
+    if "user_id" not in session or session["role"] != "student":
         return redirect("/login")
-    return render_template("student_dashboard.html")
+
+    user_id = session["user_id"]
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # ✅ Completed courses count
+    cursor.execute("""
+        SELECT COUNT(*) AS completed
+        FROM enrollments
+        WHERE user_id = %s AND completed = 1
+    """, (user_id,))
+    completed_courses = cursor.fetchone()["completed"]
+
+    # ✅ Advanced courses completed (FIXED COLUMN NAME)
+    cursor.execute("""
+        SELECT COUNT(*) AS advanced_completed
+        FROM enrollments e
+        JOIN courses c ON e.course_id = c.id
+        WHERE e.user_id = %s
+          AND e.completed = 1
+          AND c.difficulty = 'Advanced'
+    """, (user_id,))
+    advanced_completed = cursor.fetchone()["advanced_completed"]
+
+    # ✅ Learning streak (simple version)
+    cursor.execute("""
+        SELECT MAX(DATE(enrolled_at)) AS last_activity
+        FROM enrollments
+        WHERE user_id = %s
+    """, (user_id,))
+    last_activity = cursor.fetchone()["last_activity"]
+
+    if last_activity:
+        from datetime import date
+        days_diff = (date.today() - last_activity).days
+        current_streak = 1 if days_diff <= 1 else 0
+    else:
+        current_streak = 0
+
+    # Get streak
+    cursor.execute("""
+        SELECT current_streak
+        FROM learning_streaks
+        WHERE user_id = %s
+    """, (user_id,))
+    streak = cursor.fetchone()
+
+    current_streak = streak["current_streak"] if streak else 0
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "student_dashboard.html",
+        completed_courses=completed_courses,
+        advanced_completed=advanced_completed,
+        current_streak=current_streak
+    )
+
 
 @app.route("/some-route")
 def some_function():
@@ -588,20 +645,106 @@ def student_progress():
 
 @app.route("/student/mark-completed/<int:enrollment_id>", methods=["POST"])
 def mark_completed(enrollment_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    if "user_id" not in session:
+        return redirect("/login")
 
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # 1️⃣ Check enrollment belongs to this user and is not already completed
+    cursor.execute("""
+        SELECT completed
+        FROM enrollments
+        WHERE id = %s AND user_id = %s
+    """, (enrollment_id, session["user_id"]))
+
+    enrollment = cursor.fetchone()
+
+    if not enrollment:
+        cursor.close()
+        conn.close()
+        flash("Invalid enrollment", "danger")
+        return redirect("/my-enrollments")
+
+    if enrollment["completed"] == 1:
+        cursor.close()
+        conn.close()
+        flash("Course already completed ✅", "info")
+        return redirect("/my-enrollments")
+
+    # 2️⃣ Mark as completed
     cursor.execute("""
         UPDATE enrollments
-        SET completed=1, completed_at=NOW()
-        WHERE id=%s AND user_id=%s
+        SET completed = 1,
+            completed_at = NOW()
+        WHERE id = %s AND user_id = %s
     """, (enrollment_id, session["user_id"]))
 
     conn.commit()
     cursor.close()
     conn.close()
 
+    flash("🎉 Course marked as completed!", "success")
     return redirect("/my-enrollments")
+
+
+@app.route("/student/visit-course/<int:course_id>")
+def visit_course(course_id):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+    today = datetime.now().date()
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT current_streak, last_activity_date FROM users WHERE id=%s",
+        (user_id,)
+    )
+    streak = cursor.fetchone()
+
+    if not streak:
+        # First time activity
+        cursor.execute("""
+            INSERT INTO learning_streaks (user_id, current_streak, last_activity_date)
+            VALUES (%s, 1, %s)
+        """, (user_id, today))
+
+    else:
+        last_date = streak["last_activity_date"]
+
+        if last_date == today:
+            pass  # already counted today
+
+        elif last_date == today - timedelta(days=1):
+            cursor.execute("""
+                UPDATE learning_streaks
+                SET current_streak = current_streak + 1,
+                    last_activity_date = %s
+                WHERE user_id = %s
+            """, (today, user_id))
+
+        else:
+            # Missed day → reset streak
+            cursor.execute("""
+                UPDATE learning_streaks
+                SET current_streak = 1,
+                    last_activity_date = %s
+                WHERE user_id = %s
+            """, (today, user_id))
+
+    conn.commit()
+
+    cursor.execute("SELECT course_link FROM courses WHERE id=%s", (course_id,))
+    link = cursor.fetchone()["course_link"]
+
+    cursor.close()
+    conn.close()
+
+    return redirect(link)
+
 
 
 

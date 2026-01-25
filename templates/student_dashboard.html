@@ -3,7 +3,7 @@
 
 <style>
 /* =========================================================
-   STUDENT DASHBOARD – MODERN & CLEAN DESIGN
+   STUDENT DASHBOARD – CLEAN + STREAKS & BADGES
    ========================================================= */
 
 /* ---------- LAYOUT ---------- */
@@ -12,7 +12,6 @@
     min-height: calc(100vh - 80px);
     background: #f7f9fc;
 }
-
 body.dark .dashboard-wrapper {
     background: #0f172a;
 }
@@ -21,10 +20,9 @@ body.dark .dashboard-wrapper {
 .sidebar {
     width: 260px;
     background: linear-gradient(180deg, #0a3d62, #062b46);
-    color: #ffffff;
+    color: #fff;
     padding: 30px 20px;
 }
-
 body.dark .sidebar {
     background: #020617;
 }
@@ -36,31 +34,26 @@ body.dark .sidebar {
     font-weight: 700;
 }
 
-/* Sidebar Links */
 .sidebar a {
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 12px 15px;
     margin-bottom: 12px;
-    color: #ffffff;
+    color: #fff;
     text-decoration: none;
     border-radius: 8px;
     font-size: 14px;
-    transition: background 0.2s, transform 0.2s;
+    transition: all 0.2s ease;
 }
-
 .sidebar a:hover {
     background: rgba(255,255,255,0.18);
     transform: translateX(4px);
 }
-
 .sidebar a.active {
     background: rgba(255,255,255,0.25);
     font-weight: 600;
 }
-
-/* Logout button */
 .sidebar .logout {
     margin-top: 40px;
     background: rgba(255,255,255,0.12);
@@ -73,24 +66,17 @@ body.dark .sidebar {
 }
 
 /* Header */
-.dashboard-header {
-    margin-bottom: 35px;
-}
-
 .dashboard-header h2 {
     font-size: 30px;
     margin-bottom: 6px;
     color: #0a3d62;
 }
-
 body.dark .dashboard-header h2 {
     color: #60a5fa;
 }
-
 .dashboard-header p {
     color: #555;
 }
-
 body.dark .dashboard-header p {
     color: #cbd5f5;
 }
@@ -100,31 +86,21 @@ body.dark .dashboard-header p {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
+    margin-top: 30px;
 }
 
-/* Card */
 .dashboard-card {
-    background: #ffffff;
+    background: #fff;
     padding: 30px;
     border-radius: 14px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    transition: transform 0.25s, box-shadow 0.25s;
     position: relative;
-    overflow: hidden;
+    transition: all 0.25s ease;
 }
-
 body.dark .dashboard-card {
     background: #020617;
-    box-shadow: 0 10px 30px rgba(255,255,255,0.05);
 }
 
-/* Card hover effect */
-.dashboard-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.15);
-}
-
-/* Accent bar */
 .dashboard-card::before {
     content: "";
     position: absolute;
@@ -135,125 +111,199 @@ body.dark .dashboard-card {
     background: #1e90ff;
 }
 
-/* Card title */
-.dashboard-card h4 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #0a3d62;
+.dashboard-card:hover {
+    transform: translateY(-6px);
 }
 
+.dashboard-card h4 {
+    color: #0a3d62;
+    margin-bottom: 10px;
+}
 body.dark .dashboard-card h4 {
     color: #60a5fa;
 }
 
-/* Card text */
 .dashboard-card p {
     font-size: 14px;
     color: #666;
-    margin-bottom: 22px;
-    line-height: 1.6;
+    margin-bottom: 20px;
 }
-
 body.dark .dashboard-card p {
     color: #cbd5f5;
 }
 
-/* Card button */
 .dashboard-card a {
-    display: inline-block;
     padding: 10px 20px;
     background: #0a3d62;
-    color: #ffffff;
-    text-decoration: none;
+    color: #fff;
     border-radius: 8px;
+    text-decoration: none;
     font-size: 14px;
     font-weight: 600;
-    transition: background 0.2s, transform 0.2s;
 }
-
 .dashboard-card a:hover {
     background: #08324f;
-    transform: translateY(-2px);
 }
 
-/* ---------- MOBILE ---------- */
-@media (max-width: 900px) {
-    .dashboard-wrapper {
-        flex-direction: column;
-    }
+/* ---------- STREAKS & BADGES ---------- */
+.streak-badge-wrapper {
+    max-width: 1200px;
+    margin: 50px auto;
+}
 
-    .sidebar {
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        padding: 20px;
-    }
+.section-heading {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #0a3d62;
+}
+body.dark .section-heading {
+    color: #60a5fa;
+}
 
-    .sidebar h3 {
-        width: 100%;
-        margin-bottom: 20px;
-    }
+/* STREAK CARD */
+.streak-card {
+    background: linear-gradient(135deg, #ff9800, #ff5722);
+    color: #fff;
+    border-radius: 14px;
+    padding: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    margin-bottom: 40px;
+}
+.streak-left {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+.streak-icon {
+    font-size: 48px;
+}
+.streak-count {
+    font-size: 42px;
+    font-weight: 800;
+}
 
-    .sidebar a {
-        justify-content: center;
-        width: 100%;
-    }
+/* BADGES */
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 22px;
+}
+
+.badge-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 22px 16px;
+    text-align: center;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+body.dark .badge-card {
+    background: #020617;
+}
+
+.badge-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+.badge-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0a3d62;
+}
+body.dark .badge-title {
+    color: #60a5fa;
+}
+.badge-desc {
+    font-size: 12px;
+    color: #64748b;
+}
+.badge-locked {
+    opacity: 0.35;
+    filter: grayscale(1);
 }
 </style>
 
 <div class="dashboard-wrapper">
 
-    <!-- ================= SIDEBAR ================= -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
         <h3>BharatLearn</h3>
-
         <a href="/student/dashboard" class="active">Dashboard</a>
         <a href="/courses">Explore Courses</a>
         <a href="/my-enrollments">My Enrollments</a>
-        <a href="/student/progress" class="back-btn">
-            View My Progress
-        </a>
-
-
+        <a href="/student/progress">View My Progress</a>
         <a href="/logout" class="logout">Logout</a>
     </aside>
 
-    <!-- ================= MAIN CONTENT ================= -->
+    <!-- MAIN -->
     <main class="dashboard-content">
-
         <div class="dashboard-header">
             <h2>Student Dashboard</h2>
-            <p>Welcome back! Manage your learning and continue growing</p>
+            <p>Welcome back! Continue your learning journey 🚀</p>
         </div>
 
         <div class="dashboard-cards">
-
-            <!-- Explore Courses -->
             <div class="dashboard-card">
                 <h4>Explore Courses</h4>
-                <p>
-                    Discover new courses curated to help you build
-                    in‑demand skills and grow your career.
-                </p>
+                <p>Discover new skills and advance your career.</p>
                 <a href="/courses">Browse Courses</a>
             </div>
 
-            <!-- My Enrollments -->
             <div class="dashboard-card">
                 <h4>My Enrollments</h4>
-                <p>
-                    Continue learning from courses you are already enrolled in
-                    and track your progress.
-                </p>
+                <p>Continue learning from your enrolled courses.</p>
                 <a href="/my-enrollments">View Enrollments</a>
             </div>
+        </div>
+    </main>
+</div>
 
+<!-- STREAKS & BADGES -->
+<div class="streak-badge-wrapper">
+
+    <div class="section-heading">🔥 Learning Streak</div>
+    <div class="streak-card">
+        <div class="streak-left">
+            <div class="streak-icon">🔥</div>
+            <div>
+                <h3>Current Streak</h3>
+                <p>Learn daily to keep your streak alive</p>
+            </div>
+        </div>
+        <div class="streak-count">{{ current_streak }} days</div>
+    </div>
+
+    <div class="section-heading">🏅 Your Badges</div>
+    <div class="badges-grid">
+
+        <div class="badge-card {% if completed_courses < 1 %}badge-locked{% endif %}">
+            <div class="badge-icon">🎯</div>
+            <div class="badge-title">First Course</div>
+            <div class="badge-desc">Completed 1 course</div>
         </div>
 
-    </main>
+        <div class="badge-card {% if completed_courses < 5 %}badge-locked{% endif %}">
+            <div class="badge-icon">🚀</div>
+            <div class="badge-title">Course Explorer</div>
+            <div class="badge-desc">Completed 5 courses</div>
+        </div>
 
+        <div class="badge-card {% if completed_courses < 10 %}badge-locked{% endif %}">
+            <div class="badge-icon">🏆</div>
+            <div class="badge-title">Learning Champion</div>
+            <div class="badge-desc">Completed 10 courses</div>
+        </div>
+
+        <div class="badge-card {% if advanced_completed < 1 %}badge-locked{% endif %}">
+            <div class="badge-icon">🧠</div>
+            <div class="badge-title">Advanced Learner</div>
+            <div class="badge-desc">Completed 1 Advanced course</div>
+        </div>
+
+    </div>
 </div>
 
 {% endblock %}
