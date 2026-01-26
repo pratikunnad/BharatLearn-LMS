@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .btn-secondary {
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: #475569;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-secondary:hover {
+    background: #334155;
+}
+
+.profile-card {
+    max-width: 700px;
+    margin: auto;
+    background: var(--card-light);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+    border: 3px solid var(--primary);
+}
+.profile-info h2 {
+    margin: 0;
+    font-size: 28px;
+}
+.profile-info .email {
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+.profile-body {
+    margin-top: 20px;
+}
+.profile-field {
+    margin-bottom: 16px;
+}
+.profile-field strong {
+    display: block;
+    margin-bottom: 6px;
+}
+.profile-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+}
+</style>
+
+<div class="profile-card">
+    <div class="profile-header">
+        <img 
+            src="{{ url_for('static', filename='images/' + (user.profile_image or 'default-avatar.png')) }}"
+            class="profile-avatar"
+            alt="Profile Image">
+
+        <div class="profile-info">
+            <h2>{{ user.name }}</h2>
+            <p class="email">{{ user.email }}</p>
+            <p><strong>Joined:</strong> {{ user.created_at.strftime('%d %b %Y') }}</p>
+        </div>
+    </div>
+
+    <div class="profile-body">
+        <div class="profile-field">
+            <strong>Date of Birth:</strong>
+            <span>
+                {{ user.dob.strftime('%d %b %Y') if user.dob else "Not provided" }}
+            </span>
+        </div>
+
+        <div class="profile-field">
+            <strong>Bio:</strong>
+            <p>{{ user.bio if user.bio else "No bio added yet." }}</p>
+        </div>
+    </div>
+
+    <div class="profile-actions">
+    <a href="/student/profile/edit" class="btn-primary">Edit Profile</a>
+    <a href="/student/change-password" class="btn-primary" style="margin-left:10px;">
+        Change Password
+    </a>
+</div>
+
+</div>
+
+<!-- 🏅 Earned Badges -->
+<div class="profile-section">
+    <h3 class="section-title">🏅 Earned Badges</h3>
+
+    {% if earned_badges %}
+        <div class="badges-grid">
+            {% for badge in earned_badges %}
+                <div class="badge-card">
+                    <div class="badge-icon">{{ badge.icon }}</div>
+                    <div class="badge-title">{{ badge.name }}</div>
+                    <div class="badge-desc">{{ badge.description }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="muted-text">No badges earned yet. Keep learning 🚀</p>
+    {% endif %}
+</div>
+
+
+{% endblock %}

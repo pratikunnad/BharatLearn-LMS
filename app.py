@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
 import mysql.connector
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -17,6 +19,15 @@ def get_db_connection():
         password="",          # put your MySQL password if any
         database="lms_db"     # change if your DB name is different
     )
+
+UPLOAD_FOLDER = "static/uploads/profile"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # --------------------
 # ROUTES
@@ -111,6 +122,47 @@ def register():
 
     return render_template("register.html", message=message)
 
+@app.route("/student/change-password", methods=["GET", "POST"])
+def change_password():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+        current = request.form["current_password"]
+        new = request.form["new_password"]
+        confirm = request.form["confirm_password"]
+
+        if new != confirm:
+            flash("Passwords do not match", "danger")
+            return redirect("/student/change-password")
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute(
+            "SELECT password FROM users WHERE id=%s",
+            (session["user_id"],)
+        )
+        user = cursor.fetchone()
+
+        if not user or user["password"] != current:
+            flash("Current password is incorrect", "danger")
+        else:
+            cursor.execute(
+                "UPDATE users SET password=%s WHERE id=%s",
+                (new, session["user_id"])
+            )
+            conn.commit()
+            flash("Password updated successfully ✅", "success")
+
+        cursor.close()
+        conn.close()
+
+        return redirect("/student/profile")
+
+    return render_template("change_password.html")
+
+
 
 @app.route("/student/dashboard")
 def student_dashboard():
@@ -123,22 +175,28 @@ def student_dashboard():
 
     # ✅ Completed courses count
     cursor.execute("""
-        SELECT COUNT(*) AS completed
+        SELECT COUNT(*) AS total
         FROM enrollments
-        WHERE user_id = %s AND completed = 1
+        WHERE user_id=%s AND completed=1
     """, (user_id,))
-    completed_courses = cursor.fetchone()["completed"]
+    completed_courses = cursor.fetchone()["total"]
 
     # ✅ Advanced courses completed (FIXED COLUMN NAME)
     cursor.execute("""
-        SELECT COUNT(*) AS advanced_completed
+        SELECT COUNT(*) AS total
         FROM enrollments e
         JOIN courses c ON e.course_id = c.id
-        WHERE e.user_id = %s
-          AND e.completed = 1
-          AND c.difficulty = 'Advanced'
+        WHERE e.user_id=%s AND e.completed=1 AND c.difficulty='Advanced'
     """, (user_id,))
-    advanced_completed = cursor.fetchone()["advanced_completed"]
+    advanced_completed = cursor.fetchone()["total"]
+
+    cursor.execute("""
+        SELECT b.*
+        FROM badges b
+        JOIN user_badges ub ON b.id = ub.badge_id
+        WHERE ub.user_id=%s
+    """, (user_id,))
+    earned_badges = cursor.fetchall()
 
     # ✅ Learning streak (simple version)
     cursor.execute("""
@@ -172,8 +230,242 @@ def student_dashboard():
         "student_dashboard.html",
         completed_courses=completed_courses,
         advanced_completed=advanced_completed,
-        current_streak=current_streak
+        current_streak=current_streak,
+        earned_badges=earned_badges
     )
+
+def award_badges(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    new_badges = []
+
+    # 1️⃣ Completed courses count
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM enrollments
+        WHERE user_id=%s AND completed=1
+    """, (user_id,))
+    completed_courses = cursor.fetchone()["total"]
+
+    # 2️⃣ Advanced courses completed
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM enrollments e
+        JOIN courses c ON e.course_id = c.id
+        WHERE e.user_id=%s AND e.completed=1 AND c.difficulty='Advanced'
+    """, (user_id,))
+    advanced_completed = cursor.fetchone()["total"]
+
+    # 3️⃣ Current streak
+    cursor.execute("""
+        SELECT current_streak
+        FROM learning_streaks
+        WHERE user_id=%s
+    """, (user_id,))
+    streak_row = cursor.fetchone()
+    current_streak = streak_row["current_streak"] if streak_row else 0
+
+    # 4️⃣ Fetch all badges
+    cursor.execute("SELECT * FROM badges")
+    badges = cursor.fetchall()
+
+    for badge in badges:
+        eligible = False
+
+        if badge["rule_type"] == "course_count" and completed_courses >= badge["rule_value"]:
+            eligible = True
+
+        elif badge["rule_type"] == "advanced_course" and advanced_completed >= badge["rule_value"]:
+            eligible = True
+
+        elif badge["rule_type"] == "streak_days" and current_streak >= badge["rule_value"]:
+            eligible = True
+
+        if eligible:
+            # check if already earned
+            cursor.execute("""
+                SELECT 1 FROM user_badges
+                WHERE user_id=%s AND badge_id=%s
+            """, (user_id, badge["id"]))
+
+            if not cursor.fetchone():
+                cursor.execute("""
+                    INSERT INTO user_badges (user_id, badge_id)
+                    VALUES (%s, %s)
+                """, (user_id, badge["id"]))
+
+                new_badges.append(badge["name"])
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return new_badges
+
+def get_current_streak(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT activity_date
+        FROM user_activity
+        WHERE user_id=%s
+        ORDER BY activity_date DESC
+    """, (user_id,))
+
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    streak = 0
+    today = date.today()
+
+    for row in rows:
+        if row["activity_date"] == today:
+            streak += 1
+            today = today.replace(day=today.day - 1)
+        else:
+            break
+
+    return streak
+
+STREAK_BADGES = {
+    3: "3-Day Streak",
+    7: "7-Day Streak",
+    30: "30-Day Streak"
+}
+
+def award_streak_badges(user_id):
+    streak = get_current_streak(user_id)
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    for days, badge_name in STREAK_BADGES.items():
+        if streak >= days:
+            cursor.execute("""
+                INSERT INTO user_badges (user_id, badge_name)
+                VALUES (%s, %s)
+                ON DUPLICATE KEY UPDATE id=id
+            """, (user_id, badge_name))
+
+            if cursor.rowcount == 1:
+                flash(f"🏆 Badge Earned: {badge_name}", "badge")
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+@app.route("/student/profile")
+def student_profile():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # User details
+    cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+    user = cursor.fetchone()
+
+    # ✅ Earned badges
+    cursor.execute("""
+        SELECT b.*
+        FROM badges b
+        JOIN user_badges ub ON b.id = ub.badge_id
+        WHERE ub.user_id = %s
+        ORDER BY b.id
+    """, (user_id,))
+    earned_badges = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "student_profile.html",
+        user=user,
+        earned_badges=earned_badges
+    )
+
+
+@app.route("/student/profile/edit", methods=["GET", "POST"])
+def edit_profile():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    if request.method == "POST":
+        name = request.form["name"]
+        dob = request.form["dob"]
+        bio = request.form["bio"]
+
+        image = request.files.get("profile_image")
+        image_name = None
+
+        if image and allowed_file(image.filename):
+            filename = secure_filename(image.filename)
+            image_name = f"user_{user_id}_{filename}"
+            image.save(os.path.join(app.config["UPLOAD_FOLDER"], image_name))
+
+        if image_name:
+            cursor.execute("""
+                UPDATE users
+                SET name=%s, dob=%s, bio=%s, profile_image=%s
+                WHERE id=%s
+            """, (name, dob, bio, image_name, user_id))
+        else:
+            cursor.execute("""
+                UPDATE users
+                SET name=%s, dob=%s, bio=%s
+                WHERE id=%s
+            """, (name, dob, bio, user_id))
+
+        conn.commit()
+        flash("Profile updated successfully 🎉", "success")
+        return redirect("/student/profile")
+
+    cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+    user = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("edit_profile.html", user=user)
+
+
+@app.route("/student/profile/update", methods=["POST"])
+def update_profile():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+    full_name = request.form["full_name"]
+    dob = request.form["dob"]
+    bio = request.form["bio"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO user_profiles (user_id, full_name, dob, bio)
+        VALUES (%s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+            full_name = VALUES(full_name),
+            dob = VALUES(dob),
+            bio = VALUES(bio)
+    """, (user_id, full_name, dob, bio))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    flash("✅ Profile updated successfully", "success")
+    return redirect("/student/profile")
 
 
 @app.route("/some-route")
@@ -347,6 +639,19 @@ def my_enrollments():
     conn.close()
 
     return render_template("my_enrollments.html", courses=courses)
+
+def record_daily_activity(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT IGNORE INTO user_activity (user_id, activity_date)
+        VALUES (%s, %s)
+    """, (user_id, date.today()))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 @app.route("/unenroll/<int:course_id>", methods=["POST"])
 def unenroll(course_id):
@@ -648,22 +953,24 @@ def mark_completed(enrollment_id):
     if "user_id" not in session:
         return redirect("/login")
 
+    user_id = session["user_id"]
+
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # 1️⃣ Check enrollment belongs to this user and is not already completed
+    # 1️⃣ Fetch enrollment FIRST
     cursor.execute("""
         SELECT completed
         FROM enrollments
-        WHERE id = %s AND user_id = %s
-    """, (enrollment_id, session["user_id"]))
+        WHERE id=%s AND user_id=%s
+    """, (enrollment_id, user_id))
 
     enrollment = cursor.fetchone()
 
     if not enrollment:
         cursor.close()
         conn.close()
-        flash("Invalid enrollment", "danger")
+        flash("Invalid enrollment ❌", "danger")
         return redirect("/my-enrollments")
 
     if enrollment["completed"] == 1:
@@ -678,14 +985,24 @@ def mark_completed(enrollment_id):
         SET completed = 1,
             completed_at = NOW()
         WHERE id = %s AND user_id = %s
-    """, (enrollment_id, session["user_id"]))
+    """, (enrollment_id, user_id))
 
     conn.commit()
     cursor.close()
     conn.close()
 
+   # 🔥 award badges after completion
+    new_badges = award_badges(user_id)
+
+    if new_badges:
+        session["badge_toasts"] = new_badges
+
     flash("🎉 Course marked as completed!", "success")
+    for badge_name in new_badges:
+        flash(f"🏅 New badge unlocked: {badge_name}", "badge")
+
     return redirect("/my-enrollments")
+
 
 
 @app.route("/student/visit-course/<int:course_id>")
@@ -743,7 +1060,18 @@ def visit_course(course_id):
     cursor.close()
     conn.close()
 
+    # Award streak badges after streak update
+    award_badges(user_id)
+
+
     return redirect(link)
+
+
+@app.after_request
+def clear_badge_toasts(response):
+    session.pop("badge_toasts", None)
+    return response
+
 
 
 
