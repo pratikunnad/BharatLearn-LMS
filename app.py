@@ -67,7 +67,7 @@ def login():
         conn.close()
 
         # ✅ Check password in Python
-        if user and user["password"] == password:
+        if user and check_password_hash(user["password"], password):
             session["user_id"] = user["id"]
             session["role"] = user["role"]
 
@@ -76,7 +76,7 @@ def login():
             else:
                 return redirect(url_for("student_dashboard"))
         else:
-            error = "Invalid email or password"
+            flash("Invalid email or password", "danger")
 
     return render_template("login.html", error=error)
 
@@ -96,6 +96,8 @@ def register():
         password = request.form["password"].strip()
         confirm_password = request.form["confirm_password"].strip()
 
+        hashed_password = generate_password_hash(password)
+
         # ❌ Password mismatch check
         if password != confirm_password:
             message = "Passwords do not match."
@@ -105,10 +107,10 @@ def register():
         cursor = conn.cursor()
 
         try:
-            cursor.execute("""
-                INSERT INTO users (name, email, password, role)
-                VALUES (%s, %s, %s, 'student')
-            """, (name, email, password))
+            cursor.execute(
+                "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
+                (name, email, hashed_password)
+            )
 
             conn.commit()
             message = "Registration successful. Please login."
@@ -128,11 +130,11 @@ def change_password():
         return redirect("/login")
 
     if request.method == "POST":
-        current = request.form["current_password"]
-        new = request.form["new_password"]
-        confirm = request.form["confirm_password"]
+        current_password = request.form["current_password"]
+        new_password = request.form["new_password"]
+        confirm_password = request.form["confirm_password"]
 
-        if new != confirm:
+        if new_password != confirm_password:
             flash("Passwords do not match", "danger")
             return redirect("/student/change-password")
 
@@ -145,12 +147,17 @@ def change_password():
         )
         user = cursor.fetchone()
 
-        if not user or user["password"] != current:
+        # 2️⃣ Hash new password
+        hashed_new_password = generate_password_hash(new_password)
+
+        # 1️⃣ Verify current password
+        if not check_password_hash(user["password"], current_password):
             flash("Current password is incorrect", "danger")
+            return redirect("/student/change-password")
         else:
             cursor.execute(
                 "UPDATE users SET password=%s WHERE id=%s",
-                (new, session["user_id"])
+                (hashed_new_password, session["user_id"])
             )
             conn.commit()
             flash("Password updated successfully ✅", "success")
