@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
 import mysql.connector
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from werkzeug.utils import secure_filename
+import calendar
 
 app = Flask(__name__)
 
@@ -169,7 +170,7 @@ def change_password():
 
     return render_template("change_password.html")
 
-
+from datetime import datetime, timezone, timedelta, date
 
 @app.route("/student/dashboard")
 def student_dashboard():
@@ -177,10 +178,16 @@ def student_dashboard():
         return redirect("/login")
 
     user_id = session["user_id"]
+
+    # Log today's activity (SAFE)
+    log_daily_activity(user_id)
+
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # ✅ Completed courses count
+    # -------------------------------
+    # 1. Completed courses
+    # -------------------------------
     cursor.execute("""
         SELECT COUNT(*) AS total
         FROM enrollments
@@ -188,7 +195,9 @@ def student_dashboard():
     """, (user_id,))
     completed_courses = cursor.fetchone()["total"]
 
-    # ✅ Advanced courses completed (FIXED COLUMN NAME)
+    # -------------------------------
+    # 2. Advanced courses
+    # -------------------------------
     cursor.execute("""
         SELECT COUNT(*) AS total
         FROM enrollments e
@@ -197,6 +206,9 @@ def student_dashboard():
     """, (user_id,))
     advanced_completed = cursor.fetchone()["total"]
 
+    # -------------------------------
+    # 3. Earned badges
+    # -------------------------------
     cursor.execute("""
         SELECT b.*
         FROM badges b
@@ -205,30 +217,41 @@ def student_dashboard():
     """, (user_id,))
     earned_badges = cursor.fetchall()
 
-    # ✅ Learning streak (simple version)
+    # -------------------------------
+    # 4. Fetch learning activity
+    # -------------------------------
     cursor.execute("""
-        SELECT MAX(DATE(enrolled_at)) AS last_activity
-        FROM enrollments
-        WHERE user_id = %s
+        SELECT activity_date, is_frozen
+        FROM learning_activity
+        WHERE user_id=%s
     """, (user_id,))
-    last_activity = cursor.fetchone()["last_activity"]
+    rows = cursor.fetchall()
 
-    if last_activity:
-        from datetime import date
-        days_diff = (date.today() - last_activity).days
-        current_streak = 1 if days_diff <= 1 else 0
-    else:
-        current_streak = 0
+    # -------------------------------
+    # 5. Build streak_map  ✅ FIX
+    # -------------------------------
+    streak_map = {}
+    for r in rows:
+        streak_map[r["activity_date"].strftime("%Y-%m-%d")] = r["is_frozen"]
 
-    # Get streak
-    cursor.execute("""
-        SELECT current_streak
-        FROM learning_streaks
-        WHERE user_id = %s
-    """, (user_id,))
-    streak = cursor.fetchone()
+    # -------------------------------
+    # 6. Calculate current streak
+    # -------------------------------
+    today = date.today()
+    current_streak = 0
+    check_day = today
 
-    current_streak = streak["current_streak"] if streak else 0
+    while check_day.strftime("%Y-%m-%d") in streak_map:
+        if streak_map[check_day.strftime("%Y-%m-%d")] == 0:
+            current_streak += 1
+        check_day -= timedelta(days=1)
+
+    # -------------------------------
+    # 7. Calendar helpers
+    # -------------------------------
+    year = today.year
+    month = today.month
+    first_weekday, days_in_month = calendar.monthrange(year, month)
 
     cursor.close()
     conn.close()
@@ -237,8 +260,13 @@ def student_dashboard():
         "student_dashboard.html",
         completed_courses=completed_courses,
         advanced_completed=advanced_completed,
+        earned_badges=earned_badges,
         current_streak=current_streak,
-        earned_badges=earned_badges
+        streak_map=streak_map,          # ✅ IMPORTANT
+        year=year,
+        month=month,
+        first_weekday=first_weekday,    # ✅ for alignment
+        days_in_month=days_in_month
     )
 
 def award_badges(user_id):
@@ -360,9 +388,10 @@ def award_streak_badges(user_id):
             if cursor.rowcount == 1:
                 flash(f"🏆 Badge Earned: {badge_name}", "badge")
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+        conn.commit()
+        cursor.close()
+        conn.close()
+    
 
 @app.route("/student/profile")
 def student_profile():
@@ -647,18 +676,47 @@ def my_enrollments():
 
     return render_template("my_enrollments.html", courses=courses)
 
-def record_daily_activity(user_id):
+def log_daily_activity(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    today = datetime.now(timezone.utc).date()
+
+    # 1. Check if today already logged
+    cursor.execute("""
+        SELECT id
+        FROM learning_activity
+        WHERE user_id = %s AND activity_date = %s
+    """, (user_id, today))
+
+    exists = cursor.fetchone()
+
+    # 2. If not logged → insert
+    if not exists:
+        cursor.execute("""
+            INSERT INTO learning_activity (user_id, activity_date, is_frozen)
+            VALUES (%s, %s, 0)
+        """, (user_id, today))
+
+        conn.commit()
+
+    cursor.close()
+    conn.close()
+
+
+def mark_lesson_completed(user_id, lesson_id):
     conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT IGNORE INTO user_activity (user_id, activity_date)
-        VALUES (%s, %s)
-    """, (user_id, date.today()))
+        INSERT IGNORE INTO lesson_progress (user_id, lesson_id, completed_at)
+        VALUES (%s, %s, NOW())
+    """, (user_id, lesson_id))
 
     conn.commit()
     cursor.close()
     conn.close()
+
 
 @app.route("/unenroll/<int:course_id>", methods=["POST"])
 def unenroll(course_id):
@@ -965,12 +1023,12 @@ def mark_completed(enrollment_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # 1️⃣ Fetch enrollment FIRST
+    # 1️⃣ Mark enrollment completed
     cursor.execute("""
-        SELECT completed
-        FROM enrollments
+        UPDATE enrollments
+        SET completed=1, completed_at=NOW()
         WHERE id=%s AND user_id=%s
-    """, (enrollment_id, user_id))
+    """, (enrollment_id, session["user_id"]))
 
     enrollment = cursor.fetchone()
 
@@ -986,13 +1044,39 @@ def mark_completed(enrollment_id):
         flash("Course already completed ✅", "info")
         return redirect("/my-enrollments")
 
-    # 2️⃣ Mark as completed
+    # 2️⃣ Get current streak info
     cursor.execute("""
-        UPDATE enrollments
-        SET completed = 1,
-            completed_at = NOW()
-        WHERE id = %s AND user_id = %s
-    """, (enrollment_id, user_id))
+        SELECT streak, last_active_date
+        FROM users
+        WHERE id=%s
+    """, (session["user_id"],))
+
+    user = cursor.fetchone()
+
+    today = date.today()
+    new_streak = 1  # default
+
+    if user["last_active_date"]:
+        last_date = user["last_active_date"]
+
+        if last_date == today:
+            # already counted today
+            new_streak = user["streak"]
+
+        elif last_date == today - timedelta(days=1):
+            # consecutive day
+            new_streak = user["streak"] + 1
+
+        else:
+            # ❌ missed days → reset
+            new_streak = 1
+
+    # 3️⃣ Update streak in DB
+    cursor.execute("""
+        UPDATE users
+        SET streak=%s, last_active_date=%s
+        WHERE id=%s
+    """, (new_streak, today, session["user_id"]))
 
     conn.commit()
     cursor.close()
@@ -1007,6 +1091,14 @@ def mark_completed(enrollment_id):
     flash("🎉 Course marked as completed!", "success")
     for badge_name in new_badges:
         flash(f"🏅 New badge unlocked: {badge_name}", "badge")
+
+    today = datetime.utcnow().date()
+
+    cursor.execute("""
+    INSERT INTO user_streak_days (user_id, activity_date)
+    VALUES (%s, %s)
+    ON DUPLICATE KEY UPDATE activity_date = activity_date
+    """, (user_id, today))
 
     return redirect("/my-enrollments")
 
@@ -1079,6 +1171,46 @@ def clear_badge_toasts(response):
     session.pop("badge_toasts", None)
     return response
 
+def update_streak(user):
+    today = datetime.utcnow().date()
+
+    last_date = user["last_streak_date"]
+    streak = user["streak"]
+    freeze = user["streak_freeze"]
+
+    if last_date is None:
+        return streak + 1, today, freeze
+
+    days_gap = (today - last_date).days
+
+    # Same day → do nothing
+    if days_gap == 0:
+        return streak, last_date, freeze
+
+    # Perfect streak
+    if days_gap == 1:
+        return streak + 1, today, freeze
+
+    # Missed one day → use freeze
+    if days_gap == 2 and freeze > 0:
+        return streak + 1, today, freeze - 1
+
+    # Missed too many days → reset
+    return 1, today, freeze
+
+
+@app.route("/student/complete-lesson/<int:lesson_id>", methods=["POST"])
+def complete_lesson(lesson_id):
+    user_id = session.get("user_id")
+
+    # lesson completion logic here
+    mark_lesson_completed(user_id, lesson_id)
+
+    # ✅ streak update (timezone-safe)
+    update_streak(user_id)
+
+    flash("Lesson completed!", "success")
+    return redirect(url_for("student_dashboard"))
 
 
 
