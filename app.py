@@ -179,9 +179,6 @@ def student_dashboard():
 
     user_id = session["user_id"]
 
-    # Log today's activity (SAFE)
-    log_daily_activity(user_id)
-
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -682,24 +679,57 @@ def log_daily_activity(user_id):
 
     today = datetime.now(timezone.utc).date()
 
-    # 1. Check if today already logged
+    # 1️⃣ Check if already logged today
     cursor.execute("""
         SELECT id
         FROM learning_activity
         WHERE user_id = %s AND activity_date = %s
     """, (user_id, today))
 
-    exists = cursor.fetchone()
+    already_logged = cursor.fetchone()
 
-    # 2. If not logged → insert
-    if not exists:
+    if already_logged:
+        cursor.close()
+        conn.close()
+        return  # ✅ Do nothing
+
+    # 2️⃣ Insert today's activity
+    cursor.execute("""
+        INSERT INTO learning_activity (user_id, activity_date)
+        VALUES (%s, %s)
+    """, (user_id, today))
+
+    # 3️⃣ Fetch last streak data
+    cursor.execute("""
+        SELECT current_streak, last_activity_date
+        FROM learning_streaks
+        WHERE user_id = %s
+    """, (user_id,))
+
+    streak = cursor.fetchone()
+
+    if not streak:
+        # First time streak
         cursor.execute("""
-            INSERT INTO learning_activity (user_id, activity_date, is_frozen)
-            VALUES (%s, %s, 0)
+            INSERT INTO learning_streaks (user_id, current_streak, last_activity_date)
+            VALUES (%s, 1, %s)
         """, (user_id, today))
 
-        conn.commit()
+    else:
+        last_date = streak["last_activity_date"]
 
+        if last_date == today - timedelta(days=1):
+            new_streak = streak["current_streak"] + 1
+        else:
+            new_streak = 1  # reset streak
+
+        cursor.execute("""
+            UPDATE learning_streaks
+            SET current_streak = %s, last_activity_date = %s
+            WHERE user_id = %s
+        """, (new_streak, today, user_id))
+
+    conn.commit()
     cursor.close()
     conn.close()
 
@@ -780,6 +810,7 @@ def add_course():
 @app.route("/student/courses")
 def view_courses():
     return redirect(url_for("courses"))
+
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
@@ -1103,67 +1134,37 @@ def mark_completed(enrollment_id):
     return redirect("/my-enrollments")
 
 
-
 @app.route("/student/visit-course/<int:course_id>")
 def visit_course(course_id):
     if "user_id" not in session:
         return redirect("/login")
 
     user_id = session["user_id"]
-    today = datetime.now().date()
+    today = datetime.now(timezone.utc).date()
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute(
-        "SELECT current_streak, last_activity_date FROM users WHERE id=%s",
-        (user_id,)
-    )
-    streak = cursor.fetchone()
-
-    if not streak:
-        # First time activity
-        cursor.execute("""
-            INSERT INTO learning_streaks (user_id, current_streak, last_activity_date)
-            VALUES (%s, 1, %s)
-        """, (user_id, today))
-
-    else:
-        last_date = streak["last_activity_date"]
-
-        if last_date == today:
-            pass  # already counted today
-
-        elif last_date == today - timedelta(days=1):
-            cursor.execute("""
-                UPDATE learning_streaks
-                SET current_streak = current_streak + 1,
-                    last_activity_date = %s
-                WHERE user_id = %s
-            """, (today, user_id))
-
-        else:
-            # Missed day → reset streak
-            cursor.execute("""
-                UPDATE learning_streaks
-                SET current_streak = 1,
-                    last_activity_date = %s
-                WHERE user_id = %s
-            """, (today, user_id))
+    # ✅ Log activity ONLY ONCE per day
+    cursor.execute("""
+        INSERT IGNORE INTO learning_activity (user_id, activity_date)
+        VALUES (%s, %s)
+    """, (user_id, today))
 
     conn.commit()
 
-    cursor.execute("SELECT course_link FROM courses WHERE id=%s", (course_id,))
-    link = cursor.fetchone()["course_link"]
+    # Redirect to actual course
+    cursor.execute(
+        "SELECT course_link FROM courses WHERE id=%s",
+        (course_id,)
+    )
+    course = cursor.fetchone()
 
     cursor.close()
     conn.close()
 
-    # Award streak badges after streak update
-    award_badges(user_id)
+    return redirect(course["course_link"])
 
-
-    return redirect(link)
 
 
 @app.after_request
