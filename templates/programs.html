@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.programs-wrapper {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.programs-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #0a3d62;
+}
+
+.programs-subtitle {
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.languages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.language-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.language-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+
+.language-icon {
+  font-size: 46px;
+  margin-bottom: 14px;
+}
+
+.language-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0a3d62;
+}
+
+.language-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 6px;
+}
+</style>
+
+<div class="programs-wrapper">
+  <div class="programs-title">💻 Basic Programming Programs</div>
+  <div class="programs-subtitle">
+    Learn basic programs in different programming languages
+  </div>
+
+  <div class="languages-grid">
+
+    <div class="language-card">
+      <div class="language-icon">🐍</div>
+      <div class="language-name">Python</div>
+      <div class="language-desc">5 basic programs</div>
+    </div>
+
+    <div class="language-card">
+      <div class="language-icon">🇨</div>
+      <div class="language-name">C</div>
+      <div class="language-desc">5 basic programs</div>
+    </div>
+
+    <div class="language-card">
+      <div class="language-icon">➕</div>
+      <div class="language-name">C++</div>
+      <div class="language-desc">5 basic programs</div>
+    </div>
+
+    <div class="language-card">
+      <div class="language-icon">☕</div>
+      <div class="language-name">Java</div>
+      <div class="language-desc">5 basic programs</div>
+    </div>
+
+    <div class="language-card">
+      <div class="language-icon">🎯</div>
+      <div class="language-name">C#</div>
+      <div class="language-desc">5 basic programs</div>
+    </div>
+
+    <div class="language-card">
+      <div class="language-icon">🚀</div>
+      <div class="language-name">Go</div>
+      <div class="language-desc">5 basic programs</div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.program-list-wrapper {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.program-header h2 {
+  font-size: 28px;
+  color: #0a3d62;
+}
+
+.program-header p {
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.programs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+.program-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+  transition: 0.25s;
+}
+
+.program-card:hover {
+  transform: translateY(-6px);
+}
+
+.program-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0a3d62;
+  margin-bottom: 8px;
+}
+
+.program-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 14px;
+}
+
+.view-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  background: #0a3d62;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.view-btn:hover {
+  background: #08324f;
+}
+</style>
+
+<div class="program-list-wrapper">
+
+  <div class="program-header">
+    <h2>💻 C Language – Basic Programs</h2>
+    <p>Fundamental C programs for beginners</p>
+  </div>
+
+  <div class="programs-grid">
+
+    <div class="program-card">
+      <div class="program-title">1. Hello World</div>
+      <div class="program-desc">
+        Print “Hello World” using C
+      </div>
+      <a href="#" class="view-btn">View Program</a>
+    </div>
+
+    <div class="program-card">
+      <div class="program-title">2. Even or Odd</div>
+      <div class="program-desc">
+        Check whether a number is even or odd
+      </div>
+      <a href="#" class="view-btn">View Program</a>
+    </div>
+
+    <div class="program-card">
+      <div class="program-title">3. Factorial of a Number</div>
+      <div class="program-desc">
+        Find factorial using loop
+      </div>
+      <a href="#" class="view-btn">View Program</a>
+    </div>
+
+    <div class="program-card">
+      <div class="program-title">4. Fibonacci Series</div>
+      <div class="program-desc">
+        Print Fibonacci series up to N terms
+      </div>
+      <a href="#" class="view-btn">View Program</a>
+    </div>
+
+    <div class="program-card">
+      <div class="program-title">5. Prime Number</div>
+      <div class="program-desc">
+        Check whether a number is prime
+      </div>
+      <a href="#" class="view-btn">View Program</a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
