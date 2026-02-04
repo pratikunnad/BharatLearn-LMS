@@ -1213,6 +1213,37 @@ def complete_lesson(lesson_id):
     flash("Lesson completed!", "success")
     return redirect(url_for("student_dashboard"))
 
+@app.route("/basic-programs")
+def basic_programs():
+    if "user_id" not in session or session["role"] != "student":
+        return redirect("/login")
+    return render_template("basic_programs.html")
+
+@app.route("/programs/python")
+def python_programs():
+    return render_template("programs_python.html")
+
+@app.route("/programs/c")
+def c_programs():
+    return render_template("programs_c.html")
+
+@app.route("/programs/cpp")
+def cpp_programs():
+    return render_template("programs_cpp.html")
+
+@app.route("/programs/java")
+def java_programs():
+    return render_template("programs_java.html")
+
+@app.route("/programs/csharp")
+def csharp_programs():
+    return render_template("programs_csharp.html")
+
+@app.route("/programs/go")
+def go_programs():
+    return render_template("programs_go.html")
+
+
 
 
 

@@ -2,119 +2,171 @@
 {% block content %}
 
 <style>
-.program-list-wrapper {
+.programs-wrapper {
   max-width: 1000px;
   margin: 40px auto;
   padding: 20px;
 }
 
-.program-header h2 {
-  font-size: 28px;
+.programs-wrapper h2 {
+  text-align: center;
   color: #0a3d62;
-}
-
-.program-header p {
-  color: #64748b;
   margin-bottom: 30px;
-}
-
-.programs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 22px;
 }
 
 .program-card {
   background: #ffffff;
-  border-radius: 14px;
   padding: 22px;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
-  transition: 0.25s;
-}
-
-.program-card:hover {
-  transform: translateY(-6px);
+  border-radius: 14px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  margin-bottom: 26px;
 }
 
 .program-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
+  margin-bottom: 10px;
   color: #0a3d62;
-  margin-bottom: 8px;
 }
 
-.program-desc {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 14px;
+pre {
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  overflow-x: auto;
 }
 
-.view-btn {
-  display: inline-block;
-  padding: 8px 14px;
+.copy-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
   background: #0a3d62;
-  color: #fff;
+  color: white;
+  border: none;
   border-radius: 8px;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
 }
-
-.view-btn:hover {
+.copy-btn:hover {
   background: #08324f;
 }
 </style>
 
-<div class="program-list-wrapper">
+<div class="programs-wrapper">
+  <h2>🔷 C++ Basic Programs</h2>
 
-  <div class="program-header">
-    <h2>💻 C++ – Basic Programs</h2>
-    <p>Beginner-friendly C++ programs with logic building</p>
+  <!-- 1 -->
+  <div class="program-card">
+    <div class="program-title">1. Hello World</div>
+    <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Hello World";
+    return 0;
+}</pre>
+    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
   </div>
 
-  <div class="programs-grid">
+  <!-- 2 -->
+  <div class="program-card">
+    <div class="program-title">2. Add Two Numbers</div>
+    <pre>#include &lt;iostream&gt;
+using namespace std;
 
-    <div class="program-card">
-      <div class="program-title">1. Hello World</div>
-      <div class="program-desc">
-        Print “Hello World” using C++
-      </div>
-      <a href="#" class="view-btn">View Program</a>
-    </div>
-
-    <div class="program-card">
-      <div class="program-title">2. Sum of Two Numbers</div>
-      <div class="program-desc">
-        Add two numbers using user input
-      </div>
-      <a href="#" class="view-btn">View Program</a>
-    </div>
-
-    <div class="program-card">
-      <div class="program-title">3. Even or Odd</div>
-      <div class="program-desc">
-        Check whether a number is even or odd
-      </div>
-      <a href="#" class="view-btn">View Program</a>
-    </div>
-
-    <div class="program-card">
-      <div class="program-title">4. Factorial of a Number</div>
-      <div class="program-desc">
-        Find factorial using loop
-      </div>
-      <a href="#" class="view-btn">View Program</a>
-    </div>
-
-    <div class="program-card">
-      <div class="program-title">5. Prime Number</div>
-      <div class="program-desc">
-        Check whether a number is prime
-      </div>
-      <a href="#" class="view-btn">View Program</a>
-    </div>
-
+int main() {
+    int a, b;
+    cout &lt;&lt; "Enter two numbers: ";
+    cin &gt;&gt; a &gt;&gt; b;
+    cout &lt;&lt; "Sum = " &lt;&lt; a + b;
+    return 0;
+}</pre>
+    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
   </div>
+
+  <!-- 3 -->
+  <div class="program-card">
+    <div class="program-title">3. Check Even or Odd</div>
+    <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int num;
+    cout &lt;&lt; "Enter a number: ";
+    cin &gt;&gt; num;
+
+    if (num % 2 == 0)
+        cout &lt;&lt; "Even";
+    else
+        cout &lt;&lt; "Odd";
+
+    return 0;
+}</pre>
+    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+  </div>
+
+  <!-- 4 -->
+  <div class="program-card">
+    <div class="program-title">4. Factorial of a Number</div>
+    <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int num;
+    long long fact = 1;
+
+    cout &lt;&lt; "Enter a number: ";
+    cin &gt;&gt; num;
+
+    for (int i = 1; i <= num; i++)
+        fact *= i;
+
+    cout &lt;&lt; "Factorial = " &lt;&lt; fact;
+    return 0;
+}</pre>
+    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+  </div>
+
+  <!-- 5 -->
+  <div class="program-card">
+    <div class="program-title">5. Check Prime Number</div>
+    <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int num, flag = 0;
+    cout &lt;&lt; "Enter a number: ";
+    cin &gt;&gt; num;
+
+    for (int i = 2; i <= num / 2; i++) {
+        if (num % i == 0) {
+            flag = 1;
+            break;
+        }
+    }
+
+    if (num <= 1)
+        cout &lt;&lt; "Not Prime";
+    else if (flag == 0)
+        cout &lt;&lt; "Prime";
+    else
+        cout &lt;&lt; "Not Prime";
+
+    return 0;
+}</pre>
+    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+  </div>
+
 </div>
+
+<script>
+function copyCode(btn) {
+  const code = btn.previousElementSibling.innerText;
+  navigator.clipboard.writeText(code);
+  btn.innerText = "Copied ✅";
+  setTimeout(() => btn.innerText = "Copy Code", 1500);
+}
+</script>
 
 {% endblock %}
