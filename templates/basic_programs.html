@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.program-hub {
+  max-width: 900px;
+  margin: 40px auto;
+  text-align: center;
+}
+.lang-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+  margin-top: 40px;
+}
+.lang-card {
+  padding: 25px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+}
+.lang-card a {
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0a3d62;
+}
+</style>
+
+<div class="program-hub">
+  <h2>Basic Programming Programs</h2>
+  <p>Select a language to view basic programs</p>
+
+  <div class="lang-grid">
+    <div class="lang-card"><a href="/programs/python">Python</a></div>
+    <div class="lang-card"><a href="/programs/c">C</a></div>
+    <div class="lang-card"><a href="/programs/cpp">C++</a></div>
+    <div class="lang-card"><a href="/programs/java">Java</a></div>
+    <div class="lang-card"><a href="/programs/csharp">C#</a></div>
+    <div class="lang-card"><a href="/programs/go">Go</a></div>
+  </div>
+</div>
+
+{% endblock %}
