@@ -13,13 +13,20 @@
   color: #0a3d62;
   margin-bottom: 30px;
 }
+body.dark .programs-wrapper h2 {
+  color: #60a5fa;
+}
 
+/* PROGRAM CARD */
 .program-card {
   background: #ffffff;
   padding: 22px;
   border-radius: 14px;
   box-shadow: 0 10px 26px rgba(0,0,0,0.08);
   margin-bottom: 26px;
+}
+body.dark .program-card {
+  background: #020617;
 }
 
 .program-title {
@@ -28,7 +35,11 @@
   margin-bottom: 10px;
   color: #0a3d62;
 }
+body.dark .program-title {
+  color: #60a5fa;
+}
 
+/* CODE */
 pre {
   background: #0f172a;
   color: #e5e7eb;
@@ -38,6 +49,7 @@ pre {
   overflow-x: auto;
 }
 
+/* COPY BUTTON */
 .copy-btn {
   margin-top: 12px;
   padding: 8px 16px;
@@ -51,13 +63,30 @@ pre {
 .copy-btn:hover {
   background: #08324f;
 }
+
+/* SEARCH */
+#programSearch {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
 </style>
 
 <div class="programs-wrapper">
-  <h2>C Language - Basic Programs</h2>
+  <h2>C Language – Basic Programs</h2>
+
+  <!-- SEARCH -->
+  <input
+    type="text"
+    id="programSearch"
+    placeholder="🔍 Search program..."
+    onkeyup="searchPrograms()">
 
   <!-- 1 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">1. Hello World</div>
     <pre>#include &lt;stdio.h&gt;
 
@@ -69,7 +98,7 @@ int main() {
   </div>
 
   <!-- 2 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">2. Add Two Numbers</div>
     <pre>#include &lt;stdio.h&gt;
 
@@ -84,7 +113,7 @@ int main() {
   </div>
 
   <!-- 3 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">3. Check Even or Odd</div>
     <pre>#include &lt;stdio.h&gt;
 
@@ -104,7 +133,7 @@ int main() {
   </div>
 
   <!-- 4 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">4. Factorial of a Number</div>
     <pre>#include &lt;stdio.h&gt;
 
@@ -125,7 +154,7 @@ int main() {
   </div>
 
   <!-- 5 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">5. Check Prime Number</div>
     <pre>#include &lt;stdio.h&gt;
 
@@ -152,15 +181,26 @@ int main() {
 }</pre>
     <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
   </div>
-
 </div>
 
 <script>
+/* COPY CODE */
 function copyCode(btn) {
   const code = btn.previousElementSibling.innerText;
   navigator.clipboard.writeText(code);
   btn.innerText = "Copied ✔";
   setTimeout(() => btn.innerText = "Copy Code", 1500);
+}
+
+/* SEARCH PROGRAMS */
+function searchPrograms() {
+  const input = document.getElementById("programSearch").value.toLowerCase();
+  const cards = document.querySelectorAll(".searchable");
+
+  cards.forEach(card => {
+    const text = card.innerText.toLowerCase();
+    card.style.display = text.includes(input) ? "block" : "none";
+  });
 }
 </script>
 

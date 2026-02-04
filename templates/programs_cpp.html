@@ -48,13 +48,30 @@ pre {
   cursor: pointer;
   font-size: 14px;
 }
+
 .copy-btn:hover {
   background: #08324f;
+}
+
+#programSearch {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
 }
 </style>
 
 <div class="programs-wrapper">
   <h2>C++ Basic Programs</h2>
+
+  <input
+    type="text"
+    id="programSearch"
+    placeholder="Search program..."
+    onkeyup="searchPrograms()"
+  >
 
   <!-- 1 -->
   <div class="program-card">
@@ -157,7 +174,6 @@ int main() {
 }</pre>
     <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
   </div>
-
 </div>
 
 <script>
@@ -166,6 +182,16 @@ function copyCode(btn) {
   navigator.clipboard.writeText(code);
   btn.innerText = "Copied ✔";
   setTimeout(() => btn.innerText = "Copy Code", 1500);
+}
+
+function searchPrograms() {
+  const input = document.getElementById("programSearch").value.toLowerCase();
+  const cards = document.getElementsByClassName("program-card");
+
+  for (let card of cards) {
+    const title = card.querySelector(".program-title").innerText.toLowerCase();
+    card.style.display = title.includes(input) ? "block" : "none";
+  }
 }
 </script>
 

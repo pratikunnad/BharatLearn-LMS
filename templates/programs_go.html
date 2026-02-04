@@ -51,8 +51,21 @@ pre {
 <div class="programs-wrapper">
   <h2>Go (Golang) Basic Programs</h2>
 
+  <input 
+  type="text" 
+  id="programSearch" 
+  placeholder="Search program..."
+  style="
+    width:100%;
+    padding:12px;
+    margin-bottom:25px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:15px;"
+  onkeyup="searchPrograms()">
+
   <!-- 1 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">1. Hello World</div>
     <pre>package main
 
@@ -65,7 +78,7 @@ func main() {
   </div>
 
   <!-- 2 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">2. Add Two Numbers</div>
     <pre>package main
 
@@ -80,7 +93,7 @@ func main() {
   </div>
 
   <!-- 3 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">3. Check Even or Odd</div>
     <pre>package main
 
@@ -100,7 +113,7 @@ func main() {
   </div>
 
   <!-- 4 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">4. Factorial of a Number</div>
     <pre>package main
 
@@ -121,7 +134,7 @@ func main() {
   </div>
 
   <!-- 5 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">5. Check Prime Number</div>
     <pre>package main
 
@@ -161,6 +174,17 @@ function copyCode(btn) {
   btn.innerText = "Copied ✔";
   setTimeout(() => btn.innerText = "Copy Code", 1500);
 }
+
+function searchPrograms() {
+  const input = document.getElementById("programSearch").value.toLowerCase();
+  const cards = document.querySelectorAll(".searchable");
+
+  cards.forEach(card => {
+    const text = card.innerText.toLowerCase();
+    card.style.display = text.includes(input) ? "block" : "none";
+  });
+}
 </script>
+
 
 {% endblock %}
