@@ -1243,6 +1243,21 @@ def csharp_programs():
 def go_programs():
     return render_template("programs_go.html")
 
+@app.route("/student/reference-books")
+def reference_books():
+    if "user_id" not in session:
+        return redirect("/login")
+    return render_template("reference_books/reference_books.html")
+
+
+@app.route("/student/reference-books/<language>")
+def reference_books_language(language):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    return render_template(f"reference_books/books_{language}.html")
+
+
 
 
 

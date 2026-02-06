@@ -261,6 +261,11 @@
                     class="{% if 'profile' in request.path %}active{% endif %}">
                         Profile
                     </a>
+                    <a href="/student/reference-books"
+                    class="{% if 'reference-books' in request.path %}active{% endif %}">
+                        Reference Books
+                    </a>
+
                 {% else %}
                     <a href="/admin/dashboard"
                     class="{% if 'admin' in request.path %}active{% endif %}">

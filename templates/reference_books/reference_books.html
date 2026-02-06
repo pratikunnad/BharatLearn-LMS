@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.books-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 20px;
+}
+.books-container h2 {
+  text-align: center;
+  color: #0a3d62;
+  margin-bottom: 40px;
+}
+.language-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+}
+.language-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.language-card:hover {
+  transform: translateY(-5px);
+}
+.language-card h3 {
+  color: #0a3d62;
+  margin-top: 15px;
+}
+
+/* BACK BUTTON */
+.back-btn-wrapper {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.back-btn {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #0a3d62, #2563eb);
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* DARK MODE */
+body.dark .course-card {
+    background: #020617;
+}
+
+body.dark .course-card p,
+body.dark .enroll-date {
+    color: #cbd5f5;
+}
+
+body.dark .course-card h3 {
+    color: #60a5fa;
+}
+</style>
+
+<div class="books-container">
+  <h2>📚 Reference Books</h2>
+
+  <div class="language-grid">
+    <a href="/student/reference-books/python" class="language-card">
+      <h3>Python</h3>
+    </a>
+    <a href="/student/reference-books/c" class="language-card">
+      <h3>C</h3>
+    </a>
+    <a href="/student/reference-books/cpp" class="language-card">
+      <h3>C++</h3>
+    </a>
+    <a href="/student/reference-books/java" class="language-card">
+      <h3>Java</h3>
+    </a>
+    <a href="/student/reference-books/csharp" class="language-card">
+      <h3>C#</h3>
+    </a>
+    <a href="/student/reference-books/go" class="language-card">
+      <h3>Go</h3>
+    </a>
+  </div>
+</div>
+
+<div class="back-btn-wrapper">
+    <a href="/student/dashboard" class="back-btn">← Back to Dashboard</a>
+</div>
+
+{% endblock %}
