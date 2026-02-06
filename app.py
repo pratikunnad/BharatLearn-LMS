@@ -1244,18 +1244,96 @@ def go_programs():
     return render_template("programs_go.html")
 
 @app.route("/student/reference-books")
-def reference_books():
-    if "user_id" not in session:
+def reference_books_main():
+    if "user_id" not in session or session["role"] != "student":
         return redirect("/login")
+
     return render_template("reference_books/reference_books.html")
+
 
 
 @app.route("/student/reference-books/<language>")
 def reference_books_language(language):
+    if "user_id" not in session or session["role"] != "student":
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT id, title, author, image_path, pdf_path
+        FROM reference_books
+        WHERE language = %s
+    """, (language,))
+    books = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "reference_books/books_language.html",
+        books=books,
+        language=language.capitalize()
+    )
+
+
+@app.route('/admin/add-reference-book', methods=['GET', 'POST'])
+def add_reference_book():
+    if request.method == 'POST':
+        language = request.form['language']
+        title = request.form['title']
+        author = request.form['author']
+
+        pdf = request.files['pdf']
+        image = request.files['image']
+
+        pdf_filename = secure_filename(pdf.filename)
+        image_filename = secure_filename(image.filename)
+
+        pdf_path = f'reference_books/pdfs/{pdf_filename}'
+        image_path = f'reference_books/images/{image_filename}'
+
+        pdf.save(os.path.join('static', pdf_path))
+        image.save(os.path.join('static', image_path))
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            INSERT INTO reference_books
+            (language, title, author, pdf_path, image_path)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (language, title, author, pdf_path, image_path))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return redirect('/add-reference-book')
+
+    return render_template('add_reference_book.html')
+
+
+@app.route("/student/reference-book/view/<int:book_id>")
+def view_book(book_id):
     if "user_id" not in session:
         return redirect("/login")
 
-    return render_template(f"reference_books/books_{language}.html")
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM reference_books WHERE id=%s", (book_id,))
+    book = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("reference_books/view_book.html", book=book)
+
+
+
+
+
 
 
 

@@ -69,6 +69,20 @@ body.dark .course-card h3 {
 <div class="books-wrapper">
   <h2>CPP Reference Books</h2>
 
+  <input
+  type="text"
+  id="bookSearch"
+  placeholder="Search book..."
+  onkeyup="searchBooks()"
+  style="
+    width:100%;
+    padding:12px;
+    margin-bottom:25px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:15px;">
+
+
   <!-- Book 1 -->
   <div class="book-card">
     <img src="/static/book_images/python1.jpg">
@@ -85,5 +99,29 @@ body.dark .course-card h3 {
 <div class="back-btn-wrapper">
     <a href="/student/reference-books" class="back-btn">← Back to Reference books</a>
 </div>
+
+<script>
+function searchBooks() {
+    let input = document.getElementById("bookSearch").value.toLowerCase();
+    let books = document.getElementsByClassName("book-card");
+
+    for (let i = 0; i < books.length; i++) {
+        let title = books[i].querySelector(".book-title").innerText.toLowerCase();
+        let author = books[i].querySelector(".book-author").innerText.toLowerCase();
+        let desc = books[i].querySelector(".book-desc").innerText.toLowerCase();
+
+        if (
+            title.includes(input) ||
+            author.includes(input) ||
+            desc.includes(input)
+        ) {
+            books[i].style.display = "block";
+        } else {
+            books[i].style.display = "none";
+        }
+    }
+}
+</script>
+
 
 {% endblock %}
