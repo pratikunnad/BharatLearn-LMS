@@ -1309,9 +1309,9 @@ def add_reference_book():
         cursor.close()
         conn.close()
 
-        return redirect('/add-reference-book')
+        return redirect(url_for("add_reference_book"))
 
-    return render_template('add_reference_book.html')
+    return render_template("add_reference_book.html")
 
 
 @app.route("/student/reference-book/view/<int:book_id>")
