@@ -3,94 +3,214 @@
 
 <style>
 .books-container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 40px auto;
   padding: 20px;
 }
+
 .books-container h2 {
   text-align: center;
   color: #0a3d62;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
-.language-grid {
+
+/* FILTER BAR */
+.filter-bar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.filter-bar input,
+.filter-bar select {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  width: 100%;
+}
+
+/* BOOK GRID */
+.books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 25px;
 }
-.language-card {
-  background: #fff;
-  padding: 25px;
+
+/* BOOK CARD */
+.book-card {
+  background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 10px 26px rgba(0,0,0,0.08);
-  text-align: center;
-  cursor: pointer;
+  overflow: hidden;
   transition: 0.3s;
 }
-.language-card:hover {
-  transform: translateY(-5px);
+
+.book-card:hover {
+  transform: translateY(-6px);
 }
-.language-card h3 {
+
+.book-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.book-info {
+  padding: 18px;
+}
+
+.book-info h4 {
   color: #0a3d62;
-  margin-top: 15px;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.book-info p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.view-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
+  color: white;
+  border-radius: 25px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 /* BACK BUTTON */
 .back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
+  margin-top: 40px;
+  text-align: center;
 }
 
 .back-btn {
-    padding: 12px 28px;
-    background: linear-gradient(135deg, #0a3d62, #2563eb);
-    color: white;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
+  padding: 12px 28px;
+  background: #e5e7eb;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  color: #111;
 }
 
-/* DARK MODE */
-body.dark .course-card {
-    background: #020617;
+/* PAGINATION */
+
+.pagination {
+  margin-top: 40px;
+  text-align: center;
 }
 
-body.dark .course-card p,
-body.dark .enroll-date {
-    color: #cbd5f5;
+.pagination a {
+  display: inline-block;
+  margin: 0 6px;
+  padding: 10px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  background: #e5e7eb;
+  color: #111;
+  font-weight: 600;
 }
 
-body.dark .course-card h3 {
-    color: #60a5fa;
+.pagination a.active {
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
+  color: white;
 }
+
 </style>
 
 <div class="books-container">
   <h2>Reference Books</h2>
 
-  <div class="language-grid">
-    <a href="/student/reference-books/python" class="language-card">
-      <h3>Python</h3>
-    </a>
-    <a href="/student/reference-books/c" class="language-card">
-      <h3>C</h3>
-    </a>
-    <a href="/student/reference-books/cpp" class="language-card">
-      <h3>C++</h3>
-    </a>
-    <a href="/student/reference-books/java" class="language-card">
-      <h3>Java</h3>
-    </a>
-    <a href="/student/reference-books/csharp" class="language-card">
-      <h3>C#</h3>
-    </a>
-    <a href="/student/reference-books/go" class="language-card">
-      <h3>Go</h3>
-    </a>
+  <!-- FILTERS -->
+  <div class="filter-bar">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search by book title or author..."
+      onkeyup="filterBooks()"
+    >
+
+    <select id="languageFilter" onchange="filterBooks()">
+      <option value="">All Languages</option>
+      <option value="python">Python</option>
+      <option value="c">C</option>
+      <option value="cpp">C++</option>
+      <option value="java">Java</option>
+      <option value="csharp">C#</option>
+      <option value="go">Go</option>
+    </select>
   </div>
+
+  <!-- BOOKS -->
+  <div class="books-grid">
+    {% for book in books %}
+    <div class="book-card"
+         data-title="{{ book.title | lower }}"
+         data-author="{{ book.author | lower }}"
+         data-language="{{ book.language }}">
+
+      <img src="{{ url_for('static', filename=book.image_path) }}" alt="Book">
+
+      <div class="book-info">
+        <h4>{{ book.title }}</h4>
+        <p>{{ book.author }} • {{ book.language|upper }}</p>
+
+        <a href="{{ url_for('view_book', book_id=book.id) }}" class="view-btn">
+          View Book
+        </a>
+
+
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- PAGINATION -->
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if current_page > 1 %}
+    <a href="?page={{ current_page - 1 }}">« Prev</a>
+  {% endif %}
+
+  {% for p in range(1, total_pages + 1) %}
+    <a href="?page={{ p }}"
+       class="{% if p == current_page %}active{% endif %}">
+       {{ p }}
+    </a>
+  {% endfor %}
+
+  {% if current_page < total_pages %}
+    <a href="?page={{ current_page + 1 }}">Next »</a>
+  {% endif %}
+</div>
+{% endif %}
 </div>
 
 <div class="back-btn-wrapper">
-    <a href="/student/dashboard" class="back-btn">← Back to Dashboard</a>
+  <a href="/student/dashboard" class="back-btn">← Back to Dashboard</a>
 </div>
+
+<script>
+function filterBooks() {
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const language = document.getElementById("languageFilter").value;
+
+  document.querySelectorAll(".book-card").forEach(card => {
+    const title = card.dataset.title;
+    const author = card.dataset.author;
+    const lang = card.dataset.language;
+
+    const matchSearch = title.includes(search) || author.includes(search);
+    const matchLang = !language || lang === language;
+
+    card.style.display = (matchSearch && matchLang) ? "block" : "none";
+  });
+}
+</script>
 
 {% endblock %}

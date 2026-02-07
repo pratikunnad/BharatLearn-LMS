@@ -1,5 +1,100 @@
-<iframe 
-  src="{{ url_for('static', filename=book.pdf_path) }}"
-  width="100%"
-  height="600px">
-</iframe>
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.viewer-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.book-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.book-details h2 {
+  color: #0a3d62;
+  margin-bottom: 6px;
+}
+
+.book-details p {
+  color: #555;
+  font-size: 14px;
+}
+
+.back-btn {
+  padding: 10px 22px;
+  background: #e5e7eb;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  color: #111;
+}
+
+/* PDF VIEWER */
+.pdf-wrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.pdf-wrapper iframe {
+  width: 100%;
+  height: 80vh;
+  border: none;
+}
+
+/* INFO BAR */
+.info-bar {
+  background: #f1f5f9;
+  padding: 14px 20px;
+  font-size: 14px;
+  color: #334155;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* DARK MODE */
+body.dark .pdf-wrapper {
+  background: #020617;
+}
+
+body.dark .info-bar {
+  background: #020617;
+  color: #cbd5f5;
+}
+</style>
+
+<div class="viewer-container">
+
+  <!-- HEADER -->
+  <div class="book-header">
+    <div class="book-details">
+      <h2>{{ book.title }}</h2>
+      <p>{{ book.author }} • {{ book.language|upper }}</p>
+    </div>
+
+    <a href="/student/reference-books" class="back-btn">
+      ← Back to Books
+    </a>
+  </div>
+
+  <!-- PDF VIEW -->
+  <div class="pdf-wrapper">
+  <div class="info-bar">
+    <span>📘 Read only • Download disabled</span>
+    <span>Reference Book Viewer</span>
+  </div>
+
+  <iframe
+    src="{{ url_for('static', filename=book.pdf_path) }}#toolbar=0&navpanes=0">
+  </iframe>
+</div>
+
+
+{% endblock %}

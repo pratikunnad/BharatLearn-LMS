@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session, abort
 import mysql.connector
 from datetime import datetime, timedelta, date, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -822,11 +822,14 @@ def admin_dashboard():
 
     cursor.execute("SELECT * FROM courses")
     courses = cursor.fetchall()
+    
+    cursor.execute("SELECT * FROM reference_books")
+    reference_books = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
-    return render_template("admin_dashboard.html", courses=courses)
+    return render_template("admin_dashboard.html", courses=courses, reference_books=reference_books)
 
 @app.route("/logout")
 def logout():
@@ -1243,92 +1246,121 @@ def csharp_programs():
 def go_programs():
     return render_template("programs_go.html")
 
+
 @app.route("/student/reference-books")
 def reference_books_main():
     if "user_id" not in session or session["role"] != "student":
         return redirect("/login")
 
-    return render_template("reference_books/reference_books.html")
-
-
-
-@app.route("/student/reference-books/<language>")
-def reference_books_language(language):
-    if "user_id" not in session or session["role"] != "student":
-        return redirect("/login")
+    page = request.args.get("page", 1, type=int)
+    per_page = 8
+    offset = (page - 1) * per_page
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
+    # total count
+    cursor.execute("SELECT COUNT(*) AS total FROM reference_books")
+    total_books = cursor.fetchone()["total"]
+
+    total_pages = (total_books + per_page - 1) // per_page
+
+    # paginated books
     cursor.execute("""
-        SELECT id, title, author, image_path, pdf_path
-        FROM reference_books
-        WHERE language = %s
-    """, (language,))
+        SELECT * FROM reference_books
+        ORDER BY id DESC
+        LIMIT %s OFFSET %s
+    """, (per_page, offset))
+
     books = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
     return render_template(
-        "reference_books/books_language.html",
+        "reference_books/reference_books.html",
         books=books,
-        language=language.capitalize()
+        current_page=page,
+        total_pages=total_pages
     )
 
 
-@app.route('/admin/add-reference-book', methods=['GET', 'POST'])
+@app.route("/admin/add-reference-book", methods=["GET", "POST"])
 def add_reference_book():
-    if request.method == 'POST':
-        language = request.form['language']
-        title = request.form['title']
-        author = request.form['author']
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
 
-        pdf = request.files['pdf']
-        image = request.files['image']
+    if request.method == "POST":
+        title = request.form["title"]
+        language = request.form["language"]
+        author = request.form["author"]
+        pdf_file = request.files["pdf"]
+        image_file = request.files["image"]
 
-        pdf_filename = secure_filename(pdf.filename)
-        image_filename = secure_filename(image.filename)
+        # ---- SAVE FILES ----
+        pdf_filename = secure_filename(pdf_file.filename)
+        image_filename = secure_filename(image_file.filename)
 
-        pdf_path = f'reference_books/pdfs/{pdf_filename}'
-        image_path = f'reference_books/images/{image_filename}'
+        pdf_path = os.path.join("static/reference_books/pdfs", pdf_filename)
+        image_path = os.path.join("static/reference_books/images", image_filename)
 
-        pdf.save(os.path.join('static', pdf_path))
-        image.save(os.path.join('static', image_path))
+        pdf_file.save(pdf_path)
+        image_file.save(image_path)
 
+        # ---- DB INSERT ----
         conn = get_db_connection()
         cursor = conn.cursor()
 
         cursor.execute("""
-            INSERT INTO reference_books
-            (language, title, author, pdf_path, image_path)
+            INSERT INTO reference_books (title, author, language, pdf_path, image_path)
             VALUES (%s, %s, %s, %s, %s)
-        """, (language, title, author, pdf_path, image_path))
+        """, (
+            title,
+            author,
+            language,
+            f"reference_books/pdfs/{pdf_filename}",
+            f"reference_books/images/{image_filename}"
+        ))
 
         conn.commit()
         cursor.close()
         conn.close()
 
+        # ✅ SUCCESS MESSAGE
+        flash("Book added successfully", "success")
+
+        # ✅ IMPORTANT: redirect to SAME page
         return redirect(url_for("add_reference_book"))
 
     return render_template("add_reference_book.html")
 
 
-@app.route("/student/reference-book/view/<int:book_id>")
+
+@app.route("/student/view-book/<int:book_id>")
 def view_book(book_id):
-    if "user_id" not in session:
+    if "user_id" not in session or session["role"] != "student":
         return redirect("/login")
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM reference_books WHERE id=%s", (book_id,))
+    cursor.execute(
+        "SELECT * FROM reference_books WHERE id = %s",
+        (book_id,)
+    )
     book = cursor.fetchone()
 
     cursor.close()
     conn.close()
 
-    return render_template("reference_books/view_book.html", book=book)
+    if not book:
+        abort(404)
+
+    return render_template(
+        "reference_books/view_book.html",
+        book=book
+    )
+
 
 
 
