@@ -822,14 +822,11 @@ def admin_dashboard():
 
     cursor.execute("SELECT * FROM courses")
     courses = cursor.fetchall()
-    
-    cursor.execute("SELECT * FROM reference_books")
-    reference_books = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
-    return render_template("admin_dashboard.html", courses=courses, reference_books=reference_books)
+    return render_template("admin_dashboard.html", courses=courses)
 
 @app.route("/logout")
 def logout():
@@ -1360,6 +1357,79 @@ def view_book(book_id):
         "reference_books/view_book.html",
         book=book
     )
+
+@app.route("/admin/reference-books")
+def admin_reference_books():
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT id, title, author, language, pdf_path, image_path, created_at
+        FROM reference_books
+        ORDER BY created_at DESC
+    """)
+    books = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "reference_books_list.html",
+        books=books
+    )
+
+@app.route("/admin/edit-reference-book/<int:book_id>", methods=["GET", "POST"])
+def edit_reference_book(book_id):
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    if request.method == "POST":
+        title = request.form["title"]
+        author = request.form["author"]
+        language = request.form["language"]
+        pdf_file = request.files["pdf"]
+        image_file = request.files["image"]
+
+        cursor.execute("""
+            UPDATE reference_books
+            SET title=%s, author=%s, language=%s, pdf_path=%s, image_path=%s
+            WHERE id=%s
+        """, (title, author, language, f"reference_books/pdfs/{pdf_file.filename}", f"reference_books/images/{image_file.filename}", book_id))
+
+        conn.commit()
+        flash("Book updated successfully", "success")
+        return redirect("/admin/reference-books")
+
+    cursor.execute("SELECT * FROM reference_books WHERE id=%s", (book_id,))
+    book = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("edit_reference_book.html", book=book)
+
+@app.route("/admin/delete-reference-book/<int:book_id>")
+def delete_reference_book(book_id):
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM reference_books WHERE id=%s", (book_id,))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    flash("Book deleted successfully", "success")
+    return redirect("/admin/reference-books")
 
 
 
