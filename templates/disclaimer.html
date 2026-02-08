@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ================= DISCLAIMER PAGE ================= */
+.disclaimer-page {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 0 20px 60px;
+}
+
+.disclaimer-card {
+  background: var(--card-bg, #ffffff);
+  border-radius: 18px;
+  padding: 40px 36px;
+  box-shadow: 0 14px 35px rgba(0,0,0,0.08);
+}
+
+body.dark .disclaimer-card {
+  background: #020617;
+}
+
+.disclaimer-card h1 {
+  font-size: 34px;
+  margin-bottom: 14px;
+  color: var(--primary, #2563eb);
+}
+
+.disclaimer-card p {
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--text-muted, #64748b);
+  margin-bottom: 18px;
+}
+
+.disclaimer-card h2 {
+  font-size: 20px;
+  margin-top: 32px;
+  margin-bottom: 10px;
+  color: var(--secondary, #0a3d62);
+}
+
+body.dark .disclaimer-card h2 {
+  color: #60a5fa;
+}
+
+.disclaimer-updated {
+  font-size: 13px;
+  opacity: 0.7;
+  margin-bottom: 25px;
+}
+</style>
+
+<div class="disclaimer-page">
+  <div class="disclaimer-card">
+
+    <h1>Disclaimer</h1>
+    <div class="disclaimer-updated">
+      Last updated: {{ current_date if current_date else "2026" }}
+    </div>
+
+    <p>
+      The information provided on <strong>BharatLearn</strong> is for general
+      educational and informational purposes only. By using this website,
+      you agree to the terms of this Disclaimer.
+    </p>
+
+    <h2>Educational Content Disclaimer</h2>
+    <p>
+      BharatLearn is a learning aggregation platform that curates, organizes,
+      and presents courses, reference materials, and learning resources from
+      various third‑party websites and providers.
+    </p>
+    <p>
+      We do not claim ownership of third‑party course content, videos, PDFs,
+      or external learning materials unless explicitly stated.
+    </p>
+
+    <h2>No Professional Advice</h2>
+    <p>
+      The content available on BharatLearn is not intended to substitute
+      professional advice, including technical, academic, legal, or career
+      guidance. Always seek advice from qualified professionals when needed.
+    </p>
+
+    <h2>External Links Disclaimer</h2>
+    <p>
+      BharatLearn may contain links to external websites that are not provided
+      or maintained by us. We do not guarantee the accuracy, relevance,
+      availability, or completeness of information on external sites.
+    </p>
+    <p>
+      Clicking on third‑party links is done at your own risk.
+    </p>
+
+    <h2>Accuracy of Information</h2>
+    <p>
+      While we strive to keep information up‑to‑date and accurate, BharatLearn
+      makes no warranties or representations of any kind regarding the
+      completeness, reliability, or accuracy of any content on this platform.
+    </p>
+
+    <h2>Limitation of Liability</h2>
+    <p>
+      Under no circumstances shall BharatLearn, its team, or affiliates be
+      liable for any direct, indirect, incidental, or consequential damages
+      arising from the use of this website or reliance on any content provided.
+    </p>
+
+    <h2>User Responsibility</h2>
+    <p>
+      Users are responsible for verifying information before applying it to
+      real‑world situations. Learning outcomes may vary depending on individual
+      effort and external factors.
+    </p>
+
+    <h2>No Guarantees</h2>
+    <p>
+    BharatLearn does not guarantee any specific outcomes, results, or
+    achievements from using the platform or accessing any listed courses.
+    Individual learning results depend on personal effort, background,
+    and external circumstances.
+    </p>
+
+    <h2>Changes to This Disclaimer</h2>
+    <p>
+    We reserve the right to modify or update this Disclaimer at any time
+    without prior notice. Changes will be effective immediately upon
+    posting on this page.
+    </p>
+
+    <h2>Data & Content Responsibility</h2>
+    <p>
+    BharatLearn does not host or control third‑party learning content.
+    Any personal data collected through this platform is handled in
+    accordance with our Privacy Policy.
+    </p>
+
+    <h2>Consent</h2>
+    <p>
+      By using BharatLearn, you hereby consent to this Disclaimer and agree to
+      its terms.
+    </p>
+
+    <h2>Contact Us</h2>
+    <p>
+      If you have any questions regarding this Disclaimer, please contact us
+      via the Support page.
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

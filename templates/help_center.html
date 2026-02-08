@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ================= HELP CENTER ================= */
+.help-container {
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 0 20px 60px;
+}
+
+.help-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.help-header h1 {
+  font-size: 36px;
+  font-weight: 800;
+  color: #2563eb;
+  margin-bottom: 12px;
+}
+
+.help-header p {
+  font-size: 16px;
+  color: #64748b;
+  max-width: 700px;
+  margin: auto;
+}
+
+/* ================= SECTIONS ================= */
+.help-section {
+  margin-bottom: 50px;
+}
+
+.help-section h2 {
+  font-size: 24px;
+  margin-bottom: 18px;
+  color: #0f172a;
+}
+
+body.dark .help-section h2 {
+  color: #e5e7eb;
+}
+
+.help-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.08);
+  margin-bottom: 24px;
+}
+
+body.dark .help-card {
+  background: #020617;
+}
+
+/* ================= FAQ ================= */
+.faq-item {
+  margin-bottom: 18px;
+}
+
+.faq-item h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #2563eb;
+}
+
+.faq-item p {
+  font-size: 14.5px;
+  color: #475569;
+  line-height: 1.7;
+}
+
+body.dark .faq-item p {
+  color: #94a3b8;
+}
+
+/* ================= CONTACT ================= */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.contact-box {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 26px;
+  text-align: center;
+}
+
+body.dark .contact-box {
+  background: #020617;
+}
+
+.contact-box h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #2563eb;
+}
+
+.contact-box p {
+  font-size: 14.5px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.contact-box a {
+  display: inline-block;
+  margin-top: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.contact-box a:hover {
+  text-decoration: underline;
+}
+
+/* ================= NOTICE ================= */
+.help-note {
+  margin-top: 40px;
+  padding: 22px;
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+  border-radius: 12px;
+  font-size: 14.5px;
+  color: #334155;
+}
+
+body.dark .help-note {
+  background: #020617;
+  color: #94a3b8;
+}
+</style>
+
+<div class="help-container">
+
+  <!-- HEADER -->
+  <div class="help-header">
+    <h1>Help Center</h1>
+    <p>
+      Find answers to common questions, learn how BharatLearn works,
+      and get support whenever you need it.
+    </p>
+  </div>
+
+  <!-- GETTING STARTED -->
+  <div class="help-section">
+    <h2>Getting Started</h2>
+    <div class="help-card">
+      <div class="faq-item">
+        <h4>What is BharatLearn?</h4>
+        <p>
+          BharatLearn is a learning platform that organizes and curates
+          courses, tutorials, and reference material from multiple trusted
+          sources into one easy‑to‑use dashboard.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h4>Do you create your own courses?</h4>
+        <p>
+          BharatLearn primarily groups and organizes educational content
+          from different platforms. Course ownership and rights belong
+          to their respective creators.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h4>Is BharatLearn free?</h4>
+        <p>
+          Many features are free. Some courses or external platforms
+          may require payment, which is clearly mentioned before access.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div class="help-section">
+    <h2>Account & Profile</h2>
+    <div class="help-card">
+      <div class="faq-item">
+        <h4>How do I create an account?</h4>
+        <p>
+          Click on “Get Started” or “Register” and fill in your basic
+          information to create an account.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h4>Why is my profile image or data not updating?</h4>
+        <p>
+        If you recently edited your profile, please refresh the page.
+        Users are responsible for keeping their account information
+        accurate and up‑to‑date. If the issue continues, log out
+        and log back in.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- COURSES -->
+  <div class="help-section">
+    <h2>Courses & Reference Books</h2>
+    <div class="help-card">
+      <div class="faq-item">
+        <h4>I cannot see a PDF or book cover</h4>
+        <p>
+          This usually happens if the file path is missing or the file
+          was not uploaded correctly. Please contact support if the
+          issue persists.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h4>Can I download reference books?</h4>
+        <p>
+          Most reference books are provided in read‑only mode to respect
+          copyright and licensing rules.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA & PRIVACY -->
+<div class="help-section">
+  <h2>Data & Privacy</h2>
+  <div class="help-card">
+    <div class="faq-item">
+      <h4>How does BharatLearn handle my data?</h4>
+      <p>
+        BharatLearn collects only the minimum information required
+        to create and manage user accounts, provide access to
+        learning resources, and respond to support requests.
+      </p>
+    </div>
+
+    <div class="faq-item">
+      <h4>Do you share my data with third parties?</h4>
+      <p>
+        We do not sell or rent personal data. Limited data may be
+        shared only when required to provide platform functionality
+        or comply with legal obligations.
+      </p>
+    </div>
+
+    <div class="faq-item">
+      <h4>Where can I learn more?</h4>
+      <p>
+        For complete details on data collection, usage, storage,
+        and user rights, please review our
+        <a href="/privacy-policy">Privacy Policy</a>.
+      </p>
+    </div>
+  </div>
+</div>
+
+  <!-- CONTACT -->
+  <div class="help-section">
+    <h2>Contact Support</h2>
+
+    <div class="contact-grid">
+      <div class="contact-box">
+        <h3>Email Support</h3>
+        <p>
+        For technical issues, account problems, or feedback.
+        Any personal information shared via email is handled
+        in accordance with our Privacy Policy.
+        </p>
+
+        <a href="mailto:bharatlearn.official@gmail.com">
+          bharatlearn.official@gmail.com
+        </a>
+      </div>
+
+      <div class="contact-box">
+        <h3>Response Time</h3>
+        <p>
+          We usually respond within 24-48 business hours.
+        </p>
+      </div>
+
+      <div class="contact-box">
+        <h3>Report Content</h3>
+        <p>
+          If you believe any content violates copyright or policies,
+          please notify us immediately.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTE -->
+  <div class="help-note">
+    BharatLearn does not host or claim ownership of third‑party course
+    content. All trademarks, logos, and materials belong to their
+    respective owners. User data is handled in accordance with our
+    Privacy Policy.
+
+  </div>
+
+</div>
+
+{% endblock %}

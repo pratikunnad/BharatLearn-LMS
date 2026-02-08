@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.legal-page {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 0 20px 60px;
+  color: var(--text-main, #0f172a);
+}
+
+.legal-page h1 {
+  font-size: 34px;
+  margin-bottom: 10px;
+  color: #2563eb;
+}
+
+.legal-page .updated {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 40px;
+}
+
+.legal-page h2 {
+  font-size: 22px;
+  margin-top: 40px;
+  margin-bottom: 12px;
+  color: #0a3d62;
+}
+
+.legal-page p {
+  font-size: 15.5px;
+  line-height: 1.75;
+  margin-bottom: 14px;
+  color: #334155;
+}
+
+.legal-page ul {
+  margin: 10px 0 20px 20px;
+}
+
+.legal-page li {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+body.dark .legal-page p,
+body.dark .legal-page li {
+  color: #cbd5f5;
+}
+</style>
+
+<div class="legal-page">
+
+  <h1>Terms of Service</h1>
+  <div class="updated">Last updated: {{ current_year }}</div>
+
+  <p>
+    Welcome to <strong>BharatLearn</strong>. By accessing or using our website,
+    you agree to comply with and be bound by these Terms of Service.
+    If you do not agree with any part of these terms, please do not use our platform.
+  </p>
+
+  <h2>1. About BharatLearn</h2>
+  <p>
+    BharatLearn is an educational platform designed to help learners discover,
+    organize, and access learning resources, including courses, reference books,
+    and educational materials.
+  </p>
+  <p>
+    Some courses or learning resources may be hosted directly on BharatLearn,
+    while others may link to or reference third‑party platforms.
+  </p>
+
+  <h2>2. User Accounts</h2>
+  <p>
+    By creating an account on BharatLearn, you acknowledge that certain personal
+    data is required to provide our services. The processing of this data is
+    necessary for the performance of a contract between you and BharatLearn,
+    in accordance with applicable data protection laws.
+  </p>
+
+  <ul>
+    <li>You must provide accurate and complete information.</li>
+    <li>You must not share your account with others.</li>
+    <li>You are responsible for any activity performed using your account.</li>
+  </ul>
+
+  <h2>3. Educational Content</h2>
+  <p>
+    BharatLearn provides access to educational materials including:
+  </p>
+  <ul>
+    <li>Courses curated or hosted on BharatLearn</li>
+    <li>Reference books and PDFs</li>
+    <li>Links to third‑party educational platforms</li>
+  </ul>
+
+  <p>
+    We do not guarantee that all content is created or owned by BharatLearn.
+    Third‑party content remains the property of its respective owners.
+  </p>
+
+  <h2>4. Third‑Party Links & Platforms</h2>
+  <p>
+    BharatLearn may contain links to third‑party websites or services.
+    We do not control or take responsibility for the content, policies,
+    or practices of any third‑party platforms.
+  </p>
+
+  <p>
+    Accessing third‑party resources is done at your own risk,
+    and their terms and policies will apply.
+  </p>
+
+  <h2>5. Acceptable Use</h2>
+  <p>
+    You agree not to misuse BharatLearn. This includes, but is not limited to:
+  </p>
+
+  <ul>
+    <li>Attempting to hack, disrupt, or damage the platform</li>
+    <li>Uploading malicious or harmful content</li>
+    <li>Copying or redistributing content without permission</li>
+    <li>Using the platform for unlawful purposes</li>
+  </ul>
+
+  <h2>6. Intellectual Property</h2>
+  <p>
+    All original content, branding, design, and functionality on BharatLearn
+    are the intellectual property of BharatLearn unless otherwise stated.
+  </p>
+
+  <p>
+    You may not copy, modify, distribute, or reproduce our content
+    without prior written permission.
+  </p>
+
+  <h2>7. Privacy & Data Protection</h2>
+<p>
+  Your use of BharatLearn is also governed by our Privacy Policy, which explains
+  how we collect, process, and protect your personal data.
+</p>
+<p>
+  We process personal information only when there is a lawful basis to do so,
+  including contractual necessity, legal obligations, or legitimate interests.
+</p>
+<p>
+  Users have the right to access, correct, or request deletion of their personal
+  data, subject to applicable laws. Requests can be made through our Support page.
+</p>
+
+
+  <h2>8. No Guarantees</h2>
+  <p>
+    BharatLearn is provided on an “as is” and “as available” basis.
+    We do not guarantee uninterrupted access, accuracy, or completeness
+    of content.
+  </p>
+
+  <h2>9. Limitation of Liability</h2>
+  <p>
+    BharatLearn shall not be liable for any direct, indirect, incidental,
+    or consequential damages arising from your use of the platform,
+    including reliance on educational content or third‑party resources.
+  </p>
+
+  <h2>10. Account Termination</h2>
+  <p>
+    We reserve the right to suspend or terminate accounts that violate
+    these Terms of Service or misuse the platform.
+  </p>
+
+  <h2>11. Automated Decision‑Making</h2>
+    <p>
+    BharatLearn does not use automated decision‑making or profiling that produces
+    legal or similarly significant effects on users.
+    </p>
+
+
+  <h2>12. Changes to These Terms</h2>
+  <p>
+    We may update these Terms of Service from time to time.
+    Continued use of BharatLearn after changes means you accept the updated terms.
+  </p>
+
+  <h2>13. Governing Law</h2>
+    <p>
+    These Terms of Service shall be governed by and interpreted in accordance
+    with the laws applicable in India, without regard to conflict of law principles.
+    </p>
+
+
+  <h2>14. Contact Us</h2>
+  <p>
+    If you have any questions about these Terms of Service,
+    please contact us through the Support page or via our official communication channels.
+  </p>
+
+</div>
+
+{% endblock %}

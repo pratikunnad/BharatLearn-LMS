@@ -1468,19 +1468,25 @@ def delete_reference_book(book_id):
     flash("Book deleted successfully", "success")
     return redirect("/admin/reference-books")
 
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
+@app.route("/privacy-policy")
+def privacy_policy():
+    return render_template("privacy_policy.html")
 
+@app.route("/terms")
+def terms():
+    return render_template("terms.html")
 
+@app.route("/help")
+def support():
+    return render_template("help_center.html")
 
-
-
-
-
-
-
-
-
-
+@app.route("/disclaimer")
+def disclaimer():
+    return render_template("disclaimer.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
