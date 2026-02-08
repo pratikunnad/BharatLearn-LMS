@@ -162,7 +162,7 @@ body.dark .enrollment-table tr:hover td {
     background: #020617;
 }
 
-/* STUDENT NAME & EMAIL */
+/* learner NAME & EMAIL */
 body.dark .enrollment-table strong {
     color: #ffffff;
 }
@@ -221,7 +221,7 @@ body.dark .back-btn:hover {
         <table class="enrollment-table">
             <thead>
                 <tr>
-                    <th>Student Name</th>
+                    <th>learner Name</th>
                     <th>Email</th>
                     <th>Course</th>
                     <th>Enrolled On</th>
@@ -231,8 +231,8 @@ body.dark .back-btn:hover {
             <tbody>
                 {% for e in enrollments %}
                 <tr>
-                    <td><strong>{{ e.student_name }}</strong></td>
-                    <td>{{ e.student_email }}</td>
+                    <td><strong>{{ e.learner_name }}</strong></td>
+                    <td>{{ e.learner_email }}</td>
                     <td>
                         <span class="badge badge-course">
                             {{ e.course_title }}
@@ -247,7 +247,7 @@ body.dark .back-btn:hover {
                         <form
                             action="{{ url_for('admin_unenroll', enrollment_id=e.enrollment_id) }}"
                             method="post"
-                            onsubmit="return confirm('Are you sure you want to unenroll this student?');"
+                            onsubmit="return confirm('Are you sure you want to unenroll this learner?');"
                         >
                             <button type="submit" class="btn-danger">
                                 Unenroll

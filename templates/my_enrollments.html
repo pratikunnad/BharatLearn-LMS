@@ -157,6 +157,11 @@
     font-weight: 600;
 }
 
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
 /* DARK MODE */
 body.dark .course-card {
     background: #020617;
@@ -170,6 +175,7 @@ body.dark .enroll-date {
 body.dark .course-card h3 {
     color: #60a5fa;
 }
+
 </style>
 
 <h2 class="page-title">My Enrolled Courses</h2>
@@ -206,7 +212,7 @@ body.dark .course-card h3 {
 
         <div class="card-actions">
 
-            <a href="/student/visit-course/{{ course.id }}" target="_blank" class="visit-btn">
+            <a href="/learner/visit-course/{{ course.id }}" target="_blank" class="visit-btn">
                 ▶ Visit Course
             </a>
 
@@ -235,7 +241,7 @@ body.dark .course-card h3 {
 {% endif %}
 
 <div class="back-btn-wrapper">
-    <a href="/student/dashboard" class="back-btn">← Back to Dashboard</a>
+    <a href="/learner/dashboard" class="back-btn">← Back to Dashboard</a>
 </div>
 
 {% endblock %}

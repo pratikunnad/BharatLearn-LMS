@@ -178,46 +178,46 @@ body.dark td:last-child {
 
 <div class="analytics-container">
 
-    <h2>Student-wise Enrollment Analytics</h2>
+    <h2>Learner-wise Enrollment Analytics</h2>
 
     <!-- STATS -->
     <div class="stats-grid">
         <div class="stat-card">
-            <h3>Total Students</h3>
-            <p>{{ total_students }}</p>
+            <h3>Total Learners</h3>
+            <p>{{ total_learners }}</p>
         </div>
 
         <div class="stat-card">
-            <h3>Students Enrolled</h3>
-            <p>{{ enrolled_students }}</p>
+            <h3>Learners Enrolled</h3>
+            <p>{{ enrolled_learners }}</p>
         </div>
 
         <div class="stat-card">
-            <h3>Students Not Enrolled</h3>
-            <p>{{ students_without_enrollments }}</p>
+            <h3>Learners Not Enrolled</h3>
+            <p>{{ learners_without_enrollments }}</p>
         </div>
 
         <div class="stat-card">
-            <h3>Avg Enrollments / Student</h3>
+            <h3>Avg Enrollments / Learner</h3>
             <p>{{ avg_enrollments }}</p>
         </div>
     </div>
 
     <!-- TABLE -->
     <div class="table-container">
-        <h3>Student-wise Enrollment Details</h3>
+        <h3>Learner-wise Enrollment Details</h3>
 
         <table>
             <thead>
                 <tr>
-                    <th>Student Name</th>
+                    <th>Learner Name</th>
                     <th>Email</th>
                     <th>Total Enrollments</th>
                     <th>Enrolled Courses</th>
                 </tr>
             </thead>
             <tbody>
-                {% for s in student_data %}
+                {% for s in learner_data %}
                 <tr>
                     <td>{{ s.name }}</td>
                     <td>{{ s.email }}</td>

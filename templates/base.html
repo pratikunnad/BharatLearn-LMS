@@ -252,16 +252,16 @@
                 <a href="/register">Register</a>
             {% else %}
 
-                {% if session.get("role") == "student" %}
-                    <a href="/student/dashboard"
-                    class="{% if 'student' in request.path %}active{% endif %}">
+                {% if session.get("role") == "learner" %}
+                    <a href="/learner/dashboard"
+                    class="{% if 'learner' in request.path %}active{% endif %}">
                         Dashboard
                     </a>
-                    <a href="/student/profile"
+                    <a href="/learner/profile"
                     class="{% if 'profile' in request.path %}active{% endif %}">
                         Profile
                     </a>
-                    <a href="/student/reference-books"
+                    <a href="/learner/reference-books"
                     class="{% if 'reference-books' in request.path %}active{% endif %}">
                         Reference Books
                     </a>

@@ -42,8 +42,8 @@ def inject_year():
 @app.route("/")
 def home():
     if session.get("user_id"):
-        if session.get("role") == "student":
-            return redirect("/student/dashboard")
+        if session.get("role") == "learner":
+            return redirect("/learner/dashboard")
         elif session.get("role") == "admin":
             return redirect("/admin/dashboard")
     return render_template("home.html")
@@ -75,7 +75,7 @@ def login():
             if user["role"] == "admin":
                 return redirect(url_for("admin_dashboard"))
             else:
-                return redirect(url_for("student_dashboard"))
+                return redirect(url_for("learner_dashboard"))
         else:
             flash("Invalid email or password", "danger")
 
@@ -125,7 +125,7 @@ def register():
 
     return render_template("register.html", message=message)
 
-@app.route("/student/change-password", methods=["GET", "POST"])
+@app.route("/learner/change-password", methods=["GET", "POST"])
 def change_password():
     if "user_id" not in session:
         return redirect("/login")
@@ -137,7 +137,7 @@ def change_password():
 
         if new_password != confirm_password:
             flash("Passwords do not match", "danger")
-            return redirect("/student/change-password")
+            return redirect("/learner/change-password")
 
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -154,7 +154,7 @@ def change_password():
         # 1️⃣ Verify current password
         if not check_password_hash(user["password"], current_password):
             flash("Current password is incorrect", "danger")
-            return redirect("/student/change-password")
+            return redirect("/learner/change-password")
         else:
             cursor.execute(
                 "UPDATE users SET password=%s WHERE id=%s",
@@ -166,15 +166,15 @@ def change_password():
         cursor.close()
         conn.close()
 
-        return redirect("/student/profile")
+        return redirect("/learner/profile")
 
     return render_template("change_password.html")
 
 from datetime import datetime, timezone, timedelta, date
 
-@app.route("/student/dashboard")
-def student_dashboard():
-    if "user_id" not in session or session["role"] != "student":
+@app.route("/learner/dashboard")
+def learner_dashboard():
+    if "user_id" not in session or session["role"] != "learner":
         return redirect("/login")
 
     user_id = session["user_id"]
@@ -254,7 +254,7 @@ def student_dashboard():
     conn.close()
 
     return render_template(
-        "student_dashboard.html",
+        "learner_dashboard.html",
         completed_courses=completed_courses,
         advanced_completed=advanced_completed,
         earned_badges=earned_badges,
@@ -390,8 +390,8 @@ def award_streak_badges(user_id):
         conn.close()
     
 
-@app.route("/student/profile")
-def student_profile():
+@app.route("/learner/profile")
+def learner_profile():
     if "user_id" not in session:
         return redirect("/login")
 
@@ -417,13 +417,13 @@ def student_profile():
     conn.close()
 
     return render_template(
-        "student_profile.html",
+        "learner_profile.html",
         user=user,
         earned_badges=earned_badges
     )
 
 
-@app.route("/student/profile/edit", methods=["GET", "POST"])
+@app.route("/learner/profile/edit", methods=["GET", "POST"])
 def edit_profile():
     if "user_id" not in session:
         return redirect("/login")
@@ -460,7 +460,7 @@ def edit_profile():
 
         conn.commit()
         flash("Profile updated successfully 🎉", "success")
-        return redirect("/student/profile")
+        return redirect("/learner/profile")
 
     cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
     user = cursor.fetchone()
@@ -471,7 +471,7 @@ def edit_profile():
     return render_template("edit_profile.html", user=user)
 
 
-@app.route("/student/profile/update", methods=["POST"])
+@app.route("/learner/profile/update", methods=["POST"])
 def update_profile():
     if "user_id" not in session:
         return redirect("/login")
@@ -498,7 +498,7 @@ def update_profile():
     conn.close()
 
     flash("✅ Profile updated successfully", "success")
-    return redirect("/student/profile")
+    return redirect("/learner/profile")
 
 
 @app.route("/some-route")
@@ -807,7 +807,7 @@ def add_course():
     return render_template("add_course.html")
 
 
-@app.route("/student/courses")
+@app.route("/learner/courses")
 def view_courses():
     return redirect(url_for("courses"))
 
@@ -846,8 +846,8 @@ def admin_enrollments():
     cursor.execute("""
         SELECT 
             e.id AS enrollment_id,
-            u.name AS student_name,
-            u.email AS student_email,
+            u.name AS learner_name,
+            u.email AS learner_email,
             c.title AS course_title,
             e.enrolled_at
         FROM enrollments e
@@ -896,9 +896,9 @@ def admin_enrollment_analytics():
     cursor.execute("SELECT COUNT(*) AS total_enrollments FROM enrollments")
     total_enrollments = cursor.fetchone()["total_enrollments"]
 
-    # Total unique students
-    cursor.execute("SELECT COUNT(DISTINCT user_id) AS total_students FROM enrollments")
-    total_students = cursor.fetchone()["total_students"]
+    # Total unique learners
+    cursor.execute("SELECT COUNT(DISTINCT user_id) AS total_learners FROM enrollments")
+    total_learners = cursor.fetchone()["total_learners"]
 
     # Total courses enrolled
     cursor.execute("SELECT COUNT(DISTINCT course_id) AS total_courses FROM enrollments")
@@ -937,40 +937,40 @@ def admin_enrollment_analytics():
     return render_template(
         "admin_enrollment_analytics.html",
         total_enrollments=total_enrollments,
-        total_students=total_students,
+        total_learners=total_learners,
         total_courses=total_courses,
         today_enrollments=today_enrollments,
         course_data=course_data,
         difficulty_data=difficulty_data
     )
 
-@app.route("/admin/student-analytics")
-def student_analytics():
+@app.route("/admin/learner-analytics")
+def learner_analytics():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # Total students
-    cursor.execute("SELECT COUNT(*) AS total FROM users WHERE role='student'")
-    total_students = cursor.fetchone()["total"]
+    # Total learners
+    cursor.execute("SELECT COUNT(*) AS total FROM users WHERE role='learner'")
+    total_learners = cursor.fetchone()["total"]
 
-    # Students with enrollments
+    # Learners with enrollments
     cursor.execute("""
         SELECT COUNT(DISTINCT user_id) AS total
         FROM enrollments
     """)
-    enrolled_students = cursor.fetchone()["total"]
+    enrolled_learners = cursor.fetchone()["total"]
 
-    # Students without enrollments
-    students_without_enrollments = total_students - enrolled_students
+    # Learners without enrollments
+    learners_without_enrollments = total_learners - enrolled_learners
 
-    # Average enrollments per student
+    # Average enrollments per learner
     cursor.execute("""
         SELECT COUNT(*) / COUNT(DISTINCT user_id) AS avg_enrollments
         FROM enrollments
     """)
     avg_enrollments = cursor.fetchone()["avg_enrollments"] or 0
 
-    # Student-wise enrollment details
+    # Learner-wise enrollment details
     cursor.execute("""
         SELECT 
             u.id,
@@ -981,28 +981,28 @@ def student_analytics():
         FROM users u
         LEFT JOIN enrollments e ON u.id = e.user_id
         LEFT JOIN courses c ON e.course_id = c.id
-        WHERE u.role = 'student'
+        WHERE u.role = 'learner'
         GROUP BY u.id
         ORDER BY total_enrollments DESC
     """)
-    student_data = cursor.fetchall()
+    learner_data = cursor.fetchall()
 
     cursor.close()
 
     return render_template(
-        "student_wise_analytics.html",
-        total_students=total_students,
-        enrolled_students=enrolled_students,
-        students_without_enrollments=students_without_enrollments,
+        "learner_wise_analytics.html",
+        total_learners=total_learners,
+        enrolled_learners=enrolled_learners,
+        learners_without_enrollments=learners_without_enrollments,
         avg_enrollments=round(avg_enrollments, 2),
-        student_data=student_data
+        learner_data=learner_data
     )
 
 # --------------------
-# STUDENT PROGRESS (✅ FIXED)
+# LEARNER PROGRESS (✅ FIXED)
 # --------------------
-@app.route("/student/progress")
-def student_progress():
+@app.route("/learner/progress")
+def learner_progress():
     if "user_id" not in session:
         return redirect("/login")
 
@@ -1035,7 +1035,7 @@ def student_progress():
     conn.close()
 
     return render_template(
-        "student_progress.html",
+        "learner_progress.html",
         total_courses=total_courses,
         completed_courses=completed_courses,
         pending_courses=pending_courses,
@@ -1044,7 +1044,7 @@ def student_progress():
     )
 
 
-@app.route("/student/mark-completed/<int:enrollment_id>", methods=["POST"])
+@app.route("/learner/mark-completed/<int:enrollment_id>", methods=["POST"])
 def mark_completed(enrollment_id):
     if "user_id" not in session:
         return redirect("/login")
@@ -1134,7 +1134,7 @@ def mark_completed(enrollment_id):
     return redirect("/my-enrollments")
 
 
-@app.route("/student/visit-course/<int:course_id>")
+@app.route("/learner/visit-course/<int:course_id>")
 def visit_course(course_id):
     if "user_id" not in session:
         return redirect("/login")
@@ -1200,7 +1200,7 @@ def update_streak(user):
     return 1, today, freeze
 
 
-@app.route("/student/complete-lesson/<int:lesson_id>", methods=["POST"])
+@app.route("/learner/complete-lesson/<int:lesson_id>", methods=["POST"])
 def complete_lesson(lesson_id):
     user_id = session.get("user_id")
 
@@ -1211,11 +1211,11 @@ def complete_lesson(lesson_id):
     update_streak(user_id)
 
     flash("Lesson completed!", "success")
-    return redirect(url_for("student_dashboard"))
+    return redirect(url_for("learner_dashboard"))
 
 @app.route("/basic-programs")
 def basic_programs():
-    if "user_id" not in session or session["role"] != "student":
+    if "user_id" not in session or session["role"] != "learner":
         return redirect("/login")
     return render_template("basic_programs.html")
 
@@ -1244,9 +1244,9 @@ def go_programs():
     return render_template("programs_go.html")
 
 
-@app.route("/student/reference-books")
+@app.route("/learner/reference-books")
 def reference_books_main():
-    if "user_id" not in session or session["role"] != "student":
+    if "user_id" not in session or session["role"] != "learner":
         return redirect("/login")
 
     page = request.args.get("page", 1, type=int)
@@ -1333,9 +1333,9 @@ def add_reference_book():
 
 
 
-@app.route("/student/view-book/<int:book_id>")
+@app.route("/learner/view-book/<int:book_id>")
 def view_book(book_id):
-    if "user_id" not in session or session["role"] != "student":
+    if "user_id" not in session or session["role"] != "learner":
         return redirect("/login")
 
     conn = get_db_connection()

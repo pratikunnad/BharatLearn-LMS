@@ -83,21 +83,6 @@
   font-weight: 600;
 }
 
-/* BACK BUTTON */
-.back-btn-wrapper {
-  margin-top: 40px;
-  text-align: center;
-}
-
-.back-btn {
-  padding: 12px 28px;
-  background: #e5e7eb;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-  color: #111;
-}
-
 /* PAGINATION */
 
 .pagination {
@@ -119,6 +104,26 @@
 .pagination a.active {
   background: linear-gradient(135deg, #0a3d62, #2563eb);
   color: white;
+}
+
+/* BACK BUTTON */
+.back-btn-wrapper {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.back-btn {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #0a3d62, #2563eb);
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
 </style>
@@ -192,7 +197,7 @@
 </div>
 
 <div class="back-btn-wrapper">
-  <a href="/student/dashboard" class="back-btn">← Back to Dashboard</a>
+    <a href="/learner/dashboard" class="back-btn">← Back to Dashboard</a>
 </div>
 
 <script>
