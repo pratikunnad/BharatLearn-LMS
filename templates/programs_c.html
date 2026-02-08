@@ -3,111 +3,120 @@
 
 <style>
 .programs-wrapper {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 40px auto;
   padding: 20px;
 }
 
 .programs-wrapper h2 {
   text-align: center;
-  color: #0a3d62;
   margin-bottom: 30px;
+  color: #0a3d62;
 }
 body.dark .programs-wrapper h2 {
   color: #60a5fa;
+}
+
+/* SEARCH */
+#programSearch {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+}
+body.dark #programSearch {
+  background: #020617;
+  color: #e5e7eb;
+  border-color: #1e293b;
 }
 
 /* PROGRAM CARD */
 .program-card {
   background: #ffffff;
   padding: 22px;
-  border-radius: 14px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
   margin-bottom: 26px;
 }
 body.dark .program-card {
   background: #020617;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
 }
 
 .program-title {
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: #0a3d62;
 }
 body.dark .program-title {
   color: #60a5fa;
 }
 
-/* CODE */
+/* CODE BLOCK */
 pre {
   background: #0f172a;
   color: #e5e7eb;
   padding: 16px;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 14px;
   overflow-x: auto;
 }
 
 /* COPY BUTTON */
 .copy-btn {
-  margin-top: 12px;
-  padding: 8px 16px;
-  background: #0a3d62;
+  margin-top: 14px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .copy-btn:hover {
-  background: #08324f;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
-/* SEARCH */
-#programSearch {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 25px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-}
-
-/* ===== BACK BUTTON ===== */
+/* BACK BUTTON */
 .back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
+  margin-top: 40px;
+  text-align: center;
 }
 
 .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #0a3d62, #1e90ff);
+  color: #ffffff;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform .2s, box-shadow .2s;
 }
-
 .back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
 }
 </style>
 
 <div class="programs-wrapper">
   <h2>C Language – Basic Programs</h2>
 
-  <!-- SEARCH -->
   <input
     type="text"
     id="programSearch"
     placeholder="🔍 Search program..."
-    onkeyup="searchPrograms()">
+    onkeyup="searchPrograms()"
+  >
 
   <!-- 1 -->
   <div class="program-card searchable">
@@ -128,7 +137,6 @@ int main() {
 
 int main() {
     int a, b;
-    printf("Enter two numbers: ");
     scanf("%d %d", &a, &b);
     printf("Sum = %d", a + b);
     return 0;
@@ -143,7 +151,6 @@ int main() {
 
 int main() {
     int num;
-    printf("Enter a number: ");
     scanf("%d", &num);
 
     if (num % 2 == 0)
@@ -162,13 +169,11 @@ int main() {
     <pre>#include &lt;stdio.h&gt;
 
 int main() {
-    int num, i;
+    int num;
     long fact = 1;
-
-    printf("Enter a number: ");
     scanf("%d", &num);
 
-    for (i = 1; i <= num; i++)
+    for (int i = 1; i <= num; i++)
         fact *= i;
 
     printf("Factorial = %ld", fact);
@@ -183,23 +188,20 @@ int main() {
     <pre>#include &lt;stdio.h&gt;
 
 int main() {
-    int num, i, flag = 0;
-    printf("Enter a number: ");
+    int num, flag = 0;
     scanf("%d", &num);
 
-    for (i = 2; i <= num / 2; i++) {
+    for (int i = 2; i <= num / 2; i++) {
         if (num % i == 0) {
             flag = 1;
             break;
         }
     }
 
-    if (num <= 1)
+    if (num <= 1 || flag)
         printf("Not Prime");
-    else if (flag == 0)
-        printf("Prime");
     else
-        printf("Not Prime");
+        printf("Prime");
 
     return 0;
 }</pre>
@@ -208,11 +210,10 @@ int main() {
 </div>
 
 <div class="back-btn-wrapper">
-    <a href="/basic-programs" class="back-btn">← Back </a>
+  <a href="/basic-programs" class="back-btn">← Back</a>
 </div>
 
 <script>
-/* COPY CODE */
 function copyCode(btn) {
   const code = btn.previousElementSibling.innerText;
   navigator.clipboard.writeText(code);
@@ -220,14 +221,14 @@ function copyCode(btn) {
   setTimeout(() => btn.innerText = "Copy Code", 1500);
 }
 
-/* SEARCH PROGRAMS */
 function searchPrograms() {
   const input = document.getElementById("programSearch").value.toLowerCase();
   const cards = document.querySelectorAll(".searchable");
 
   cards.forEach(card => {
-    const text = card.innerText.toLowerCase();
-    card.style.display = text.includes(input) ? "block" : "none";
+    card.style.display = card.innerText.toLowerCase().includes(input)
+      ? "block"
+      : "none";
   });
 }
 </script>

@@ -2,88 +2,148 @@
 {% block content %}
 
 <style>
+/* =========================
+   PAGE WRAPPER
+========================= */
 .programs-wrapper {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 40px auto;
   padding: 20px;
 }
 
 .programs-wrapper h2 {
   text-align: center;
-  color: #0a3d62;
-  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 25px;
 }
 
+/* =========================
+   SEARCH BAR
+========================= */
+#programSearch {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  font-size: 15px;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+
+#programSearch:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(10,61,98,0.15);
+}
+
+/* =========================
+   PROGRAM CARD
+========================= */
 .program-card {
   background: #ffffff;
-  padding: 22px;
-  border-radius: 14px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
-  margin-bottom: 26px;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 14px 36px rgba(0,0,0,0.08);
+  margin-bottom: 28px;
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
+.program-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 48px rgba(0,0,0,0.12);
+}
+
+body.dark .program-card {
+  background: #020617;
+}
+
+/* =========================
+   PROGRAM TITLE
+========================= */
 .program-title {
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 10px;
-  color: #0a3d62;
+  color: var(--primary);
+  margin-bottom: 12px;
 }
 
+body.dark .program-title {
+  color: #60a5fa;
+}
+
+/* =========================
+   CODE BLOCK
+========================= */
 pre {
   background: #0f172a;
   color: #e5e7eb;
-  padding: 16px;
-  border-radius: 10px;
+  padding: 18px;
+  border-radius: 12px;
   font-size: 14px;
   overflow-x: auto;
+  line-height: 1.55;
 }
 
+/* =========================
+   COPY BUTTON
+========================= */
 .copy-btn {
-  margin-top: 12px;
-  padding: 8px 16px;
-  background: #0a3d62;
+  margin-top: 14px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .copy-btn:hover {
-  background: #08324f;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
-#programSearch {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 25px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-}
-
-/* ===== BACK BUTTON ===== */
+/* =========================
+   BACK BUTTON
+========================= */
 .back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
+  margin-top: 50px;
+  text-align: center;
 }
 
 .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 30px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
+  color: #ffffff;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 600px) {
+  .programs-wrapper h2 {
+    font-size: 24px;
+  }
+
+  pre {
+    font-size: 13px;
+  }
 }
 </style>
 
@@ -93,12 +153,12 @@ pre {
   <input
     type="text"
     id="programSearch"
-    placeholder="Search program..."
+    placeholder="🔍 Search program..."
     onkeyup="searchPrograms()"
   >
 
   <!-- 1 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">1. Hello World</div>
     <pre>#include &lt;iostream&gt;
 using namespace std;
@@ -111,36 +171,34 @@ int main() {
   </div>
 
   <!-- 2 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">2. Add Two Numbers</div>
     <pre>#include &lt;iostream&gt;
 using namespace std;
 
 int main() {
     int a, b;
-    cout &lt;&lt; "Enter two numbers: ";
-    cin &gt;&gt; a &gt;&gt; b;
-    cout &lt;&lt; "Sum = " &lt;&lt; a + b;
+    cin >> a >> b;
+    cout << "Sum = " << a + b;
     return 0;
 }</pre>
     <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
   </div>
 
   <!-- 3 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">3. Check Even or Odd</div>
     <pre>#include &lt;iostream&gt;
 using namespace std;
 
 int main() {
     int num;
-    cout &lt;&lt; "Enter a number: ";
-    cin &gt;&gt; num;
+    cin >> num;
 
     if (num % 2 == 0)
-        cout &lt;&lt; "Even";
+        cout << "Even";
     else
-        cout &lt;&lt; "Odd";
+        cout << "Odd";
 
     return 0;
 }</pre>
@@ -148,7 +206,7 @@ int main() {
   </div>
 
   <!-- 4 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">4. Factorial of a Number</div>
     <pre>#include &lt;iostream&gt;
 using namespace std;
@@ -156,44 +214,38 @@ using namespace std;
 int main() {
     int num;
     long long fact = 1;
-
-    cout &lt;&lt; "Enter a number: ";
-    cin &gt;&gt; num;
+    cin >> num;
 
     for (int i = 1; i <= num; i++)
         fact *= i;
 
-    cout &lt;&lt; "Factorial = " &lt;&lt; fact;
+    cout << "Factorial = " << fact;
     return 0;
 }</pre>
     <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
   </div>
 
   <!-- 5 -->
-  <div class="program-card">
+  <div class="program-card searchable">
     <div class="program-title">5. Check Prime Number</div>
     <pre>#include &lt;iostream&gt;
 using namespace std;
 
 int main() {
-    int num, flag = 0;
-    cout &lt;&lt; "Enter a number: ";
-    cin &gt;&gt; num;
+    int num;
+    cin >> num;
+    bool prime = true;
+
+    if (num <= 1) prime = false;
 
     for (int i = 2; i <= num / 2; i++) {
         if (num % i == 0) {
-            flag = 1;
+            prime = false;
             break;
         }
     }
 
-    if (num <= 1)
-        cout &lt;&lt; "Not Prime";
-    else if (flag == 0)
-        cout &lt;&lt; "Prime";
-    else
-        cout &lt;&lt; "Not Prime";
-
+    cout << (prime ? "Prime" : "Not Prime");
     return 0;
 }</pre>
     <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
@@ -201,7 +253,7 @@ int main() {
 </div>
 
 <div class="back-btn-wrapper">
-    <a href="/basic-programs" class="back-btn">← Back </a>
+  <a href="/basic-programs" class="back-btn">← Back</a>
 </div>
 
 <script>
@@ -214,12 +266,12 @@ function copyCode(btn) {
 
 function searchPrograms() {
   const input = document.getElementById("programSearch").value.toLowerCase();
-  const cards = document.getElementsByClassName("program-card");
+  const cards = document.querySelectorAll(".searchable");
 
-  for (let card of cards) {
-    const title = card.querySelector(".program-title").innerText.toLowerCase();
-    card.style.display = title.includes(input) ? "block" : "none";
-  }
+  cards.forEach(card => {
+    const text = card.innerText.toLowerCase();
+    card.style.display = text.includes(input) ? "block" : "none";
+  });
 }
 </script>
 

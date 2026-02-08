@@ -2,47 +2,41 @@
 {% block content %}
 
 <style>
-/* =========================
-   PAGE WRAPPER
-========================= */
+/* ================= PAGE WRAPPER ================= */
 .register-page {
-    min-height: 90vh;
+    min-height: 92vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 24px;
 }
 
-/* =========================
-   REGISTER CARD
-========================= */
+/* ================= REGISTER CARD ================= */
 .register-card {
     width: 100%;
-    max-width: 440px;
+    max-width: 460px;
     background: #ffffff;
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
 }
 
-/* DARK MODE SUPPORT */
 body.dark .register-card {
     background: #020617;
 }
 
-/* =========================
-   CARD HEADER
-========================= */
+/* ================= HEADER ================= */
 .register-header {
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    padding: 30px 25px;
+    padding: 34px 26px;
     text-align: center;
-    color: white;
+    background: linear-gradient(135deg, #0a3d62, #2563eb);
+    color: #ffffff;
 }
 
 .register-header h2 {
+    font-size: 26px;
+    font-weight: 800;
     margin-bottom: 6px;
-    font-size: 24px;
 }
 
 .register-header p {
@@ -50,16 +44,14 @@ body.dark .register-card {
     opacity: 0.9;
 }
 
-/* =========================
-   FORM BODY
-========================= */
+/* ================= BODY ================= */
 .register-body {
-    padding: 30px 28px;
+    padding: 32px 30px;
 }
 
-/* FORM GROUP */
+/* ================= FORM ================= */
 .form-group {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 .form-group label {
@@ -67,7 +59,7 @@ body.dark .register-card {
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 6px;
-    color: #333;
+    color: #0f172a;
 }
 
 body.dark .form-group label {
@@ -76,76 +68,75 @@ body.dark .form-group label {
 
 .form-group input {
     width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
     font-size: 14px;
     transition: border 0.2s, box-shadow 0.2s;
 }
 
-.form-group input:focus {
-    outline: none;
-    border-color: #1e90ff;
-    box-shadow: 0 0 0 2px rgba(30,144,255,0.15);
+body.dark .form-group input {
+    background: #020617;
+    color: #ffffff;
+    border-color: #1e293b;
 }
 
-/* =========================
-   PASSWORD HINT
-========================= */
+.form-group input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.18);
+}
+
+/* ================= PASSWORD HINT ================= */
 .password-hint {
     font-size: 12px;
-    color: #666;
-    margin-top: -8px;
-    margin-bottom: 12px;
+    color: #64748b;
+    margin-top: -6px;
+    margin-bottom: 14px;
 }
 
 body.dark .password-hint {
     color: #94a3b8;
 }
 
-/* =========================
-   SUBMIT BUTTON
-========================= */
+/* ================= BUTTON ================= */
 .register-btn {
     width: 100%;
-    padding: 13px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
+    padding: 14px;
+    margin-top: 10px;
+    border-radius: 10px;
     border: none;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #0a3d62, #2563eb);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .register-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.25);
 }
 
-/* =========================
-   SUCCESS MESSAGE
-========================= */
+/* ================= MESSAGE ================= */
 .success-msg {
+    margin-top: 16px;
     text-align: center;
-    color: #16a34a;
     font-weight: 600;
-    margin-top: 15px;
+    color: #16a34a;
 }
 
-/* =========================
-   FOOTER LINKS
-========================= */
+/* ================= FOOTER ================= */
 .register-footer {
     text-align: center;
-    margin-top: 22px;
+    margin-top: 24px;
     font-size: 14px;
 }
 
 .register-footer a {
-    color: #1e90ff;
-    font-weight: 600;
+    color: #2563eb;
+    font-weight: 700;
     text-decoration: none;
 }
 
@@ -155,18 +146,16 @@ body.dark .password-hint {
 </style>
 
 <div class="register-page">
-
     <div class="register-card">
 
         <!-- HEADER -->
         <div class="register-header">
             <h2>Create Your Account</h2>
-            <p>Join BharatLearn and start learning today</p>
+            <p>Join BharatLearn and start your learning journey 🚀</p>
         </div>
 
-        <!-- FORM BODY -->
+        <!-- BODY -->
         <div class="register-body">
-
             <form method="POST">
 
                 <div class="form-group">
@@ -185,12 +174,12 @@ body.dark .password-hint {
                 </div>
 
                 <p class="password-hint">
-                    Must be at least 6 characters
+                    Minimum 6 characters recommended
                 </p>
 
                 <div class="form-group">
                     <label>Confirm Password</label>
-                    <input type="password" name="confirm_password" placeholder="Re-enter password" required>
+                    <input type="password" name="confirm_password" placeholder="Re-enter your password" required>
                 </div>
 
                 <button type="submit" class="register-btn">
@@ -206,8 +195,8 @@ body.dark .password-hint {
                 Already have an account?
                 <a href="/login">Login here</a>
             </div>
-
         </div>
+
     </div>
 </div>
 

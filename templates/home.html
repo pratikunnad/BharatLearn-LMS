@@ -2,31 +2,105 @@
 {% block content %}
 
 <style>
+/* ================= VARIABLES ================= */
+:root {
+    --primary: #0a3d62;
+    --accent: #2563eb;
+    --bg-light: #f8fafc;
+    --bg-dark: #020617;
+    --card-light: #ffffff;
+    --card-dark: #020617;
+    --text-dark: #020617;
+    --text-light: #e5e7eb;
+}
+
+/* ================= HEADER ================= */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+body.dark .site-header {
+    background: rgba(2,6,23,0.9);
+    border-color: #1e293b;
+}
+
+.nav {
+    max-width: 1200px;
+    margin: auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-logo {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+body.dark .nav-logo {
+    color: #60a5fa;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #334155;
+}
+
+body.dark .nav-links a {
+    color: #cbd5f5;
+}
+
+.nav-btn {
+    padding: 8px 18px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
 /* ================= HERO ================= */
 .hero {
     min-height: 92vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    padding: 80px 20px;
+    background:
+        radial-gradient(circle at top, rgba(37,99,235,0.25), transparent 60%),
+        linear-gradient(135deg, #0a3d62, #2563eb);
     color: white;
-    padding: 60px 20px;
     text-align: center;
 }
 
 body.dark .hero {
-    background: linear-gradient(135deg, #020617, #0f172a);
+    background:
+        radial-gradient(circle at top, rgba(96,165,250,0.15), transparent 60%),
+        linear-gradient(135deg, #020617, #0f172a);
 }
 
 .hero-content {
-    max-width: 780px;
+    max-width: 820px;
     animation: fadeUp 0.8s ease;
 }
 
 .hero h1 {
-    font-size: clamp(32px, 5vw, 46px);
+    font-size: clamp(34px, 5vw, 50px);
     font-weight: 800;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 .hero h1 span {
@@ -36,20 +110,20 @@ body.dark .hero {
 .hero p {
     font-size: 18px;
     opacity: 0.95;
-    margin-bottom: 32px;
-    line-height: 1.6;
+    line-height: 1.7;
+    margin-bottom: 34px;
 }
 
 .hero-actions {
     display: flex;
-    gap: 16px;
     justify-content: center;
+    gap: 16px;
     flex-wrap: wrap;
 }
 
 .hero .btn {
     padding: 14px 34px;
-    border-radius: 8px;
+    border-radius: 30px;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.25s ease;
@@ -57,12 +131,12 @@ body.dark .hero {
 
 .btn-primary {
     background: #ffffff;
-    color: #0a3d62;
+    color: var(--primary);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.3);
 }
 
 .btn-secondary {
@@ -76,41 +150,49 @@ body.dark .hero {
 
 /* ================= FEATURES ================= */
 .features {
-    padding: 80px 24px;
+    background: var(--bg-light);
+    padding: 90px 24px;
+}
+
+body.dark .features {
+    background: var(--bg-dark);
+}
+
+.features-grid {
     max-width: 1100px;
     margin: auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 32px;
+    gap: 30px;
 }
 
 .feature-card {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 32px 26px;
+    background: var(--card-light);
+    border-radius: 16px;
+    padding: 34px 28px;
     text-align: center;
-    box-shadow: 0 8px 26px rgba(0,0,0,0.08);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
     transition: transform 0.25s, box-shadow 0.25s;
 }
 
 body.dark .feature-card {
-    background: #020617;
+    background: var(--card-dark);
 }
 
 .feature-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 16px 36px rgba(0,0,0,0.15);
+    box-shadow: 0 20px 42px rgba(0,0,0,0.15);
 }
 
 .feature-icon {
-    font-size: 38px;
+    font-size: 40px;
     margin-bottom: 14px;
 }
 
 .feature-card h3 {
     font-size: 20px;
     margin-bottom: 10px;
-    color: #0a3d62;
+    color: var(--primary);
 }
 
 body.dark .feature-card h3 {
@@ -122,146 +204,144 @@ body.dark .feature-card h3 {
     opacity: 0.85;
 }
 
-/* ================= WHY US ================= */
-.why {
-    background: #f1f5f9;
-    padding: 70px 24px;
-    text-align: center;
-}
-
-body.dark .why {
-    background: #020617;
-}
-
-.why h2 {
-    font-size: 32px;
-    margin-bottom: 14px;
-}
-
-.why p {
-    max-width: 700px;
-    margin: auto;
-    font-size: 16px;
-    opacity: 0.85;
-}
-
 /* ================= CTA ================= */
 .cta {
-    padding: 70px 24px;
+    padding: 90px 24px;
     text-align: center;
 }
 
 .cta h2 {
     font-size: 34px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .cta p {
+    max-width: 650px;
+    margin: auto;
     font-size: 16px;
-    margin-bottom: 26px;
     opacity: 0.85;
+    margin-bottom: 30px;
 }
 
 /* ================= FOOTER ================= */
-footer {
+.site-footer {
     background: #0a3d62;
-    color: #ffffff;
-    padding: 40px 20px;
-    text-align: center;
+    color: white;
+    padding: 50px 20px;
 }
 
-body.dark footer {
+body.dark .site-footer {
     background: #020617;
+}
+
+.footer-content {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    gap: 20px;
+    text-align: center;
 }
 
 .footer-links {
     display: flex;
     justify-content: center;
-    gap: 22px;
+    gap: 24px;
     flex-wrap: wrap;
-    margin-bottom: 12px;
 }
 
 .footer-links a {
-    color: #ffffff;
+    color: white;
     text-decoration: none;
     font-size: 14px;
     opacity: 0.9;
 }
 
-footer p {
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+.footer-copy {
     font-size: 13px;
     opacity: 0.8;
 }
 
-/* ================= ANIMATIONS ================= */
+/* ================= ANIMATION ================= */
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(18px); }
     to { opacity: 1; transform: translateY(0); }
 }
 </style>
 
+<!-- HEADER -->
+<header class="site-header">
+    <div class="nav">
+        <div class="nav-logo">BharatLearn</div>
+        <div class="nav-links">
+            <a href="/courses">Courses</a>
+            <a href="/login">Login</a>
+            <a href="/register" class="nav-btn">Get Started</a>
+        </div>
+    </div>
+</header>
+
 <!-- HERO -->
 <section class="hero">
     <div class="hero-content">
         <h1>Learn Smarter with <span>BharatLearn</span></h1>
         <p>
-            A modern Learning Management System built to help learners
-            master skills, track progress, and grow confidently.
+            A modern learning platform designed for clarity, progress,
+            and real‑world skills. Learn at your pace, track growth,
+            and succeed with confidence.
         </p>
-
         <div class="hero-actions">
             <a href="/courses" class="btn btn-primary">Explore Courses</a>
-            <a href="/register" class="btn btn-secondary">Get Started</a>
+            <a href="/register" class="btn btn-secondary">Start Learning</a>
         </div>
     </div>
 </section>
 
 <!-- FEATURES -->
 <section class="features">
-    <div class="feature-card">
-        <div class="feature-icon">📚</div>
-        <h3>Curated Courses</h3>
-        <p>Handpicked content from trusted learning sources.</p>
-    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3>Quality Courses</h3>
+            <p>Carefully selected courses focused on practical learning.</p>
+        </div>
 
-    <div class="feature-card">
-        <div class="feature-icon">👨‍🎓</div>
-        <h3>Learner-Focused</h3>
-        <p>Simple enrollment, tracking, and progress insights.</p>
-    </div>
+        <div class="feature-card">
+            <div class="feature-icon">👨‍🎓</div>
+            <h3>Student Friendly</h3>
+            <p>Simple interface designed to keep learners focused.</p>
+        </div>
 
-    <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <h3>Smart Analytics</h3>
-        <p>Admins and learners get clear learning analytics.</p>
+        <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Track Progress</h3>
+            <p>Monitor enrollments, completion, and achievements.</p>
+        </div>
     </div>
-</section>
-
-<!-- WHY US -->
-<section class="why">
-    <h2>Why BharatLearn?</h2>
-    <p>
-        BharatLearn is designed as a clean, scalable LMS that focuses on
-        simplicity, performance, and real‑world learning needs.
-    </p>
 </section>
 
 <!-- CTA -->
 <section class="cta">
-    <h2>Start Your Learning Journey Today</h2>
-    <p>Join BharatLearn and take control of your education.</p>
+    <h2>Begin Your Learning Journey</h2>
+    <p>Join BharatLearn today and build skills that matter.</p>
     <a href="/register" class="btn btn-primary">Create Free Account</a>
 </section>
 
 <!-- FOOTER -->
-<footer>
-    <div class="footer-links">
-        <a href="#">Terms</a>
-        <a href="#">Privacy</a>
-        <a href="#">Support</a>
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+            <a href="#">Support</a>
+        </div>
+        <div class="footer-copy">
+            © {{ current_year }} BharatLearn. All rights reserved.
+        </div>
     </div>
-    <p>© {{ current_year }} BharatLearn. All rights reserved.</p>
 </footer>
 
 {% endblock %}

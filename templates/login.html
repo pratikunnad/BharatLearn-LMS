@@ -4,7 +4,7 @@
 <style>
 /* ================= LOGIN PAGE ================= */
 .login-page {
-    min-height: 85vh;
+    min-height: calc(100vh - 80px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,25 +14,25 @@
 /* ================= LOGIN CARD ================= */
 .login-card {
     width: 100%;
-    max-width: 400px;
-    padding: 35px 32px;
-    border-radius: 14px;
+    max-width: 420px;
+    padding: 38px 34px;
+    border-radius: 18px;
     background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    animation: fadeUp 0.45s ease;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 25px 45px rgba(0,0,0,0.15);
+    animation: slideFade 0.5s ease;
 }
 
 body.dark .login-card {
-    background: rgba(2, 6, 23, 0.9);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    background: rgba(2, 6, 23, 0.92);
+    box-shadow: 0 25px 45px rgba(0,0,0,0.6);
 }
 
 /* ================= ANIMATION ================= */
-@keyframes fadeUp {
+@keyframes slideFade {
     from {
         opacity: 0;
-        transform: translateY(18px);
+        transform: translateY(24px);
     }
     to {
         opacity: 1;
@@ -40,15 +40,15 @@ body.dark .login-card {
     }
 }
 
-/* ================= TITLE ================= */
+/* ================= HEADER ================= */
 .login-header {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 26px;
 }
 
 .login-header h2 {
-    font-size: 26px;
-    font-weight: 700;
+    font-size: 28px;
+    font-weight: 800;
     color: #0a3d62;
 }
 
@@ -62,11 +62,18 @@ body.dark .login-header h2 {
     margin-top: 6px;
 }
 
-/* ================= FORM ================= */
-.login-card form {
-    margin-top: 20px;
+/* ================= ERROR ================= */
+.error {
+    background: #fee2e2;
+    color: #7f1d1d;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-bottom: 18px;
+    text-align: center;
 }
 
+/* ================= FORM ================= */
 .login-card label {
     display: block;
     font-size: 14px;
@@ -74,7 +81,6 @@ body.dark .login-header h2 {
     margin-bottom: 6px;
 }
 
-/* Input wrapper for icons */
 .input-group {
     position: relative;
     margin-bottom: 18px;
@@ -82,8 +88,8 @@ body.dark .login-header h2 {
 
 .input-group input {
     width: 100%;
-    padding: 12px 44px 12px 12px;
-    border-radius: 8px;
+    padding: 13px 44px 13px 14px;
+    border-radius: 10px;
     border: 1px solid #cbd5e1;
     font-size: 14px;
     transition: border 0.2s, box-shadow 0.2s;
@@ -92,13 +98,19 @@ body.dark .login-header h2 {
 .input-group input:focus {
     outline: none;
     border-color: #0a3d62;
-    box-shadow: 0 0 0 3px rgba(10,61,98,0.15);
+    box-shadow: 0 0 0 3px rgba(10,61,98,0.18);
 }
 
-/* Show password button */
+body.dark .input-group input {
+    background: #020617;
+    color: #fff;
+    border-color: #1e293b;
+}
+
+/* PASSWORD TOGGLE */
 .toggle-password {
     position: absolute;
-    right: 12px;
+    right: 14px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
@@ -113,37 +125,25 @@ body.dark .login-header h2 {
 /* ================= BUTTON ================= */
 .login-card button {
     width: 100%;
-    padding: 13px;
-    margin-top: 8px;
-    border-radius: 8px;
+    padding: 14px;
+    border-radius: 10px;
     border: none;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    background: linear-gradient(135deg, #0a3d62, #2563eb);
     color: white;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .login-card button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.25);
-}
-
-/* ================= ERROR ================= */
-.error {
-    background: #fdecea;
-    color: #7f1d1d;
-    padding: 10px 12px;
-    border-radius: 8px;
-    font-size: 14px;
-    margin-bottom: 16px;
-    text-align: center;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.3);
 }
 
 /* ================= FOOTER ================= */
 .login-footer {
-    margin-top: 22px;
+    margin-top: 24px;
     text-align: center;
     font-size: 14px;
 }
@@ -152,6 +152,10 @@ body.dark .login-header h2 {
     color: #0a3d62;
     font-weight: 600;
     text-decoration: none;
+}
+
+body.dark .login-footer a {
+    color: #60a5fa;
 }
 
 .login-footer a:hover {
@@ -164,7 +168,7 @@ body.dark .login-header h2 {
 
         <!-- HEADER -->
         <div class="login-header">
-            <h2>Welcome Back</h2>
+            <h2>Welcome Back 👋</h2>
             <p>Login to continue learning on BharatLearn</p>
         </div>
 
@@ -183,14 +187,15 @@ body.dark .login-header h2 {
 
             <label>Password</label>
             <div class="input-group">
-                <input type="password" name="password" id="password" placeholder="Enter your password" required>
+                <input type="password" name="password" id="password"
+                       placeholder="Enter your password" required>
                 <span class="toggle-password" onclick="togglePassword()">👁️</span>
             </div>
 
             <button type="submit">Login</button>
         </form>
 
-        <!-- FOOTER LINKS -->
+        <!-- FOOTER -->
         <div class="login-footer">
             <p>
                 New Learner?
@@ -205,7 +210,6 @@ body.dark .login-header h2 {
 </div>
 
 <script>
-/* Show / Hide Password */
 function togglePassword() {
     const pwd = document.getElementById("password");
     pwd.type = pwd.type === "password" ? "text" : "password";

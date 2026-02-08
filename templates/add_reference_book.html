@@ -2,115 +2,207 @@
 {% block content %}
 
 <style>
-.form-wrapper {
-  max-width: 600px;
-  margin: 40px auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
-.form-wrapper h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #0a3d62;
-}
-.form-group {
-  margin-bottom: 18px;
-}
-label {
-  font-weight: 600;
-}
-input, select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-button {
-  width: 100%;
-  padding: 12px;
-  background: #0a3d62;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-}
-button:hover {
-  background: #08324f;
+/* ===== PAGE WRAPPER ===== */
+.add-book-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
 }
 
-/* ===== BACK BUTTON ===== */
-.back-btn-wrapper {
-    margin-top: 40px;
+/* ===== CARD ===== */
+.add-book-card {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+body.dark .add-book-card {
+    background: #020617;
+}
+
+/* ===== TITLE ===== */
+.add-book-card h2 {
     text-align: center;
+    font-size: 26px;
+    margin-bottom: 30px;
+    color: #0a3d62;
 }
 
-.back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
-    border-radius: 30px;
-    text-decoration: none;
+body.dark .add-book-card h2 {
+    color: #60a5fa;
+}
+
+/* ===== FORM GRID ===== */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+/* ===== LABELS & INPUTS ===== */
+.form-group label {
     font-weight: 600;
+    margin-bottom: 6px;
+    color: #334155;
+}
+
+body.dark .form-group label {
+    color: #e5e7eb;
+}
+
+.form-group input,
+.form-group select {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 15px;
+}
+
+body.dark .form-group input,
+body.dark .form-group select {
+    background: #020617;
+    color: #e5e7eb;
+    border-color: #334155;
+}
+
+/* ===== FILE INFO ===== */
+.file-hint {
+    font-size: 13px;
+    margin-top: 6px;
+    color: #64748b;
+}
+
+body.dark .file-hint {
+    color: #94a3b8;
+}
+
+/* ===== ACTIONS ===== */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 35px;
+}
+
+/* BUTTONS */
+.btn {
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.back-btn:hover {
+.btn-primary {
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    box-shadow: 0 10px 25px rgba(30,144,255,0.35);
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #111;
+}
+
+body.dark .btn-secondary {
+    background: #1e293b;
+    color: #e5e7eb;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 700px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-direction: column-reverse;
+        gap: 15px;
+    }
 }
 </style>
 
-<div class="form-wrapper">
-  <h2>Add Reference Book</h2>
+<div class="add-book-wrapper">
+    <div class="add-book-card">
 
-  <form method="POST" enctype="multipart/form-data">
+        <h2>Add Reference Book</h2>
 
-    <div class="form-group">
-      <label>Language</label>
-      <select name="language" required>
-        <option value="">Select Language</option>
-        <option value="c">C</option>
-        <option value="cpp">C++</option>
-        <option value="python">Python</option>
-        <option value="java">Java</option>
-        <option value="csharp">C#</option>
-        <option value="go">Go</option>
-      </select>
+        <form method="POST" enctype="multipart/form-data">
+
+            <div class="form-grid">
+
+                <!-- LANGUAGE -->
+                <div class="form-group">
+                    <label>Language</label>
+                    <select name="language" required>
+                        <option value="">Select Language</option>
+                        <option value="c">C</option>
+                        <option value="cpp">C++</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="csharp">C#</option>
+                        <option value="go">Go</option>
+                    </select>
+                </div>
+
+                <!-- TITLE -->
+                <div class="form-group">
+                    <label>Book Title</label>
+                    <input type="text" name="title" placeholder="Enter book title" required>
+                </div>
+
+                <!-- AUTHOR -->
+                <div class="form-group full">
+                    <label>Author</label>
+                    <input type="text" name="author" placeholder="Author name">
+                </div>
+
+                <!-- PDF -->
+                <div class="form-group full">
+                    <label>Book PDF</label>
+                    <input type="file" name="pdf" accept="application/pdf" required>
+                    <div class="file-hint">Upload PDF format only</div>
+                </div>
+
+                <!-- IMAGE -->
+                <div class="form-group full">
+                    <label>Thumbnail Image</label>
+                    <input type="file" name="image" accept="image/*" required>
+                    <div class="file-hint">Recommended: square image</div>
+                </div>
+
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="actions">
+                <a href="/admin/dashboard" class="btn btn-secondary">
+                    ← Back to Dashboard
+                </a>
+
+                <button type="submit" class="btn btn-primary">
+                     Add Book
+                </button>
+            </div>
+
+        </form>
+
     </div>
-
-    <div class="form-group">
-      <label>Book Title</label>
-      <input type="text" name="title" required>
-    </div>
-
-    <div class="form-group">
-      <label>Author</label>
-      <input type="text" name="author">
-    </div>
-
-    <div class="form-group">
-      <label>Book PDF</label>
-      <input type="file" name="pdf" accept=".pdf" required>
-    </div>
-
-    <div class="form-group">
-      <label>Thumbnail Image</label>
-      <input type="file" name="image" accept="image/*" required>
-    </div>
-
-    <button type="submit">Add Book</button>
-  </form>
 </div>
-
-        <div class="back-btn-wrapper">
-        <a href="/admin/dashboard" class="back-btn">
-            ← Back to Admin Dashboard
-        </a>
 
 {% endblock %}

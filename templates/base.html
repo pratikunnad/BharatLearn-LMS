@@ -9,222 +9,227 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
-        /* ================= DESIGN TOKENS ================= */
-        :root {
-            --primary: #0a3d62;
-            --primary-light: #3b82f6;
-            --danger: #dc2626;
+    /* ================= DESIGN TOKENS ================= */
+    :root {
+        --primary: #0a3d62;
+        --primary-accent: #2563eb;
+        --danger: #dc2626;
 
-            --bg-light: #f7f9fc;
-            --bg-dark: #020617;
+        --bg-light: #f7f9fc;
+        --bg-dark: #020617;
 
-            --card-light: #ffffff;
-            --card-dark: #020617;
+        --card-light: #ffffff;
+        --card-dark: #020617;
 
-            --text-light: #1f2937;
-            --text-dark: #e5e7eb;
-            --muted-light: #6b7280;
-            --muted-dark: #94a3b8;
+        --text-light: #1f2937;
+        --text-dark: #e5e7eb;
 
-            --border-light: #e5e7eb;
-            --border-dark: #1e293b;
+        --muted-light: #6b7280;
+        --muted-dark: #94a3b8;
 
-            --radius: 12px;
-            --transition: 0.25s ease;
-        }
+        --border-light: #e5e7eb;
+        --border-dark: #1e293b;
 
-        /* ================= RESET ================= */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Segoe UI", system-ui, sans-serif;
-        }
+        --radius: 14px;
+        --transition: 0.25s ease;
+    }
 
-        body {
-            background: var(--bg-light);
-            color: var(--text-light);
-            transition: background var(--transition), color var(--transition);
-        }
+    /* ================= RESET ================= */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+    }
 
-        body.dark {
-            background: var(--bg-dark);
-            color: var(--text-dark);
-        }
+    body {
+        background: var(--bg-light);
+        color: var(--text-light);
+        transition: background var(--transition), color var(--transition);
+    }
 
-        /* ================= SCROLL BAR ================= */
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            width: 0;
-            background: var(--primary-light);
-            z-index: 2000;
-        }
+    body.dark {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+    }
 
-        /* ================= NAVBAR ================= */
-        .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-light);
-        }
+    /* ================= SCROLL INDICATOR ================= */
+    .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        width: 0;
+        background: linear-gradient(90deg, var(--primary), var(--primary-accent));
+        z-index: 2000;
+    }
 
-        body.dark .navbar {
-            background: rgba(2,6,23,0.95);
-            border-color: var(--border-dark);
-        }
+    /* ================= NAVBAR ================= */
+    .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: rgba(255,255,255,0.88);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border-light);
+        transition: box-shadow var(--transition);
+    }
 
-        .navbar.scrolled {
-            box-shadow: 0 8px 28px rgba(0,0,0,0.15);
-        }
+    body.dark .navbar {
+        background: rgba(2,6,23,0.92);
+        border-color: var(--border-dark);
+    }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 14px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+    .navbar.scrolled {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
+    .nav-container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-        .logo img { height: 38px; }
+    /* ================= LOGO ================= */
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+    }
 
-        .logo span {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary);
-        }
+    .logo img { height: 36px; }
 
-        body.dark .logo span { color: #60a5fa; }
+    .logo span {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary);
+        letter-spacing: 0.2px;
+    }
 
-        /* ================= NAV LINKS ================= */
+    body.dark .logo span { color: #60a5fa; }
+
+    /* ================= NAV LINKS ================= */
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        font-size: 14.5px;
+        font-weight: 500;
+        color: inherit;
+        position: relative;
+        transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+        color: var(--primary-accent);
+    }
+
+    .nav-links a.active {
+        color: var(--primary-accent);
+        font-weight: 600;
+    }
+
+    .nav-links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -6px;
+        width: 0;
+        height: 2px;
+        background: var(--primary-accent);
+        transition: width var(--transition);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+        width: 100%;
+    }
+
+    .logout-btn {
+        color: var(--danger);
+        font-weight: 600;
+    }
+
+    /* ================= ICON BUTTONS ================= */
+    .theme-btn,
+    .menu-toggle {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: inherit;
+    }
+
+    /* ================= PAGE ================= */
+    .page-container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 28px 24px;
+    }
+
+    /* ================= ALERTS ================= */
+    .alert {
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        margin-bottom: 12px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .alert-success { background: #e6f4ea; color: #166534; }
+    .alert-danger { background: #fdecea; color: #7f1d1d; }
+    .alert-warning { background: #fff8e1; color: #854d0e; }
+    .alert-info { background: #e8f4fd; color: #0c4a6e; }
+
+    body.dark .alert-success { background: #052e1a; color: #bbf7d0; }
+    body.dark .alert-danger { background: #3f1212; color: #fecaca; }
+    body.dark .alert-warning { background: #3a2a0a; color: #fde68a; }
+    body.dark .alert-info { background: #082f49; color: #bae6fd; }
+
+    hr {
+        border: none;
+        height: 1px;
+        background: var(--border-light);
+        margin: 24px 0;
+    }
+
+    body.dark hr { background: var(--border-dark); }
+
+    /* ================= MOBILE ================= */
+    .menu-toggle { display: none; }
+
+    @media (max-width: 900px) {
+        .menu-toggle { display: block; }
+
         .nav-links {
-            display: flex;
-            gap: 22px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            font-size: 14.5px;
-            font-weight: 500;
-            color: inherit;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-light);
-        }
-
-        .nav-links a.active {
-            color: var(--primary-light);
-            font-weight: 600;
-        }
-
-        .nav-links a::after {
-            content: "";
             position: absolute;
-            left: 0;
-            bottom: -5px;
-            width: 0;
-            height: 2px;
-            background: var(--primary-light);
-            transition: width var(--transition);
-        }
-
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            width: 100%;
-        }
-
-        .logout-btn {
-            color: var(--danger);
-            font-weight: 600;
-        }
-
-        /* ================= BUTTONS ================= */
-        .theme-btn,
-        .menu-toggle {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: inherit;
-        }
-
-        /* ================= PAGE ================= */
-        .page-container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 28px 24px;
-        }
-
-        /* ================= FLASH MESSAGES ================= */
-        .alert {
-            padding: 14px 16px;
+            top: 70px;
+            right: 20px;
+            flex-direction: column;
+            background: var(--card-light);
+            width: 230px;
+            padding: 18px;
             border-radius: var(--radius);
-            margin-bottom: 12px;
-            font-weight: 500;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+            display: none;
         }
 
-        .alert-success { background: #e6f4ea; color: #166534; }
-        .alert-danger { background: #fdecea; color: #7f1d1d; }
-        .alert-warning { background: #fff8e1; color: #854d0e; }
-        .alert-info { background: #e8f4fd; color: #0c4a6e; }
-
-        body.dark .alert-success { background: #052e1a; color: #bbf7d0; }
-        body.dark .alert-danger { background: #3f1212; color: #fecaca; }
-        body.dark .alert-warning { background: #3a2a0a; color: #fde68a; }
-        body.dark .alert-info { background: #082f49; color: #bae6fd; }
-
-        hr {
-            border: none;
-            height: 1px;
-            background: var(--border-light);
-            margin: 24px 0;
+        body.dark .nav-links {
+            background: var(--card-dark);
         }
 
-        body.dark hr { background: var(--border-dark); }
-
-        /* ================= MOBILE ================= */
-        .menu-toggle { display: none; }
-
-        @media (max-width: 900px) {
-            .menu-toggle { display: block; }
-
-            .nav-links {
-                position: absolute;
-                top: 70px;
-                right: 20px;
-                flex-direction: column;
-                background: var(--card-light);
-                width: 220px;
-                padding: 18px;
-                border-radius: var(--radius);
-                box-shadow: 0 14px 35px rgba(0,0,0,0.25);
-                display: none;
-            }
-
-            body.dark .nav-links {
-                background: var(--card-dark);
-            }
-
-            .nav-links.show {
-                display: flex;
-            }
+        .nav-links.show {
+            display: flex;
         }
+    }
     </style>
 </head>
 
@@ -244,41 +249,22 @@
         <button class="menu-toggle" onclick="toggleMenu()">☰</button>
 
         <div class="nav-links" id="navLinks">
-
             {% if not session.get("user_id") %}
-                <!-- Show Home ONLY if user is NOT logged in -->
                 <a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a>
                 <a href="/login">Login</a>
                 <a href="/register">Register</a>
             {% else %}
-
                 {% if session.get("role") == "learner" %}
-                    <a href="/learner/dashboard"
-                    class="{% if 'learner' in request.path %}active{% endif %}">
-                        Dashboard
-                    </a>
-                    <a href="/learner/profile"
-                    class="{% if 'profile' in request.path %}active{% endif %}">
-                        Profile
-                    </a>
-                    <a href="/learner/reference-books"
-                    class="{% if 'reference-books' in request.path %}active{% endif %}">
-                        Reference Books
-                    </a>
-
+                    <a href="/learner/dashboard" class="{% if 'learner' in request.path %}active{% endif %}">Dashboard</a>
+                    <a href="/learner/profile" class="{% if 'profile' in request.path %}active{% endif %}">Profile</a>
+                    <a href="/learner/reference-books" class="{% if 'reference-books' in request.path %}active{% endif %}">Reference Books</a>
                 {% else %}
-                    <a href="/admin/dashboard"
-                    class="{% if 'admin' in request.path %}active{% endif %}">
-                        Admin
-                    </a>
+                    <a href="/admin/dashboard" class="{% if 'admin' in request.path %}active{% endif %}">Admin</a>
                 {% endif %}
-
                 <a href="/logout" class="logout-btn">Logout</a>
             {% endif %}
-
             <button class="theme-btn" onclick="toggleTheme()" id="themeIcon">🌙</button>
         </div>
-
     </div>
 </div>
 
@@ -327,103 +313,7 @@ window.addEventListener("scroll", () => {
     document.getElementById("scrollProgress").style.width =
         (scrollTop / height) * 100 + "%";
 });
-
-setTimeout(() => {
-    document.querySelectorAll(".alert").forEach(alert => {
-        alert.style.opacity = "0";
-        setTimeout(() => alert.remove(), 400);
-    });
-}, 3500);
 </script>
-
-<!-- Toast Container -->
-<div id="toast-container"></div>
-
-<style>
-#toast-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-}
-
-.toast {
-    background: #0a3d62;
-    color: white;
-    padding: 14px 18px;
-    margin-bottom: 12px;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-    animation: slideIn 0.4s ease, fadeOut 0.4s ease 4s forwards;
-    font-size: 14px;
-}
-
-.toast.badge {
-    background: linear-gradient(135deg, #ff9800, #ff5722);
-}
-
-.toast.success {
-    background: #16a34a;
-}
-
-@keyframes slideIn {
-    from { transform: translateX(120%); }
-    to { transform: translateX(0); }
-}
-
-@keyframes fadeOut {
-    to {
-        opacity: 0;
-        transform: translateX(120%);
-    }
-}
-</style>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const dataEl = document.getElementById("flash-data");
-    if (!dataEl) return;
-
-    let messages = [];
-    try {
-        messages = JSON.parse(dataEl.textContent);
-    } catch (e) {
-        console.error("Invalid flash JSON", e);
-        return;
-    }
-
-    messages.forEach(item => {
-        showToast(item.message, item.category);
-    });
-});
-
-function showToast(message, category) {
-    const container = document.getElementById("toast-container");
-    if (!container) return;
-
-    const toast = document.createElement("div");
-    toast.className = `toast ${category}`;
-    toast.textContent = message;
-
-    container.appendChild(toast);
-
-    setTimeout(() => {
-        toast.remove();
-    }, 5000);
-}
-</script>
-
-<!-- Flash messages as JSON -->
-<script type="application/json" id="flash-data">
-[
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% for category, message in messages %}
-        {"category": "{{ category }}", "message": {{ message|tojson }} }{% if not loop.last %},{% endif %}
-    {% endfor %}
-{% endwith %}
-]
-</script>
-
 
 </body>
 </html>

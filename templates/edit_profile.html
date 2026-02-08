@@ -1,81 +1,121 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Edit Profile</h2>
-
-<form method="POST" enctype="multipart/form-data" class="profile-form">
-
-    <label>Full Name</label>
-    <input type="text" name="name" value="{{ user.name }}" required>
-
-    <label>Date of Birth</label>
-    <input type="date" name="dob" value="{{ user.dob }}">
-
-    <label>Bio</label>
-    <textarea name="bio" rows="4">{{ user.bio }}</textarea>
-
-    <label>Profile Image</label>
-    <input type="file" name="profile_image" accept="image/*">
-
-    <!-- ACTION BUTTONS -->
-    <div class="form-actions">
-        <button type="submit" class="btn-primary">Save Changes</button>
-
-        <a href="/learner/profile" class="btn-secondary">
-            Cancel
-        </a>
-    </div>
-</form>
-
 <style>
-.profile-form {
-    max-width: 500px;
-    background: var(--card-light);
-    padding: 24px;
-    border-radius: 12px;
+/* ================= EDIT PROFILE ================= */
+
+.edit-profile-wrapper {
+    max-width: 700px;
+    margin: 40px auto;
 }
 
+.edit-profile-card {
+    background: var(--card-light);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+body.dark .edit-profile-card {
+    background: var(--card-dark);
+}
+
+/* Header */
+.edit-profile-header {
+    margin-bottom: 30px;
+}
+
+.edit-profile-header h2 {
+    font-size: 26px;
+    color: var(--primary);
+    margin-bottom: 6px;
+}
+
+body.dark .edit-profile-header h2 {
+    color: #60a5fa;
+}
+
+.edit-profile-header p {
+    font-size: 14px;
+    color: var(--muted-light);
+}
+
+body.dark .edit-profile-header p {
+    color: var(--muted-dark);
+}
+
+/* Form */
 .profile-form label {
     display: block;
-    margin-top: 12px;
+    margin-top: 18px;
     font-weight: 600;
+    font-size: 14px;
 }
 
 .profile-form input,
 .profile-form textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px 14px;
     margin-top: 6px;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid var(--border-light);
+    font-size: 14px;
+    background: transparent;
+    color: inherit;
 }
 
+body.dark .profile-form input,
+body.dark .profile-form textarea {
+    border-color: var(--border-dark);
+}
+
+.profile-form textarea {
+    resize: vertical;
+}
+
+/* Image hint */
+.image-hint {
+    font-size: 12px;
+    margin-top: 6px;
+    color: var(--muted-light);
+}
+
+body.dark .image-hint {
+    color: var(--muted-dark);
+}
+
+/* Actions */
 .form-actions {
     display: flex;
-    gap: 12px;
-    margin-top: 20px;
+    gap: 14px;
+    margin-top: 30px;
 }
 
-.btn-primary {
+.form-actions button,
+.form-actions a {
     flex: 1;
     padding: 12px;
-    background: var(--primary);
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, #0a3d62, #2563eb);
     color: white;
     border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: center;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
 }
 
 .btn-secondary {
-    flex: 1;
-    padding: 12px;
     background: transparent;
     color: var(--primary);
     border: 1px solid var(--primary);
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: center;
     text-decoration: none;
 }
 
@@ -83,5 +123,51 @@
     background: rgba(10, 61, 98, 0.08);
 }
 </style>
+
+<div class="edit-profile-wrapper">
+
+    <div class="edit-profile-card">
+
+        <!-- HEADER -->
+        <div class="edit-profile-header">
+            <h2>Edit Profile</h2>
+            <p>Update your personal information and profile picture</p>
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" enctype="multipart/form-data" class="profile-form">
+
+            <label>Full Name</label>
+            <input type="text" name="name" value="{{ user.name }}" required>
+
+            <label>Date of Birth</label>
+            <input type="date" name="dob" value="{{ user.dob }}">
+
+            <label>Bio</label>
+            <textarea name="bio" rows="4"
+                placeholder="Tell us something about yourself...">{{ user.bio }}</textarea>
+
+            <label>Profile Image</label>
+            <input type="file" name="profile_image" accept="image/*">
+            <div class="image-hint">
+                JPG or PNG • Max 2MB recommended
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                    Save Changes
+                </button>
+
+                <a href="/learner/profile" class="btn-secondary">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}

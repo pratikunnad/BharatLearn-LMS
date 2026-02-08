@@ -2,30 +2,65 @@
 {% block content %}
 
 <style>
-.edit-container {
-  max-width: 900px;
+/* ================= ROOT ================= */
+:root {
+  --primary: #2563eb;
+  --secondary: #0a3d62;
+  --bg-light: #f8fafc;
+  --bg-dark: #020617;
+  --card-light: #ffffff;
+  --card-dark: #020617;
+  --text-light: #0f172a;
+  --text-dark: #e5e7eb;
+  --border-light: #e5e7eb;
+  --border-dark: #1e293b;
+}
+
+/* ================= PAGE ================= */
+.edit-page {
+  max-width: 1000px;
   margin: 40px auto;
   padding: 20px;
 }
 
-.edit-card {
-  background: #ffffff;
-  border-radius: 18px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-  padding: 30px;
-}
-
-.edit-card h2 {
+.edit-header {
   text-align: center;
-  color: #0a3d62;
   margin-bottom: 30px;
 }
 
-/* FORM GRID */
+.edit-header h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--secondary);
+}
+
+body.dark .edit-header h2 {
+  color: #60a5fa;
+}
+
+.edit-header p {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* ================= CARD ================= */
+.edit-card {
+  background: var(--card-light);
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: 0 14px 35px rgba(0,0,0,0.08);
+}
+
+body.dark .edit-card {
+  background: var(--card-dark);
+  box-shadow: 0 14px 35px rgba(255,255,255,0.05);
+}
+
+/* ================= FORM GRID ================= */
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
 }
 
 .form-group {
@@ -33,80 +68,109 @@
   flex-direction: column;
 }
 
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
 .form-group label {
+  font-size: 14px;
   font-weight: 600;
   margin-bottom: 6px;
   color: #334155;
 }
 
+body.dark .form-group label {
+  color: var(--text-dark);
+}
+
 .form-group input,
 .form-group select {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
+  padding: 13px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
   font-size: 15px;
 }
 
-/* FULL WIDTH */
-.form-group.full {
-  grid-column: 1 / -1;
+body.dark .form-group input,
+body.dark .form-group select {
+  background: #020617;
+  color: var(--text-dark);
+  border-color: var(--border-dark);
 }
 
-/* FILE PREVIEW */
+/* ================= FILE INFO ================= */
 .file-info {
   font-size: 13px;
-  color: #64748b;
   margin-top: 6px;
+  opacity: 0.8;
 }
 
-/* ACTION BUTTONS */
+/* ================= ACTIONS ================= */
 .actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px;
+  align-items: center;
+  margin-top: 35px;
+  gap: 15px;
 }
 
 .btn {
-  padding: 12px 26px;
+  padding: 12px 28px;
   border-radius: 30px;
-  text-decoration: none;
   font-weight: 600;
   border: none;
   cursor: pointer;
+  text-decoration: none;
+  transition: transform .2s, box-shadow .2s;
 }
 
-.btn-save {
+.btn-primary {
   background: linear-gradient(135deg, #0a3d62, #2563eb);
   color: white;
 }
 
-.btn-cancel {
+.btn-secondary {
   background: #e5e7eb;
   color: #111;
 }
 
-/* DARK MODE */
-body.dark .edit-card {
-  background: #020617;
-}
-
-body.dark label,
-body.dark h2 {
+body.dark .btn-secondary {
+  background: #1e293b;
   color: #e5e7eb;
 }
 
-body.dark input,
-body.dark select {
-  background: #020617;
-  color: #e5e7eb;
-  border-color: #334155;
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 700px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
 }
 </style>
 
-<div class="edit-container">
-  <div class="edit-card">
-    <h2>Edit Reference Book</h2>
+<div class="edit-page">
 
+  <!-- HEADER -->
+  <div class="edit-header">
+    <h2>Edit Reference Book</h2>
+    <p>Update book details, PDF, or cover image</p>
+  </div>
+
+  <!-- CARD -->
+  <div class="edit-card">
     <form method="POST" enctype="multipart/form-data">
 
       <div class="form-grid">
@@ -158,17 +222,18 @@ body.dark select {
 
       <!-- ACTIONS -->
       <div class="actions">
-        <a href="/admin/reference-books" class="btn btn-cancel">
+        <a href="/admin/reference-books" class="btn btn-secondary">
           ← Cancel
         </a>
 
-        <button type="submit" class="btn btn-save">
-          💾 Update Book
+        <button type="submit" class="btn btn-primary">
+          💾Update Book
         </button>
       </div>
 
     </form>
   </div>
+
 </div>
 
 {% endblock %}

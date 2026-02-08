@@ -2,97 +2,192 @@
 {% block content %}
 
 <style>
-.container {
+/* ================= ROOT ================= */
+:root {
+  --primary: #2563eb;
+  --danger: #dc2626;
+  --bg-light: #f8fafc;
+  --card-light: #ffffff;
+  --text-light: #0f172a;
+  --text-muted: #64748b;
+  --border: #e5e7eb;
+}
+
+/* DARK MODE */
+body.dark {
+  --bg-light: #020617;
+  --card-light: #020617;
+  --text-light: #e5e7eb;
+  --text-muted: #94a3b8;
+  --border: #1e293b;
+}
+
+/* ================= PAGE ================= */
+.admin-container {
   max-width: 1200px;
   margin: 40px auto;
+  padding: 0 16px;
 }
 
-h2 {
-  color: #0a3d62;
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-/* SEARCH */
-.search-bar {
-  margin-bottom: 20px;
+.page-header h2 {
+  font-size: 26px;
+  color: var(--text-light);
 }
 
-.search-bar input {
+/* ================= SEARCH ================= */
+.search-box {
+  background: var(--card-light);
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  margin-bottom: 22px;
+}
+
+.search-box input {
   width: 100%;
-  padding: 12px;
+  padding: 12px 14px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  background: transparent;
+  color: var(--text-light);
 }
 
-/* TABLE */
+/* ================= TABLE ================= */
+.table-wrapper {
+  background: var(--card-light);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+thead {
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
 }
 
 th, td {
   padding: 14px 16px;
   text-align: left;
+  font-size: 14px;
 }
 
 th {
-  background: #0a3d62;
   color: white;
   font-weight: 600;
 }
 
-tr:nth-child(even) {
-  background: #f8fafc;
+tbody tr {
+  border-bottom: 1px solid var(--border);
 }
 
+tbody tr:hover {
+  background: rgba(37,99,235,0.06);
+}
+
+td {
+  color: var(--text-light);
+}
+
+/* ================= ACTIONS ================= */
 .actions a {
-  margin-right: 10px;
+  font-weight: 600;
+  margin-right: 12px;
+  text-decoration: none;
+}
+
+.actions .edit {
+  color: var(--primary);
+}
+
+.actions .delete {
+  color: var(--danger);
+}
+
+/* ================= MOBILE CARDS ================= */
+@media (max-width: 768px) {
+  table, thead {
+    display: none;
+  }
+
+  .mobile-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .book-card {
+    background: var(--card-light);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+
+  .book-card h3 {
+    margin-bottom: 6px;
+    color: var(--text-light);
+  }
+
+  .book-card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .book-actions {
+    margin-top: 10px;
+  }
+
+  .book-actions a {
+    margin-right: 14px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+}
+
+/* ================= BACK BUTTON ================= */
+.back-btn-wrapper {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
+  color: white;
   font-weight: 600;
   text-decoration: none;
 }
 
-.edit {
-  color: #2563eb;
-}
-
-.delete {
-  color: #dc2626;
-}
-
-/* ===== BACK BUTTON ===== */
-.back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
-}
-
-.back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
 .back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.25);
 }
 </style>
 
-<div class="container">
-  <h2>Reference Books</h2>
+<div class="admin-container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h2>Reference Books</h2>
+  </div>
 
   <!-- SEARCH -->
-  <div class="search-bar">
+  <div class="search-box">
     <input
       type="text"
       id="searchInput"
@@ -101,53 +196,51 @@ tr:nth-child(even) {
     >
   </div>
 
-  <!-- TABLE -->
-  <table id="booksTable">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Language</th>
-        <th>Added On</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for book in books %}
-      <tr>
-        <td>{{ book.id }}</td>
-        <td>{{ book.title }}</td>
-        <td>{{ book.author }}</td>
-        <td>{{ book.language|upper }}</td>
-        <td>{{ book.created_at.strftime('%d %b %Y') }}</td>
-        <td class="actions">
-          <a href="/admin/edit-reference-book/{{ book.id }}" class="edit">Edit</a>
-          <a href="/admin/delete-reference-book/{{ book.id }}"
-             class="delete"
-             onclick="return confirm('Delete this book?')">
-             Delete
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+  <!-- DESKTOP TABLE -->
+  <div class="table-wrapper">
+    <table id="booksTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Language</th>
+          <th>Added On</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td>{{ book.id }}</td>
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.language|upper }}</td>
+          <td>{{ book.created_at.strftime('%d %b %Y') }}</td>
+          <td class="actions">
+            <a href="/admin/edit-reference-book/{{ book.id }}" class="edit">Edit</a>
+            <a href="/admin/delete-reference-book/{{ book.id }}"
+               class="delete"
+               onclick="return confirm('Delete this book?')">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-        <div class="back-btn-wrapper">
-        <a href="/admin/dashboard" class="back-btn">
-            ← Back to Admin Dashboard
-        </a>
+  <!-- BACK -->
+  <div class="back-btn-wrapper">
+    <a href="/admin/dashboard" class="back-btn">← Back to Admin Dashboard</a>
+  </div>
+
+</div>
 
 <script>
 function filterTable() {
   const search = document.getElementById("searchInput").value.toLowerCase();
-  const rows = document.querySelectorAll("#booksTable tbody tr");
-
-  rows.forEach(row => {
-    const text = row.innerText.toLowerCase();
-    row.style.display = text.includes(search) ? "" : "none";
+  document.querySelectorAll("tbody tr, .book-card").forEach(el => {
+    el.style.display = el.innerText.toLowerCase().includes(search) ? "" : "none";
   });
 }
 </script>

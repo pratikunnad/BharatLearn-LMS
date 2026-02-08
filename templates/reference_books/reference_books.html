@@ -2,52 +2,87 @@
 {% block content %}
 
 <style>
-.books-container {
-  max-width: 1200px;
+/* ================= ROOT ================= */
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e5e7eb;
+}
+
+body.dark {
+  --card-bg: #020617;
+  --text-main: #e5e7eb;
+  --text-muted: #94a3b8;
+  --border: #1e293b;
+}
+
+/* ================= PAGE ================= */
+.books-page {
+  max-width: 1300px;
   margin: 40px auto;
-  padding: 20px;
+  padding: 0 20px 40px;
 }
 
-.books-container h2 {
+.page-title {
   text-align: center;
-  color: #0a3d62;
-  margin-bottom: 30px;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 10px;
 }
 
-/* FILTER BAR */
+.page-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 35px;
+}
+
+/* ================= FILTER BAR ================= */
 .filter-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 220px;
   gap: 15px;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 }
 
 .filter-bar input,
 .filter-bar select {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
   font-size: 15px;
-  width: 100%;
+  background: var(--card-bg);
+  color: var(--text-main);
 }
 
-/* BOOK GRID */
+.filter-bar input:focus,
+.filter-bar select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* ================= BOOK GRID ================= */
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 28px;
 }
 
-/* BOOK CARD */
+/* ================= BOOK CARD ================= */
 .book-card {
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  background: var(--card-bg);
+  border-radius: 18px;
   overflow: hidden;
-  transition: 0.3s;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
 .book-card:hover {
   transform: translateY(-6px);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.12);
 }
 
 .book-card img {
@@ -56,87 +91,96 @@
   object-fit: cover;
 }
 
-.book-info {
+.book-content {
   padding: 18px;
 }
 
-.book-info h4 {
-  color: #0a3d62;
+.book-content h4 {
   font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
   margin-bottom: 6px;
 }
 
-.book-info p {
+.book-content p {
   font-size: 14px;
-  color: #555;
-  margin-bottom: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
 }
 
+/* ================= BUTTON ================= */
 .view-btn {
-  display: inline-block;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #0a3d62, #2563eb);
-  color: white;
-  border-radius: 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  border-radius: 24px;
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
 }
 
-/* PAGINATION */
-
+/* ================= PAGINATION ================= */
 .pagination {
-  margin-top: 40px;
+  margin-top: 45px;
   text-align: center;
 }
 
 .pagination a {
   display: inline-block;
   margin: 0 6px;
-  padding: 10px 16px;
-  border-radius: 20px;
+  padding: 10px 18px;
+  border-radius: 22px;
   text-decoration: none;
-  background: #e5e7eb;
-  color: #111;
+  background: var(--border);
+  color: var(--text-main);
   font-weight: 600;
 }
 
 .pagination a.active {
-  background: linear-gradient(135deg, #0a3d62, #2563eb);
-  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #ffffff;
 }
 
-/* BACK BUTTON */
+/* ================= BACK BUTTON ================= */
 .back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
+  margin-top: 45px;
+  text-align: center;
 }
 
 .back-btn {
-    padding: 12px 28px;
-    background: linear-gradient(135deg, #0a3d62, #2563eb);
-    color: white;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
 }
 
-.back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+/* ================= MOBILE ================= */
+@media (max-width: 600px) {
+  .filter-bar {
+    grid-template-columns: 1fr;
+  }
 }
-
 </style>
 
-<div class="books-container">
-  <h2>Reference Books</h2>
+<div class="books-page">
+
+  <h2 class="page-title">Reference Books</h2>
+  <p class="page-subtitle">Browse curated programming reference material.</p>
 
   <!-- FILTERS -->
   <div class="filter-bar">
     <input
       type="text"
       id="searchInput"
-      placeholder="Search by book title or author..."
+      placeholder="Search by title or author..."
       onkeyup="filterBooks()"
     >
 
@@ -161,43 +205,44 @@
 
       <img src="{{ url_for('static', filename=book.image_path) }}" alt="Book">
 
-      <div class="book-info">
+      <div class="book-content">
         <h4>{{ book.title }}</h4>
         <p>{{ book.author }} • {{ book.language|upper }}</p>
 
         <a href="{{ url_for('view_book', book_id=book.id) }}" class="view-btn">
           View Book
         </a>
-
-
       </div>
     </div>
     {% endfor %}
   </div>
 
   <!-- PAGINATION -->
-{% if total_pages > 1 %}
-<div class="pagination">
-  {% if current_page > 1 %}
-    <a href="?page={{ current_page - 1 }}">« Prev</a>
+  {% if total_pages > 1 %}
+  <div class="pagination">
+    {% if current_page > 1 %}
+      <a href="?page={{ current_page - 1 }}">« Prev</a>
+    {% endif %}
+
+    {% for p in range(1, total_pages + 1) %}
+      <a href="?page={{ p }}"
+         class="{% if p == current_page %}active{% endif %}">
+        {{ p }}
+      </a>
+    {% endfor %}
+
+    {% if current_page < total_pages %}
+      <a href="?page={{ current_page + 1 }}">Next »</a>
+    {% endif %}
+  </div>
   {% endif %}
 
-  {% for p in range(1, total_pages + 1) %}
-    <a href="?page={{ p }}"
-       class="{% if p == current_page %}active{% endif %}">
-       {{ p }}
+  <div class="back-btn-wrapper">
+    <a href="/learner/dashboard" class="back-btn">
+      ← Back to Dashboard
     </a>
-  {% endfor %}
+  </div>
 
-  {% if current_page < total_pages %}
-    <a href="?page={{ current_page + 1 }}">Next »</a>
-  {% endif %}
-</div>
-{% endif %}
-</div>
-
-<div class="back-btn-wrapper">
-    <a href="/learner/dashboard" class="back-btn">← Back to Dashboard</a>
 </div>
 
 <script>

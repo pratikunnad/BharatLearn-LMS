@@ -2,109 +2,193 @@
 {% block content %}
 
 <style>
+:root {
+  --primary: #0a3d62;
+  --primary-grad: linear-gradient(135deg, #0a3d62, #1e90ff);
+  --bg-light: #f8fafc;
+  --card-light: #ffffff;
+  --code-bg: #0f172a;
+  --text-dark: #0f172a;
+}
+
+/* ===== PAGE ===== */
 .programs-wrapper {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 40px auto;
   padding: 20px;
 }
-.programs-wrapper h2 {
+
+.programs-header {
   text-align: center;
-  color: #0a3d62;
+  margin-bottom: 28px;
+}
+
+.programs-header h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.programs-header p {
+  font-size: 15px;
+  opacity: 0.75;
+}
+
+/* ===== SEARCH ===== */
+.search-box {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
   margin-bottom: 30px;
 }
+
+/* ===== PROGRAM CARD ===== */
 .program-card {
-  background: #ffffff;
-  padding: 22px;
-  border-radius: 14px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  background: var(--card-light);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
   margin-bottom: 26px;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
 }
-.program-title {
-  font-size: 18px;
+
+.program-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.12);
+}
+
+.program-header {
+  padding: 18px 22px;
+  background: var(--primary-grad);
+  color: white;
   font-weight: 700;
-  margin-bottom: 10px;
-  color: #0a3d62;
+  font-size: 16px;
 }
+
+/* ===== CODE ===== */
+.program-body {
+  padding: 22px;
+}
+
 pre {
-  background: #0f172a;
+  background: var(--code-bg);
   color: #e5e7eb;
-  padding: 16px;
-  border-radius: 10px;
+  padding: 18px;
+  border-radius: 12px;
   font-size: 14px;
   overflow-x: auto;
 }
+
+/* ===== ACTIONS ===== */
+.actions {
+  margin-top: 14px;
+  text-align: left;
+}
+
 .copy-btn {
-  margin-top: 12px;
-  padding: 8px 16px;
-  background: #0a3d62;
+  margin-top: 14px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .copy-btn:hover {
-  background: #08324f;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
 /* ===== BACK BUTTON ===== */
 .back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
+  margin-top: 40px;
+  text-align: center;
 }
 
 .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  background: var(--primary-grad);
+  color: white;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* ===== DARK MODE ===== */
+body.dark .program-card {
+  background: #020617;
+}
+
+body.dark .search-box {
+  background: #020617;
+  color: #e5e7eb;
+  border-color: #334155;
+}
+
+body.dark .programs-header h2 {
+  color: #60a5fa;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 640px) {
+  .programs-header h2 {
+    font-size: 24px;
+  }
 }
 </style>
 
 <div class="programs-wrapper">
-  <h2>C# Basic Programs</h2>
 
-  <input 
-  type="text" 
-  id="programSearch" 
-  placeholder="Search program..."
-  style="
-    width:100%;
-    padding:12px;
-    margin-bottom:25px;
-    border-radius:10px;
-    border:1px solid #ccc;
-    font-size:15px;"
-  onkeyup="searchPrograms()">
+  <div class="programs-header">
+    <h2>C# Basic Programs</h2>
+    <p>Beginner‑friendly C# programs with clean examples</p>
+  </div>
 
-  <!-- 1 -->
-  <div class="program-card">
-    <div class="program-title">1. Hello World</div>
-    <pre>using System;
+  <input
+    type="text"
+    id="programSearch"
+    class="search-box"
+    placeholder="Search program..."
+    onkeyup="searchPrograms()"
+  >
+
+  <!-- PROGRAM 1 -->
+  <div class="program-card searchable">
+    <div class="program-header">1. Hello World</div>
+    <div class="program-body">
+<pre>using System;
 
 class Program {
     static void Main() {
         Console.WriteLine("Hello World");
     }
 }</pre>
-    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+      <div class="actions">
+        <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+      </div>
+    </div>
   </div>
 
-  <!-- 2 -->
-  <div class="program-card">
-    <div class="program-title">2. Add Two Numbers</div>
-    <pre>using System;
+  <!-- PROGRAM 2 -->
+  <div class="program-card searchable">
+    <div class="program-header">2. Add Two Numbers</div>
+    <div class="program-body">
+<pre>using System;
 
 class Program {
     static void Main() {
@@ -113,31 +197,35 @@ class Program {
         Console.WriteLine("Sum = " + (a + b));
     }
 }</pre>
-    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+      <div class="actions">
+        <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+      </div>
+    </div>
   </div>
 
-  <!-- 3 -->
-  <div class="program-card">
-    <div class="program-title">3. Check Even or Odd</div>
-    <pre>using System;
+  <!-- PROGRAM 3 -->
+  <div class="program-card searchable">
+    <div class="program-header">3. Check Even or Odd</div>
+    <div class="program-body">
+<pre>using System;
 
 class Program {
     static void Main() {
         int num = int.Parse(Console.ReadLine());
-
-        if (num % 2 == 0)
-            Console.WriteLine("Even");
-        else
-            Console.WriteLine("Odd");
+        Console.WriteLine(num % 2 == 0 ? "Even" : "Odd");
     }
 }</pre>
-    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+      <div class="actions">
+        <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+      </div>
+    </div>
   </div>
 
-  <!-- 4 -->
-  <div class="program-card">
-    <div class="program-title">4. Factorial of a Number</div>
-    <pre>using System;
+  <!-- PROGRAM 4 -->
+  <div class="program-card searchable">
+    <div class="program-header">4. Factorial of a Number</div>
+    <div class="program-body">
+<pre>using System;
 
 class Program {
     static void Main() {
@@ -150,47 +238,40 @@ class Program {
         Console.WriteLine("Factorial = " + fact);
     }
 }</pre>
-    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+      <div class="actions">
+        <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+      </div>
+    </div>
   </div>
 
-  <!-- 5 -->
-  <div class="program-card">
-    <div class="program-title">5. Check Prime Number</div>
-    <pre>using System;
+  <!-- PROGRAM 5 -->
+  <div class="program-card searchable">
+    <div class="program-header">5. Check Prime Number</div>
+    <div class="program-body">
+<pre>using System;
 
 class Program {
     static void Main() {
         int num = int.Parse(Console.ReadLine());
-        bool isPrime = true;
+        bool prime = num > 1;
 
-        if (num <= 1) isPrime = false;
+        for (int i = 2; i <= num / 2 && prime; i++)
+            if (num % i == 0) prime = false;
 
-        for (int i = 2; i <= num / 2; i++) {
-            if (num % i == 0) {
-                isPrime = false;
-                break;
-            }
-        }
-
-        Console.WriteLine(isPrime ? "Prime" : "Not Prime");
+        Console.WriteLine(prime ? "Prime" : "Not Prime");
     }
 }</pre>
-    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+      <div class="actions">
+        <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+      </div>
+    </div>
   </div>
+
 </div>
 
 <div class="back-btn-wrapper">
-    <a href="/basic-programs" class="back-btn">← Back </a>
+  <a href="/basic-programs" class="back-btn">← Back</a>
 </div>
-
-<script>
-function copyCode(btn) {
-  const code = btn.previousElementSibling.innerText;
-  navigator.clipboard.writeText(code);
-  btn.innerText = "Copied ✔";
-  setTimeout(() => btn.innerText = "Copy Code", 1500);
-}
-</script>
 
 <script>
 function copyCode(btn) {
@@ -202,18 +283,10 @@ function copyCode(btn) {
 
 function searchPrograms() {
   const input = document.getElementById("programSearch").value.toLowerCase();
-  const cards = document.getElementsByClassName("program-card");
-
-  for (let i = 0; i < cards.length; i++) {
-    const title = cards[i].querySelector(".program-title").innerText.toLowerCase();
-    if (title.includes(input)) {
-      cards[i].style.display = "block";
-    } else {
-      cards[i].style.display = "none";
-    }
-  }
+  document.querySelectorAll(".searchable").forEach(card => {
+    card.style.display = card.innerText.toLowerCase().includes(input) ? "block" : "none";
+  });
 }
 </script>
-
 
 {% endblock %}

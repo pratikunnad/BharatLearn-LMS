@@ -2,67 +2,62 @@
 {% block content %}
 
 <style>
-/* =========================================================
-   learner DASHBOARD – CLEAN + STREAKS & BADGES
-   ========================================================= */
-
-/* ---------- LAYOUT ---------- */
-.dashboard-wrapper {
+/* ================= DASHBOARD LAYOUT ================= */
+.dashboard-layout {
     display: flex;
-    min-height: calc(100vh - 80px);
-    background: #f7f9fc;
-}
-body.dark .dashboard-wrapper {
-    background: #0f172a;
+    min-height: calc(100vh - 120px);
+    gap: 30px;
 }
 
-/* ---------- SIDEBAR ---------- */
-.sidebar {
+/* ================= SIDEBAR ================= */
+.dashboard-sidebar {
     width: 260px;
     background: linear-gradient(180deg, #0a3d62, #062b46);
     color: #fff;
-    padding: 30px 20px;
+    border-radius: 16px;
+    padding: 26px 20px;
 }
-body.dark .sidebar {
+
+body.dark .dashboard-sidebar {
     background: #020617;
 }
 
-.sidebar h3 {
+.dashboard-sidebar h3 {
     text-align: center;
+    margin-bottom: 30px;
     font-size: 22px;
-    margin-bottom: 35px;
-    font-weight: 700;
 }
 
-.sidebar a {
+.dashboard-sidebar a {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 15px;
-    margin-bottom: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
     color: #fff;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 14px;
-    transition: all 0.2s ease;
+    transition: 0.2s ease;
 }
-.sidebar a:hover {
+
+.dashboard-sidebar a:hover {
     background: rgba(255,255,255,0.18);
-    transform: translateX(4px);
 }
-.sidebar a.active {
-    background: rgba(255,255,255,0.25);
+
+.dashboard-sidebar a.active {
+    background: rgba(255,255,255,0.28);
     font-weight: 600;
 }
-.sidebar .logout {
-    margin-top: 40px;
+
+.dashboard-sidebar .logout {
+    margin-top: 30px;
     background: rgba(255,255,255,0.12);
 }
 
-/* ---------- MAIN CONTENT ---------- */
-.dashboard-content {
+/* ================= MAIN ================= */
+.dashboard-main {
     flex: 1;
-    padding: 40px;
 }
 
 /* Header */
@@ -71,69 +66,65 @@ body.dark .sidebar {
     margin-bottom: 6px;
     color: #0a3d62;
 }
+
 body.dark .dashboard-header h2 {
     color: #60a5fa;
 }
+
 .dashboard-header p {
-    color: #555;
+    color: #64748b;
 }
+
 body.dark .dashboard-header p {
     color: #cbd5f5;
 }
 
-/* ---------- DASHBOARD CARDS ---------- */
-.dashboard-cards {
+/* ================= QUICK ACTION CARDS ================= */
+.quick-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    margin-top: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 26px;
+    margin-top: 32px;
 }
 
-.dashboard-card {
-    background: #fff;
-    padding: 30px;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    position: relative;
-    transition: all 0.25s ease;
+.quick-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 26px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    transition: 0.25s ease;
 }
-body.dark .dashboard-card {
+
+body.dark .quick-card {
     background: #020617;
 }
 
-.dashboard-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 6px;
-    height: 100%;
-    background: #1e90ff;
-}
-
-.dashboard-card:hover {
+.quick-card:hover {
     transform: translateY(-6px);
 }
 
-.dashboard-card h4 {
+.quick-card h4 {
     color: #0a3d62;
     margin-bottom: 10px;
 }
-body.dark .dashboard-card h4 {
+
+body.dark .quick-card h4 {
     color: #60a5fa;
 }
 
-.dashboard-card p {
+.quick-card p {
     font-size: 14px;
-    color: #666;
+    color: #64748b;
     margin-bottom: 20px;
 }
-body.dark .dashboard-card p {
+
+body.dark .quick-card p {
     color: #cbd5f5;
 }
 
-.dashboard-card a {
-    padding: 10px 20px;
+.quick-card a {
+    display: inline-block;
+    padding: 10px 18px;
     background: #0a3d62;
     color: #fff;
     border-radius: 8px;
@@ -141,52 +132,81 @@ body.dark .dashboard-card p {
     font-size: 14px;
     font-weight: 600;
 }
-.dashboard-card a:hover {
+
+.quick-card a:hover {
     background: #08324f;
 }
 
-/* ---------- STREAKS & BADGES ---------- */
-.streak-badge-wrapper {
-    max-width: 1200px;
-    margin: 50px auto;
-}
-
-.section-heading {
+/* ================= STREAK ================= */
+.section-title {
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin: 50px 0 20px;
     color: #0a3d62;
 }
-body.dark .section-heading {
+
+body.dark .section-title {
     color: #60a5fa;
 }
 
-/* STREAK CARD */
 .streak-card {
     background: linear-gradient(135deg, #ff9800, #ff5722);
     color: #fff;
-    border-radius: 14px;
+    border-radius: 18px;
     padding: 28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-    margin-bottom: 40px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.25);
 }
+
 .streak-left {
     display: flex;
-    gap: 18px;
     align-items: center;
+    gap: 18px;
 }
-.streak-icon {
-    font-size: 48px;
+
+.streak-left span {
+    font-size: 46px;
 }
+
 .streak-count {
     font-size: 42px;
     font-weight: 800;
 }
 
-/* BADGES */
+/* ================= CALENDAR ================= */
+.streak-calendar {
+    margin-top: 26px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    max-width: 360px;
+}
+
+.day {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.day.inactive { background: #e5e7eb; }
+.day.active { background: #22c55e; color: #fff; }
+.day.frozen { background: #38bdf8; color: #fff; }
+
+body.dark .day.inactive { background: #1e293b; }
+body.dark .day.active { background: #16a34a; }
+body.dark .day.frozen { background: #0ea5e9; }
+
+/* ================= BADGES ================= */
 .badges-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -194,206 +214,142 @@ body.dark .section-heading {
 }
 
 .badge-card {
-    background: #fff;
-    border-radius: 14px;
-    padding: 22px 16px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 22px;
     text-align: center;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.08);
 }
+
 body.dark .badge-card {
     background: #020617;
 }
 
 .badge-icon {
-    font-size: 42px;
+    font-size: 40px;
     margin-bottom: 10px;
 }
+
 .badge-title {
     font-size: 14px;
     font-weight: 700;
     color: #0a3d62;
 }
+
 body.dark .badge-title {
     color: #60a5fa;
 }
+
 .badge-desc {
     font-size: 12px;
     color: #64748b;
 }
+
 .badge-locked {
     opacity: 0.35;
     filter: grayscale(1);
 }
-
-.profile-field {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 20px;
-    padding: 12px 0;
-}
-body.dark .profile-field {
-    color: #cbd5f5;
-}
-
-.streak-calendar {
-  margin-top: 30px;
-}
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-  max-width: 350px;
-}
-
-.day {
-  width: 42px;
-  height: 42px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* Light mode */
-.day.inactive {
-  background: #e5e7eb;
-}
-
-.day.active {
-  background: #22c55e;
-  color: #fff;
-}
-
-.day.frozen {
-  background: #38bdf8;
-  color: #fff;
-}
-
-/* Dark mode */
-body.dark .day.inactive {
-  background: #1e293b;
-}
-
-body.dark .day.active {
-  background: #16a34a;
-}
-
-body.dark .day.frozen {
-  background: #0ea5e9;
-}
-
 </style>
 
-<div class="dashboard-wrapper">
+<div class="dashboard-layout">
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="dashboard-sidebar">
         <h3>BharatLearn</h3>
         <a href="/learner/dashboard" class="active">Dashboard</a>
         <a href="/courses">Explore Courses</a>
         <a href="/my-enrollments">My Enrollments</a>
-        <a href="/learner/progress">View My Progress</a>
+        <a href="/learner/progress">My Progress</a>
         <a href="/basic-programs">Basic Programs</a>
         <a href="/logout" class="logout">Logout</a>
     </aside>
 
     <!-- MAIN -->
-    <main class="dashboard-content">
+    <main class="dashboard-main">
+
         <div class="dashboard-header">
             <h2>Learner Dashboard</h2>
             <p>Welcome back! Continue your learning journey 🚀</p>
         </div>
 
-        <div class="dashboard-cards">
-            <div class="dashboard-card">
+        <!-- QUICK ACTIONS -->
+        <div class="quick-cards">
+            <div class="quick-card">
                 <h4>Explore Courses</h4>
-                <p>Discover new skills and advance your career.</p>
+                <p>Discover new skills and grow your knowledge.</p>
                 <a href="/courses">Browse Courses</a>
             </div>
 
-            <div class="dashboard-card">
+            <div class="quick-card">
                 <h4>My Enrollments</h4>
-                <p>Continue learning from your enrolled courses.</p>
+                <p>Resume learning from your enrolled courses.</p>
                 <a href="/my-enrollments">View Enrollments</a>
             </div>
         </div>
-    </main>
-</div>
 
-<!-- STREAKS & BADGES -->
-<div class="streak-badge-wrapper">
+        <!-- STREAK -->
+        <div class="section-title">🔥 Learning Streak</div>
+        <div class="streak-card">
+            <div class="streak-left">
+                <span>🔥</span>
+                <div>
+                    <h3>Current Streak</h3>
+                    <p>Learn daily to keep it alive</p>
+                </div>
+            </div>
+            <div class="streak-count">{{ current_streak }} days</div>
+        </div>
 
-    <div class="section-heading">🔥 Learning Streak</div>
-    <div class="streak-card">
-        <div class="streak-left">
-            <div class="streak-icon">🔥</div>
-            <div>
-                <h3>Current Streak</h3>
-                <p>Learn daily to keep your streak alive</p>
+        <!-- CALENDAR -->
+        <div class="streak-calendar">
+            <div class="calendar-grid">
+                {% for _ in range(first_weekday) %}
+                    <div></div>
+                {% endfor %}
+                {% for day in range(1, days_in_month + 1) %}
+                    {% set date_str = "%04d-%02d-%02d"|format(year, month, day) %}
+                    {% if date_str in streak_map %}
+                        {% if streak_map[date_str] == "frozen" %}
+                            <div class="day frozen">❄️</div>
+                        {% else %}
+                            <div class="day active">🔥</div>
+                        {% endif %}
+                    {% else %}
+                        <div class="day inactive"></div>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-        <div class="streak-count">{{ current_streak }} days</div>
-    </div>
 
-    <div class="streak-calendar">
-    <h3>🔥 Streak Calendar</h3>
+        <!-- BADGES -->
+        <div class="section-title">🏅 Your Badges</div>
+        <div class="badges-grid">
+            <div class="badge-card {% if completed_courses < 1 %}badge-locked{% endif %}">
+                <div class="badge-icon">🎯</div>
+                <div class="badge-title">First Course</div>
+                <div class="badge-desc">Completed 1 course</div>
+            </div>
 
-        <div class="calendar-grid">
+            <div class="badge-card {% if completed_courses < 5 %}badge-locked{% endif %}">
+                <div class="badge-icon">🚀</div>
+                <div class="badge-title">Course Explorer</div>
+                <div class="badge-desc">Completed 5 courses</div>
+            </div>
 
-            <!-- Empty cells for first weekday -->
-            {% for _ in range(first_weekday) %}
-                <div></div>
-            {% endfor %}
+            <div class="badge-card {% if completed_courses < 10 %}badge-locked{% endif %}">
+                <div class="badge-icon">🏆</div>
+                <div class="badge-title">Learning Champion</div>
+                <div class="badge-desc">Completed 10 courses</div>
+            </div>
 
-            <!-- Days of month -->
-            {% for day in range(1, days_in_month + 1) %}
-                {% set date_str = "%04d-%02d-%02d"|format(year, month, day) %}
-
-            {% if date_str in streak_map %}
-                    {% if streak_map[date_str] == "frozen" %}
-                        <div class="day frozen">❄️</div>
-                    {% else %}
-                        <div class="day active">🔥</div>
-                    {% endif %}
-                {% else %}
-                    <div class="day inactive"></div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-
-
-    <div class="section-heading">🏅 Your Badges</div>
-    <div class="badges-grid">
-
-        <div class="badge-card {% if completed_courses < 1 %}badge-locked{% endif %}">
-            <div class="badge-icon">🎯</div>
-            <div class="badge-title">First Course</div>
-            <div class="badge-desc">Completed 1 course</div>
+            <div class="badge-card {% if advanced_completed < 1 %}badge-locked{% endif %}">
+                <div class="badge-icon">🧠</div>
+                <div class="badge-title">Advanced Learner</div>
+                <div class="badge-desc">Completed 1 Advanced course</div>
+            </div>
         </div>
 
-        <div class="badge-card {% if completed_courses < 5 %}badge-locked{% endif %}">
-            <div class="badge-icon">🚀</div>
-            <div class="badge-title">Course Explorer</div>
-            <div class="badge-desc">Completed 5 courses</div>
-        </div>
-
-        <div class="badge-card {% if completed_courses < 10 %}badge-locked{% endif %}">
-            <div class="badge-icon">🏆</div>
-            <div class="badge-title">Learning Champion</div>
-            <div class="badge-desc">Completed 10 courses</div>
-        </div>
-
-        <div class="badge-card {% if advanced_completed < 1 %}badge-locked{% endif %}">
-            <div class="badge-icon">🧠</div>
-            <div class="badge-title">Advanced Learner</div>
-            <div class="badge-desc">Completed 1 Advanced course</div>
-        </div>
-
-    </div>
+    </main>
 </div>
 
 {% endblock %}

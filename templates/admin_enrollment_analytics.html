@@ -2,192 +2,255 @@
 {% block content %}
 
 <style>
-.analytics-wrapper {
-    padding: 30px 40px;
+/* ================= ROOT ================= */
+:root {
+  --primary: #2563eb;
+  --secondary: #0a3d62;
+  --bg-light: #f8fafc;
+  --bg-dark: #020617;
+  --card-light: #ffffff;
+  --card-dark: #020617;
+  --text-light: #0f172a;
+  --text-dark: #e5e7eb;
+  --border-light: #e5e7eb;
 }
 
-.page-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: #0a3d62;
-    margin-bottom: 30px;
+/* ================= PAGE ================= */
+.analytics-page {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
 }
 
-body.dark .page-title {
-    color: #60a5fa;
+/* ================= HEADER ================= */
+.page-header {
+  text-align: center;
+  margin-bottom: 35px;
 }
 
-/* STATS */
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 22px;
-    margin-bottom: 45px;
+.page-header h2 {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--secondary);
+}
+
+body.dark .page-header h2 {
+  color: #60a5fa;
+}
+
+.page-header p {
+  font-size: 15px;
+  opacity: 0.8;
+}
+
+/* ================= STATS ================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 22px;
+  margin-bottom: 45px;
 }
 
 .stat-card {
-    background: #ffffff;
-    padding: 24px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+  background: var(--card-light);
+  padding: 26px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  transition: transform .25s, box-shadow .25s;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.15);
 }
 
 .stat-card h3 {
-    font-size: 13px;
-    text-transform: uppercase;
-    color: #64748b;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: #64748b;
+  margin-bottom: 10px;
 }
 
 .stat-card p {
-    font-size: 34px;
-    font-weight: 700;
-    color: #0a3d62;
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--secondary);
 }
 
 body.dark .stat-card {
-    background: #020617;
+  background: var(--card-dark);
 }
 
 body.dark .stat-card p {
-    color: #60a5fa;
+  color: #60a5fa;
 }
 
-/* SECTION */
+/* ================= SECTION ================= */
 .section-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 40px 0 18px;
-    color: #0a3d62;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 50px 0 25px;
+  color: var(--secondary);
 }
 
 body.dark .section-title {
-    color: #60a5fa;
+  color: #60a5fa;
 }
 
-/* CHARTS */
+/* ================= CHARTS ================= */
 .chart-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
-    margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
 }
 
-.chart-box {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+.chart-card {
+  background: var(--card-light);
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
 }
 
-body.dark .chart-box {
-    background: #020617;
+body.dark .chart-card {
+  background: var(--card-dark);
 }
 
-/* BACK BUTTON */
-.back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
+/* ================= BACK BUTTON ================= */
+.back-wrapper {
+  margin-top: 50px;
+  text-align: center;
 }
 
 .back-btn {
-    padding: 12px 28px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
+  padding: 13px 30px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
+  color: white;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 600px) {
+  .page-header h2 {
+    font-size: 24px;
+  }
 }
 </style>
 
-<div class="analytics-wrapper">
+<div class="analytics-page">
 
-    <h2 class="page-title">Enrollment Analytics</h2>
+  <!-- HEADER -->
+  <div class="page-header">
+    <h2>📊 Enrollment Analytics</h2>
+    <p>Overview of learners, courses and enrollments</p>
+  </div>
 
-    <!-- STATS -->
-    <div class="stats-container">
-        <div class="stat-card">
-            <h3>Total Enrollments</h3>
-            <p>{{ total_enrollments }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Total learners</h3>
-            <p>{{ total_learners }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Total Courses</h3>
-            <p>{{ total_courses }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Today's Enrollments</h3>
-            <p>{{ today_enrollments }}</p>
-        </div>
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Total Enrollments</h3>
+      <p>{{ total_enrollments }}</p>
     </div>
-
-    <h3 class="section-title">Visual Analytics</h3>
-
-    <!-- CHARTS -->
-    <div class="chart-grid">
-        <div class="chart-box">
-            <canvas id="courseChart"></canvas>
-        </div>
-
-        <div class="chart-box">
-            <canvas id="difficultyChart"></canvas>
-        </div>
+    <div class="stat-card">
+      <h3>Total Learners</h3>
+      <p>{{ total_learners }}</p>
     </div>
-
-    <!-- DATA -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script id="course-data" type="application/json">
-        {{ course_data | tojson | safe }}
-    </script>
-
-    <script id="difficulty-data" type="application/json">
-        {{ difficulty_data | tojson | safe }}
-    </script>
-
-    <script>
-    /* COURSE BAR CHART */
-    const courseData = JSON.parse(document.getElementById("course-data").textContent);
-    new Chart(document.getElementById("courseChart"), {
-        type: "bar",
-        data: {
-            labels: courseData.map(c => c.title),
-            datasets: [{
-                label: "Enrollments",
-                data: courseData.map(c => c.total),
-                backgroundColor: "#1e90ff"
-            }]
-        }
-    });
-
-    /* DIFFICULTY PIE CHART */
-    const difficultyData = JSON.parse(document.getElementById("difficulty-data").textContent);
-    new Chart(document.getElementById("difficultyChart"), {
-        type: "pie",
-        data: {
-            labels: difficultyData.map(d => d.difficulty),
-            datasets: [{
-                data: difficultyData.map(d => d.total),
-                backgroundColor: [
-                    "#0a3d62",
-                    "#1e90ff",
-                    "#38bdf8",
-                    "#22c55e"
-                ]
-            }]
-        }
-    });
-    </script>
-
-    <div class="back-btn-wrapper">
-        <a href="/admin/dashboard" class="back-btn">
-            ← Back to Admin Dashboard
-        </a>
+    <div class="stat-card">
+      <h3>Total Courses</h3>
+      <p>{{ total_courses }}</p>
     </div>
+    <div class="stat-card">
+      <h3>Today's Enrollments</h3>
+      <p>{{ today_enrollments }}</p>
+    </div>
+  </div>
+
+  <!-- CHART SECTION -->
+  <h3 class="section-title">Visual Analytics</h3>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <canvas id="courseChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <canvas id="difficultyChart"></canvas>
+    </div>
+  </div>
+
+  <!-- BACK -->
+  <div class="back-wrapper">
+    <a href="/admin/dashboard" class="back-btn">← Back to Admin Dashboard</a>
+  </div>
 
 </div>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script id="course-data" type="application/json">
+  {{ course_data | tojson | safe }}
+</script>
+
+<script id="difficulty-data" type="application/json">
+  {{ difficulty_data | tojson | safe }}
+</script>
+
+<script>
+const isDark = document.body.classList.contains("dark");
+
+/* COURSE BAR CHART */
+const courseData = JSON.parse(document.getElementById("course-data").textContent);
+new Chart(document.getElementById("courseChart"), {
+  type: "bar",
+  data: {
+    labels: courseData.map(c => c.title),
+    datasets: [{
+      label: "Enrollments",
+      data: courseData.map(c => c.total),
+      backgroundColor: "#2563eb"
+    }]
+  },
+  options: {
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      x: { ticks: { color: isDark ? "#e5e7eb" : "#0f172a" } },
+      y: { ticks: { color: isDark ? "#e5e7eb" : "#0f172a" } }
+    }
+  }
+});
+
+/* DIFFICULTY PIE CHART */
+const difficultyData = JSON.parse(document.getElementById("difficulty-data").textContent);
+new Chart(document.getElementById("difficultyChart"), {
+  type: "doughnut",
+  data: {
+    labels: difficultyData.map(d => d.difficulty),
+    datasets: [{
+      data: difficultyData.map(d => d.total),
+      backgroundColor: ["#0a3d62", "#2563eb", "#38bdf8", "#22c55e"]
+    }]
+  },
+  options: {
+    plugins: {
+      legend: {
+        labels: {
+          color: isDark ? "#e5e7eb" : "#0f172a"
+        }
+      }
+    }
+  }
+});
+</script>
 
 {% endblock %}

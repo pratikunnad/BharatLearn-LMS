@@ -13,7 +13,11 @@
   color: #0a3d62;
   margin-bottom: 30px;
 }
+body.dark .programs-wrapper h2 {
+  color: #60a5fa;
+}
 
+/* PROGRAM CARD */
 .program-card {
   background: #ffffff;
   padding: 22px;
@@ -21,14 +25,22 @@
   box-shadow: 0 10px 26px rgba(0,0,0,0.08);
   margin-bottom: 26px;
 }
+body.dark .program-card {
+  background: #020617;
+}
 
+/* TITLE */
 .program-title {
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 10px;
   color: #0a3d62;
 }
+body.dark .program-title {
+  color: #60a5fa;
+}
 
+/* CODE */
 pre {
   background: #0f172a;
   color: #e5e7eb;
@@ -38,60 +50,70 @@ pre {
   overflow-x: auto;
 }
 
+/* COPY BUTTON */
 .copy-btn {
-  margin-top: 12px;
-  padding: 8px 16px;
-  background: #0a3d62;
+  margin-top: 14px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
-}
-.copy-btn:hover {
-  background: #08324f;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* ===== BACK BUTTON ===== */
+.copy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* SEARCH */
+#programSearch {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+/* BACK BUTTON */
 .back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
+  margin-top: 40px;
+  text-align: center;
 }
 
 .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 26px;
+  background: linear-gradient(135deg, #0a3d62, #1e90ff);
+  color: #ffffff;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 </style>
 
 <div class="programs-wrapper">
   <h2>Python Basic Programs</h2>
 
-  <input 
-  type="text" 
-  id="programSearch" 
-  placeholder="Search program..."
-  style="
-    width:100%;
-    padding:12px;
-    margin-bottom:25px;
-    border-radius:10px;
-    border:1px solid #ccc;
-    font-size:15px;"
-  onkeyup="searchPrograms()">
+  <!-- SEARCH -->
+  <input
+    type="text"
+    id="programSearch"
+    placeholder="Search program..."
+    onkeyup="searchPrograms()"
+  >
 
   <!-- 1 -->
   <div class="program-card searchable">
@@ -103,9 +125,8 @@ pre {
   <!-- 2 -->
   <div class="program-card searchable">
     <div class="program-title">2. Add Two Numbers</div>
-    <pre>a = int(input("Enter first number: "))
-b = int(input("Enter second number: "))
-
+    <pre>a = int(input())
+b = int(input())
 print("Sum =", a + b)</pre>
     <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
   </div>
@@ -113,7 +134,7 @@ print("Sum =", a + b)</pre>
   <!-- 3 -->
   <div class="program-card searchable">
     <div class="program-title">3. Check Even or Odd</div>
-    <pre>num = int(input("Enter a number: "))
+    <pre>num = int(input())
 
 if num % 2 == 0:
     print("Even")
@@ -125,7 +146,7 @@ else:
   <!-- 4 -->
   <div class="program-card searchable">
     <div class="program-title">4. Factorial of a Number</div>
-    <pre>num = int(input("Enter a number: "))
+    <pre>num = int(input())
 fact = 1
 
 for i in range(1, num + 1):
@@ -138,24 +159,24 @@ print("Factorial =", fact)</pre>
   <!-- 5 -->
   <div class="program-card searchable">
     <div class="program-title">5. Check Prime Number</div>
-    <pre>num = int(input("Enter a number: "))
+    <pre>num = int(input())
+is_prime = True
 
-if num > 1:
-    for i in range(2, num):
-        if num % i == 0:
-            print("Not Prime")
-            break
-    else:
-        print("Prime")
-else:
-    print("Not Prime")</pre>
+if num <= 1:
+    is_prime = False
+
+for i in range(2, num // 2 + 1):
+    if num % i == 0:
+        is_prime = False
+        break
+
+print("Prime" if is_prime else "Not Prime")</pre>
     <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
   </div>
-
 </div>
 
 <div class="back-btn-wrapper">
-    <a href="/basic-programs" class="back-btn">← Back </a>
+  <a href="/basic-programs" class="back-btn">← Back</a>
 </div>
 
 <script>
@@ -176,6 +197,5 @@ function searchPrograms() {
   });
 }
 </script>
-
 
 {% endblock %}

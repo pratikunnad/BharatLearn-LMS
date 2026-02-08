@@ -2,71 +2,160 @@
 {% block content %}
 
 <style>
+/* ================= ROOT ================= */
+:root {
+  --primary: #2563eb;
+  --secondary: #0a3d62;
+  --card-light: #ffffff;
+  --card-dark: #020617;
+  --text-light: #0f172a;
+  --text-dark: #e5e7eb;
+}
+
+/* ================= PAGE ================= */
 .program-hub {
-  max-width: 900px;
-  margin: 40px auto;
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 20px;
   text-align: center;
 }
+
+.program-hub h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--secondary);
+}
+
+body.dark .program-hub h2 {
+  color: #60a5fa;
+}
+
+.program-hub p {
+  margin-top: 8px;
+  font-size: 15px;
+  opacity: 0.85;
+}
+
+/* ================= GRID ================= */
 .lang-grid {
+  margin-top: 50px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 25px;
-  margin-top: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
 }
+
+/* ================= CARD ================= */
 .lang-card {
-  padding: 25px;
-  border-radius: 14px;
-  background: #ffffff;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  background: var(--card-light);
+  padding: 28px 20px;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  transition: transform .25s, box-shadow .25s;
 }
+
+.lang-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+}
+
+body.dark .lang-card {
+  background: var(--card-dark);
+}
+
+/* ================= LINK ================= */
 .lang-card a {
   text-decoration: none;
   font-size: 18px;
   font-weight: 700;
-  color: #0a3d62;
+  color: var(--secondary);
+  display: block;
 }
 
-/* ===== BACK BUTTON ===== */
-.back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
+body.dark .lang-card a {
+  color: #60a5fa;
+}
+
+/* ================= ICON ================= */
+.lang-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+/* ================= BACK BUTTON ================= */
+.back-wrapper {
+  margin-top: 60px;
+  text-align: center;
 }
 
 .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 30px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
+  color: #ffffff;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform .2s, box-shadow .2s;
 }
 
 .back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 600px) {
+  .program-hub h2 {
+    font-size: 24px;
+  }
 }
 </style>
 
 <div class="program-hub">
+
   <h2>Basic Programming Programs</h2>
-  <p>Select a language to view basic programs</p>
+  <p>Select a language to explore beginner-friendly programs</p>
 
   <div class="lang-grid">
-    <div class="lang-card"><a href="/programs/python">Python</a></div>
-    <div class="lang-card"><a href="/programs/c">C</a></div>
-    <div class="lang-card"><a href="/programs/cpp">C++</a></div>
-    <div class="lang-card"><a href="/programs/java">Java</a></div>
-    <div class="lang-card"><a href="/programs/csharp">C#</a></div>
-    <div class="lang-card"><a href="/programs/go">Go</a></div>
-  </div>
-</div>
 
-<div class="back-btn-wrapper">
+    <div class="lang-card">
+      <div class="lang-icon">🐍</div>
+      <a href="/programs/python">Python</a>
+    </div>
+
+    <div class="lang-card">
+      <div class="lang-icon">💻</div>
+      <a href="/programs/c">C</a>
+    </div>
+
+    <div class="lang-card">
+      <div class="lang-icon">🚀</div>
+      <a href="/programs/cpp">C++</a>
+    </div>
+
+    <div class="lang-card">
+      <div class="lang-icon">☕</div>
+      <a href="/programs/java">Java</a>
+    </div>
+
+    <div class="lang-card">
+      <div class="lang-icon">🔷</div>
+      <a href="/programs/csharp">C#</a>
+    </div>
+
+    <div class="lang-card">
+      <div class="lang-icon">🌀</div>
+      <a href="/programs/go">Go</a>
+    </div>
+
+  </div>
+
+  <div class="back-wrapper">
     <a href="/learner/dashboard" class="back-btn">← Back to Dashboard</a>
+  </div>
+
 </div>
 
 {% endblock %}

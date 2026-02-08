@@ -21,10 +21,13 @@ def get_db_connection():
         database="lms_db"     # change if your DB name is different
     )
 
-UPLOAD_FOLDER = "static/uploads/profile"
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads", "profile")
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -440,10 +443,16 @@ def edit_profile():
         image = request.files.get("profile_image")
         image_name = None
 
+        # ✅ Ensure upload folder exists
+        os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+
         if image and allowed_file(image.filename):
             filename = secure_filename(image.filename)
-            image_name = f"user_{user_id}_{filename}"
-            image.save(os.path.join(app.config["UPLOAD_FOLDER"], image_name))
+            ext = filename.rsplit(".", 1)[1].lower()
+            image_name = f"user_{user_id}.{ext}"
+
+            image_path = os.path.join(app.config["UPLOAD_FOLDER"], image_name)
+            image.save(image_path)
 
         if image_name:
             cursor.execute("""
@@ -469,6 +478,7 @@ def edit_profile():
     conn.close()
 
     return render_template("edit_profile.html", user=user)
+
 
 
 @app.route("/learner/profile/update", methods=["POST"])
@@ -820,13 +830,22 @@ def admin_dashboard():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
+    cursor.execute("SELECT COUNT(*) AS total FROM courses")
+    total_courses = cursor.fetchone()["total"]
+
+    cursor.execute("SELECT COUNT(*) AS total FROM enrollments")
+    total_enrollments = cursor.fetchone()["total"]
+
+    cursor.execute("SELECT COUNT(*) AS total FROM users WHERE role='learner'")
+    total_learners = cursor.fetchone()["total"]
+
     cursor.execute("SELECT * FROM courses")
     courses = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
-    return render_template("admin_dashboard.html", courses=courses)
+    return render_template("admin_dashboard.html", courses=courses, total_enrollments=total_enrollments, total_learners=total_learners)
 
 @app.route("/logout")
 def logout():
@@ -1389,30 +1408,48 @@ def edit_reference_book(book_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
+    # Fetch existing book first
+    cursor.execute("SELECT * FROM reference_books WHERE id=%s", (book_id,))
+    book = cursor.fetchone()
+
     if request.method == "POST":
         title = request.form["title"]
         author = request.form["author"]
         language = request.form["language"]
-        pdf_file = request.files["pdf"]
-        image_file = request.files["image"]
+
+        pdf_file = request.files.get("pdf")
+        image_file = request.files.get("image")
+
+        pdf_path = book["pdf_path"]
+        image_path = book["image_path"]
+
+        # ✅ Update PDF only if new file uploaded
+        if pdf_file and pdf_file.filename:
+            pdf_path = f"reference_books/pdfs/{pdf_file.filename}"
+            pdf_file.save(os.path.join("static", pdf_path))
+
+        # ✅ Update Image only if new file uploaded
+        if image_file and image_file.filename:
+            image_path = f"reference_books/images/{image_file.filename}"
+            image_file.save(os.path.join("static", image_path))
 
         cursor.execute("""
             UPDATE reference_books
-            SET title=%s, author=%s, language=%s, pdf_path=%s, image_path=%s
+            SET title=%s, author=%s, language=%s,
+                pdf_path=%s, image_path=%s
             WHERE id=%s
-        """, (title, author, language, f"reference_books/pdfs/{pdf_file.filename}", f"reference_books/images/{image_file.filename}", book_id))
+        """, (title, author, language, pdf_path, image_path, book_id))
 
         conn.commit()
         flash("Book updated successfully", "success")
         return redirect("/admin/reference-books")
 
-    cursor.execute("SELECT * FROM reference_books WHERE id=%s", (book_id,))
-    book = cursor.fetchone()
-
     cursor.close()
     conn.close()
 
     return render_template("edit_reference_book.html", book=book)
+
+
 
 @app.route("/admin/delete-reference-book/<int:book_id>")
 def delete_reference_book(book_id):

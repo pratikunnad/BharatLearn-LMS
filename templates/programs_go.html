@@ -2,91 +2,161 @@
 {% block content %}
 
 <style>
+/* =========================
+   WRAPPER
+========================= */
 .programs-wrapper {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 40px auto;
   padding: 20px;
 }
+
 .programs-wrapper h2 {
   text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 30px;
   color: #0a3d62;
+}
+
+body.dark .programs-wrapper h2 {
+  color: #60a5fa;
+}
+
+/* =========================
+   SEARCH
+========================= */
+.search-box {
   margin-bottom: 30px;
 }
+
+.search-box input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.search-box input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+body.dark .search-box input {
+  background: #020617;
+  color: #e5e7eb;
+  border-color: #334155;
+}
+
+/* =========================
+   PROGRAM CARD
+========================= */
 .program-card {
   background: #ffffff;
-  padding: 22px;
-  border-radius: 14px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
-  margin-bottom: 26px;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  margin-bottom: 28px;
+  transition: transform 0.25s, box-shadow 0.25s;
 }
+
+.program-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+}
+
+body.dark .program-card {
+  background: #020617;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+}
+
 .program-title {
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
   color: #0a3d62;
 }
-pre {
-  background: #0f172a;
-  color: #e5e7eb;
-  padding: 16px;
-  border-radius: 10px;
-  font-size: 14px;
-  overflow-x: auto;
-}
-.copy-btn {
-  margin-top: 12px;
-  padding: 8px 16px;
-  background: #0a3d62;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.copy-btn:hover {
-  background: #08324f;
+
+body.dark .program-title {
+  color: #60a5fa;
 }
 
-/* ===== BACK BUTTON ===== */
+/* =========================
+   CODE BLOCK
+========================= */
+pre {
+  background: linear-gradient(135deg, #020617, #0f172a);
+  color: #e5e7eb;
+  padding: 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin-bottom: 14px;
+}
+
+/* =========================
+   COPY BUTTON
+========================= */
+.copy-btn {
+  margin-top: 14px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.copy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
 .back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
+  margin-top: 40px;
+  text-align: center;
 }
 
 .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #0a3d62, #1e90ff);
+  color: #ffffff;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 </style>
 
 <div class="programs-wrapper">
   <h2>Go (Golang) Basic Programs</h2>
 
-  <input 
-  type="text" 
-  id="programSearch" 
-  placeholder="Search program..."
-  style="
-    width:100%;
-    padding:12px;
-    margin-bottom:25px;
-    border-radius:10px;
-    border:1px solid #ccc;
-    font-size:15px;"
-  onkeyup="searchPrograms()">
+  <!-- SEARCH -->
+  <div class="search-box">
+    <input
+      type="text"
+      id="programSearch"
+      placeholder="Search Go program..."
+      onkeyup="searchPrograms()">
+  </div>
 
   <!-- 1 -->
   <div class="program-card searchable">
@@ -145,7 +215,7 @@ import "fmt"
 
 func main() {
     var num int
-    var fact int = 1
+    fact := 1
     fmt.Scan(&num)
 
     for i := 1; i <= num; i++ {
@@ -188,11 +258,10 @@ func main() {
 }</pre>
     <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
   </div>
-
 </div>
 
 <div class="back-btn-wrapper">
-    <a href="/basic-programs" class="back-btn">← Back </a>
+  <a href="/basic-programs" class="back-btn">← Back</a>
 </div>
 
 <script>
@@ -208,11 +277,11 @@ function searchPrograms() {
   const cards = document.querySelectorAll(".searchable");
 
   cards.forEach(card => {
-    const text = card.innerText.toLowerCase();
-    card.style.display = text.includes(input) ? "block" : "none";
+    card.style.display = card.innerText.toLowerCase().includes(input)
+      ? "block"
+      : "none";
   });
 }
 </script>
-
 
 {% endblock %}

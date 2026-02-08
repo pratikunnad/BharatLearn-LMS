@@ -2,99 +2,163 @@
 {% block content %}
 
 <style>
+/* ===============================
+   VIEW BOOK – MODERN READER UI
+   =============================== */
+
+/* PAGE WRAPPER */
 .viewer-container {
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 20px;
+    max-width: 1300px;
+    margin: 30px auto;
+    padding: 0 20px 40px;
 }
 
+/* HEADER */
 .book-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
 }
 
 .book-details h2 {
-  color: #0a3d62;
-  margin-bottom: 6px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #0a3d62;
+    margin-bottom: 6px;
 }
 
 .book-details p {
-  color: #555;
-  font-size: 14px;
+    font-size: 14px;
+    color: #64748b;
 }
 
+/* BACK BUTTON */
 .back-btn {
-  padding: 10px 22px;
-  background: #e5e7eb;
-  border-radius: 25px;
-  text-decoration: none;
-  font-weight: 600;
-  color: #111;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    color: #ffffff;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* PDF VIEWER */
-.pdf-wrapper {
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
-  overflow: hidden;
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
-.pdf-wrapper iframe {
-  width: 100%;
-  height: 80vh;
-  border: none;
+/* PDF CARD */
+.pdf-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.08);
+    overflow: hidden;
 }
 
 /* INFO BAR */
 .info-bar {
-  background: #f1f5f9;
-  padding: 14px 20px;
-  font-size: 14px;
-  color: #334155;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    font-size: 14px;
+    background: #f1f5f9;
+    color: #334155;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-/* DARK MODE */
-body.dark .pdf-wrapper {
-  background: #020617;
+.info-bar span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* PDF VIEWER */
+.pdf-viewer iframe {
+    width: 100%;
+    height: 80vh;
+    border: none;
+}
+
+/* ===============================
+   DARK MODE
+   =============================== */
+
+body.dark .book-details h2 {
+    color: #60a5fa;
+}
+
+body.dark .book-details p {
+    color: #cbd5f5;
+}
+
+body.dark .pdf-card {
+    background: #020617;
+    box-shadow: 0 14px 35px rgba(255,255,255,0.05);
 }
 
 body.dark .info-bar {
-  background: #020617;
-  color: #cbd5f5;
+    background: #020617;
+    color: #cbd5f5;
+    border-bottom: 1px solid #1e293b;
+}
+
+body.dark .back-btn {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+/* ===============================
+   MOBILE
+   =============================== */
+@media (max-width: 768px) {
+    .book-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pdf-viewer iframe {
+        height: 70vh;
+    }
 }
 </style>
 
 <div class="viewer-container">
 
-  <!-- HEADER -->
-  <div class="book-header">
-    <div class="book-details">
-      <h2>{{ book.title }}</h2>
-      <p>{{ book.author }} • {{ book.language|upper }}</p>
+    <!-- HEADER -->
+    <div class="book-header">
+        <div class="book-details">
+            <h2>{{ book.title }}</h2>
+            <p>{{ book.author }} • {{ book.language|upper }}</p>
+        </div>
+
+        <a href="/learner/reference-books" class="back-btn">
+            ← Back to Books
+        </a>
     </div>
 
-    <a href="/learner/reference-books" class="back-btn">
-      ← Back to Books
-    </a>
-  </div>
+    <!-- PDF VIEWER CARD -->
+    <div class="pdf-card">
 
-  <!-- PDF VIEW -->
-  <div class="pdf-wrapper">
-  <div class="info-bar">
-    <span>📘 Read only • Download disabled</span>
-    <span>Reference Book Viewer</span>
-  </div>
+        <div class="info-bar">
+            <span>Read-only mode</span>
+            <span>Reference Book Viewer</span>
+        </div>
 
-  <iframe
-    src="{{ url_for('static', filename=book.pdf_path) }}#toolbar=0&navpanes=0">
-  </iframe>
+        <div class="pdf-viewer">
+            <iframe
+                src="{{ url_for('static', filename=book.pdf_path) }}#toolbar=0&navpanes=0">
+            </iframe>
+        </div>
+
+    </div>
+
 </div>
-
 
 {% endblock %}

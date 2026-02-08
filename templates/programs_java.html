@@ -2,101 +2,159 @@
 {% block content %}
 
 <style>
+/* ================= PAGE WRAPPER ================= */
 .programs-wrapper {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 40px auto;
   padding: 20px;
 }
 
+/* TITLE */
 .programs-wrapper h2 {
   text-align: center;
+  font-size: 30px;
+  font-weight: 800;
   color: #0a3d62;
   margin-bottom: 30px;
 }
 
-.program-card {
-  background: #ffffff;
-  padding: 22px;
-  border-radius: 14px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
-  margin-bottom: 26px;
+body.dark .programs-wrapper h2 {
+  color: #60a5fa;
 }
 
+/* SEARCH BAR */
+.program-search {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+}
+
+.program-search:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+body.dark .program-search {
+  background: #020617;
+  border-color: #334155;
+  color: #e5e7eb;
+}
+
+/* PROGRAM CARD */
+.program-card {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  margin-bottom: 28px;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.program-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.12);
+}
+
+body.dark .program-card {
+  background: #020617;
+}
+
+/* PROGRAM TITLE */
 .program-title {
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: #0a3d62;
 }
 
+body.dark .program-title {
+  color: #93c5fd;
+}
+
+/* CODE BLOCK */
 pre {
   background: #0f172a;
   color: #e5e7eb;
-  padding: 16px;
-  border-radius: 10px;
+  padding: 18px;
+  border-radius: 12px;
   font-size: 14px;
   overflow-x: auto;
+  line-height: 1.6;
 }
 
+/* COPY BUTTON */
 .copy-btn {
-  margin-top: 12px;
-  padding: 8px 16px;
-  background: #0a3d62;
+  margin-top: 14px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
-}
-.copy-btn:hover {
-  background: #08324f;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* ===== BACK BUTTON ===== */
+.copy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* BACK BUTTON */
 .back-btn-wrapper {
-    margin-top: 40px;
-    text-align: center;
+  margin-top: 50px;
+  text-align: center;
 }
 
 .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 26px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: #ffffff;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 30px;
+  background: linear-gradient(135deg, #0a3d62, #2563eb);
+  color: #ffffff;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+}
+
+/* MOBILE */
+@media (max-width: 640px) {
+  .programs-wrapper h2 {
+    font-size: 24px;
+  }
+  pre {
+    font-size: 13px;
+  }
 }
 </style>
 
 <div class="programs-wrapper">
   <h2>Java Basic Programs</h2>
 
-  <input 
-  type="text" 
-  id="programSearch" 
-  placeholder="Search program..."
-  style="
-    width:100%;
-    padding:12px;
-    margin-bottom:25px;
-    border-radius:10px;
-    border:1px solid #ccc;
-    font-size:15px;"
-  onkeyup="searchPrograms()">
+  <input
+    type="text"
+    class="program-search"
+    id="programSearch"
+    placeholder="Search Java program..."
+    onkeyup="searchPrograms()"
+  >
 
   <!-- 1 -->
   <div class="program-card searchable">
     <div class="program-title">1. Hello World</div>
-    <pre>class Main {
+<pre>class Main {
     public static void main(String[] args) {
         System.out.println("Hello World");
     }
@@ -107,7 +165,7 @@ pre {
   <!-- 2 -->
   <div class="program-card searchable">
     <div class="program-title">2. Add Two Numbers</div>
-    <pre>import java.util.Scanner;
+<pre>import java.util.Scanner;
 
 class Main {
     public static void main(String[] args) {
@@ -123,7 +181,7 @@ class Main {
   <!-- 3 -->
   <div class="program-card searchable">
     <div class="program-title">3. Check Even or Odd</div>
-    <pre>import java.util.Scanner;
+<pre>import java.util.Scanner;
 
 class Main {
     public static void main(String[] args) {
@@ -142,7 +200,7 @@ class Main {
   <!-- 4 -->
   <div class="program-card searchable">
     <div class="program-title">4. Factorial of a Number</div>
-    <pre>import java.util.Scanner;
+<pre>import java.util.Scanner;
 
 class Main {
     public static void main(String[] args) {
@@ -162,7 +220,7 @@ class Main {
   <!-- 5 -->
   <div class="program-card searchable">
     <div class="program-title">5. Check Prime Number</div>
-    <pre>import java.util.Scanner;
+<pre>import java.util.Scanner;
 
 class Main {
     public static void main(String[] args) {
@@ -187,11 +245,10 @@ class Main {
 }</pre>
     <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
   </div>
-
 </div>
 
 <div class="back-btn-wrapper">
-    <a href="/basic-programs" class="back-btn">← Back </a>
+  <a href="/basic-programs" class="back-btn">← Back</a>
 </div>
 
 <script>
