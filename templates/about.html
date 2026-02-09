@@ -144,6 +144,12 @@ body.dark .value-card p {
   font-weight: 600;
   text-decoration: none;
 }
+
+.feature-icon img {
+  width: 42px;
+  height: 42px;
+}
+
 </style>
 
 <!-- HERO -->
@@ -187,7 +193,9 @@ body.dark .value-card p {
       <div class="values-grid">
 
         <div class="value-card">
-          <div class="value-icon">🎯</div>
+          <div class="feature-icon">
+            <img src="{{ url_for('static', filename='icons/archery_icon.png') }}" alt="Archery Icon">
+          </div>
           <h3>Focused Learning</h3>
           <p>
             No distractions. We highlight what matters most — skills,
@@ -196,7 +204,9 @@ body.dark .value-card p {
         </div>
 
         <div class="value-card">
-          <div class="value-icon">🔍</div>
+          <div class="feature-icon">
+            <img src="{{ url_for('static', filename='icons/mglass_icon.png') }}" alt="Magnifying Glass Icon">
+          </div>
           <h3>Curated Content</h3>
           <p>
             Courses are grouped and categorized carefully so learners
@@ -205,7 +215,9 @@ body.dark .value-card p {
         </div>
 
         <div class="value-card">
-          <div class="value-icon">📈</div>
+          <div class="feature-icon">
+            <img src="{{ url_for('static', filename='icons/graph_icon.png') }}" alt="Graph Icon">
+          </div>
           <h3>Growth-Driven</h3>
           <p>
             We design our platform to support long-term skill growth,
@@ -214,7 +226,9 @@ body.dark .value-card p {
         </div>
 
         <div class="value-card">
-          <div class="value-icon">🤝</div>
+          <div class="feature-icon">
+            <img src="{{ url_for('static', filename='icons/handshake_icon.png') }}" alt="Handshake Icon">
+          </div>
           <h3>Student-First</h3>
           <p>
             Every feature is built with learners in mind — clarity,

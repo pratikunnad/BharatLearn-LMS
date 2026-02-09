@@ -1363,56 +1363,6 @@ def admin_reference_books():
         books=books
     )
 
-@app.route("/admin/edit-reference-book/<int:book_id>", methods=["GET", "POST"])
-def edit_reference_book(book_id):
-    if "user_id" not in session or session["role"] != "admin":
-        return redirect("/login")
-
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    # Fetch existing book first
-    cursor.execute("SELECT * FROM reference_books WHERE id=%s", (book_id,))
-    book = cursor.fetchone()
-
-    if request.method == "POST":
-        title = request.form["title"]
-        author = request.form["author"]
-        language = request.form["language"]
-
-        pdf_file = request.files.get("pdf")
-        image_file = request.files.get("image")
-
-        pdf_path = book["pdf_path"]
-        image_path = book["image_path"]
-
-        # ✅ Update PDF only if new file uploaded
-        if pdf_file and pdf_file.filename:
-            pdf_path = f"reference_books/pdfs/{pdf_file.filename}"
-            pdf_file.save(os.path.join("static", pdf_path))
-
-        # ✅ Update Image only if new file uploaded
-        if image_file and image_file.filename:
-            image_path = f"reference_books/images/{image_file.filename}"
-            image_file.save(os.path.join("static", image_path))
-
-        cursor.execute("""
-            UPDATE reference_books
-            SET title=%s, author=%s, language=%s,
-                pdf_path=%s, image_path=%s
-            WHERE id=%s
-        """, (title, author, language, pdf_path, image_path, book_id))
-
-        conn.commit()
-        flash("Book updated successfully", "success")
-        return redirect("/admin/reference-books")
-
-    cursor.close()
-    conn.close()
-
-    return render_template("edit_reference_book.html", book=book)
-
-
 
 @app.route("/admin/delete-reference-book/<int:book_id>")
 def delete_reference_book(book_id):

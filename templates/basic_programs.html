@@ -105,6 +105,12 @@ body.dark .lang-card a {
   box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
+.feature-icon img {
+  width: 42px;
+  height: 42px;
+}
+
+
 /* ================= MOBILE ================= */
 @media (max-width: 600px) {
   .program-hub h2 {
@@ -121,32 +127,44 @@ body.dark .lang-card a {
   <div class="lang-grid">
 
     <div class="lang-card">
-      <div class="lang-icon">🐍</div>
+      <div class="feature-icon">
+        <img src="{{ url_for('static', filename='icons/python_logo.png') }}" alt="Python Logo">
+      </div>
       <a href="/programs/python">Python</a>
     </div>
 
     <div class="lang-card">
-      <div class="lang-icon">💻</div>
+      <div class="feature-icon">
+        <img src="{{ url_for('static', filename='icons/c_logo.png') }}" alt="C Logo">
+      </div>
       <a href="/programs/c">C</a>
     </div>
 
     <div class="lang-card">
-      <div class="lang-icon">🚀</div>
+      <div class="feature-icon">
+        <img src="{{ url_for('static', filename='icons/cpp_logo.png') }}" alt="C++ Logo">
+      </div>
       <a href="/programs/cpp">C++</a>
     </div>
 
     <div class="lang-card">
-      <div class="lang-icon">☕</div>
+      <div class="feature-icon">
+        <img src="{{ url_for('static', filename='icons/java_logo.png') }}" alt="Java Logo">
+      </div>
       <a href="/programs/java">Java</a>
     </div>
 
     <div class="lang-card">
-      <div class="lang-icon">🔷</div>
+      <div class="feature-icon">
+        <img src="{{ url_for('static', filename='icons/csharp_logo.png') }}" alt="C# Logo">
+      </div>
       <a href="/programs/csharp">C#</a>
     </div>
 
     <div class="lang-card">
-      <div class="lang-icon">🌀</div>
+      <div class="feature-icon">
+        <img src="{{ url_for('static', filename='icons/go_logo.png') }}" alt="Go Logo">
+      </div>
       <a href="/programs/go">Go</a>
     </div>
 

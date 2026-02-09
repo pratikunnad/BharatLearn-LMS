@@ -139,7 +139,7 @@ body.dark .quick-card p {
 
 /* ================= STREAK ================= */
 .section-title {
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 700;
     margin: 50px 0 20px;
     color: #0a3d62;
@@ -249,6 +249,12 @@ body.dark .badge-title {
     opacity: 0.35;
     filter: grayscale(1);
 }
+
+.feature-icon img {
+  width: 42px;
+  height: 42px;
+}
+
 </style>
 
 <div class="dashboard-layout">
@@ -269,7 +275,7 @@ body.dark .badge-title {
 
         <div class="dashboard-header">
             <h2>Learner Dashboard</h2>
-            <p>Welcome back! Continue your learning journey 🚀</p>
+            <p>Welcome back! Continue your learning journey.</p>
         </div>
 
         <!-- QUICK ACTIONS -->
@@ -288,13 +294,17 @@ body.dark .badge-title {
         </div>
 
         <!-- STREAK -->
-        <div class="section-title">🔥 Learning Streak</div>
+        <div class="section-title">Learning Streak</div>
         <div class="streak-card">
             <div class="streak-left">
-                <span>🔥</span>
+                
+                <div class="feature-icon">
+                <img src="{{ url_for('static', filename='icons/fire_icon.png') }}" alt="Fire Icon">
+                </div>
+
                 <div>
                     <h3>Current Streak</h3>
-                    <p>Learn daily to keep it alive</p>
+                    <p>Learn & Skill Up daily to keep it alive</p>
                 </div>
             </div>
             <div class="streak-count">{{ current_streak }} days</div>
@@ -325,25 +335,33 @@ body.dark .badge-title {
         <div class="section-title">🏅 Your Badges</div>
         <div class="badges-grid">
             <div class="badge-card {% if completed_courses < 1 %}badge-locked{% endif %}">
-                <div class="badge-icon">🎯</div>
+                <div class="feature-icon">
+                <img src="{{ url_for('static', filename='icons/first_icon.png') }}" alt="First Course Icon">
+                </div>
                 <div class="badge-title">First Course</div>
                 <div class="badge-desc">Completed 1 course</div>
             </div>
 
             <div class="badge-card {% if completed_courses < 5 %}badge-locked{% endif %}">
-                <div class="badge-icon">🚀</div>
+                <div class="feature-icon">
+                <img src="{{ url_for('static', filename='icons/rocket_icon.png') }}" alt="Rocket Icon">
+                </div>
                 <div class="badge-title">Course Explorer</div>
                 <div class="badge-desc">Completed 5 courses</div>
             </div>
 
             <div class="badge-card {% if completed_courses < 10 %}badge-locked{% endif %}">
-                <div class="badge-icon">🏆</div>
+                <div class="feature-icon">
+                <img src="{{ url_for('static', filename='icons/trophy_icon.png') }}" alt="Trophy Icon">
+                </div>
                 <div class="badge-title">Learning Champion</div>
                 <div class="badge-desc">Completed 10 courses</div>
             </div>
 
             <div class="badge-card {% if advanced_completed < 1 %}badge-locked{% endif %}">
-                <div class="badge-icon">🧠</div>
+                <div class="feature-icon">
+                <img src="{{ url_for('static', filename='icons/talent_icon.png') }}" alt="Talent Icon">
+                </div>
                 <div class="badge-title">Advanced Learner</div>
                 <div class="badge-desc">Completed 1 Advanced course</div>
             </div>

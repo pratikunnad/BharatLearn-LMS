@@ -191,7 +191,7 @@ body.dark .badge {
 </style>
 
 <h2 class="page-title">Explore Courses</h2>
-<p class="page-subtitle">Find the best learning resources curated for you 🚀</p>
+<p class="page-subtitle">Find the best learning resources curated for you...</p>
 
 <!-- FILTER BAR -->
 <form method="get" action="{{ url_for('courses') }}" class="filter-bar">
@@ -203,14 +203,16 @@ body.dark .badge {
         <select name="programming_language">
             <option value="">All Languages</option>
             <option value="Python" {{ 'selected' if selected_programming_language == 'Python' }}>Python</option>
-            <option value="Java" {{ 'selected' if selected_programming_language == 'Java' }}>Java</option>
+            <option value="C" {{ 'selected' if selected_programming_language == 'C' }}>C</option>
             <option value="C++" {{ 'selected' if selected_programming_language == 'C++' }}>C++</option>
+            <option value="Java" {{ 'selected' if selected_programming_language == 'Java' }}>Java</option>
+            <option value="C#" {{ 'selected' if selected_programming_language == 'C#' }}>C#</option>
+            <option value="GO" {{ 'selected' if selected_programming_language == 'GO' }}>GO</option>
         </select>
 
         <select name="difficulty">
             <option value="">All Levels</option>
             <option value="Beginner" {{ 'selected' if selected_difficulty == 'Beginner' }}>Beginner</option>
-            <option value="Intermediate" {{ 'selected' if selected_difficulty == 'Intermediate' }}>Intermediate</option>
             <option value="Advanced" {{ 'selected' if selected_difficulty == 'Advanced' }}>Advanced</option>
         </select>
 
@@ -220,6 +222,8 @@ body.dark .badge {
             <option value="Udemy" {{ 'selected' if selected_source == 'Udemy' }}>Udemy</option>
             <option value="Coursera" {{ 'selected' if selected_source == 'Coursera' }}>Coursera</option>
             <option value="FreeCodeCamp" {{ 'selected' if selected_source == 'FreeCodeCamp' }}>FreeCodeCamp</option>
+            <option value="W3Schools" {{ 'selected' if selected_source == 'W3Schools' }}>W3Schools</option>
+            <option value="GeeksforGeeks" {{ 'selected' if selected_source == 'GeeksforGeeks' }}>GeeksforGeeks</option>
         </select>
 
         <select name="sort">
