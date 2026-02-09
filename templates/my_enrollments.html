@@ -130,17 +130,25 @@ body.dark .course-card p {
     padding: 10px;
     border-radius: 10px;
     border: none;
-    background: #22c55e;
-    color: white;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
 }
 
-.btn-complete:disabled {
-    background: #94a3b8;
-    cursor: not-allowed;
+/* BLUE = not completed */
+.btn-complete.pending {
+    background: #2563eb; /* blue */
+    color: white;
 }
+
+/* GREEN = completed */
+.btn-complete.done {
+    background: #22c55e; /* green */
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
 
 .btn-danger {
     padding: 10px;
@@ -222,10 +230,23 @@ body.dark .course-card p {
             </a>
 
             <form method="POST"
-                  action="{{ url_for('mark_completed', enrollment_id=course.enrollment_id) }}">
-                <button class="btn-complete" {% if course.completed %}disabled{% endif %}>
-                    ✓ Mark as Completed
-                </button>
+                action="{{ url_for('mark_completed', enrollment_id=course.enrollment_id) }}">
+
+                {% if course.completed %}
+                    <!-- COMPLETED -->
+                    <button
+                        class="btn-complete {% if course.completed %}completed{% endif %}"
+                        {% if course.completed %}disabled{% endif %}
+                    >
+                        ✔ Completed
+                    </button>
+                {% else %}
+                    <!-- NOT COMPLETED -->
+                    <button class="btn-complete pending">
+                        ✓ Mark as Completed
+                    </button>
+                {% endif %}
+
             </form>
 
             <form method="POST"

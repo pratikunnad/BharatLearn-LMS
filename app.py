@@ -1073,82 +1073,45 @@ def mark_completed(enrollment_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # 1️⃣ Mark enrollment completed
+    # 1️⃣ Fetch enrollment FIRST
     cursor.execute("""
-        UPDATE enrollments
-        SET completed=1, completed_at=NOW()
+        SELECT id, completed
+        FROM enrollments
         WHERE id=%s AND user_id=%s
-    """, (enrollment_id, session["user_id"]))
+    """, (enrollment_id, user_id))
 
     enrollment = cursor.fetchone()
 
     if not enrollment:
+        flash("Invalid enrollment ❌", "danger")
         cursor.close()
         conn.close()
-        flash("Invalid enrollment ❌", "danger")
         return redirect("/my-enrollments")
 
     if enrollment["completed"] == 1:
+        flash("Course already completed ✅", "info")
         cursor.close()
         conn.close()
-        flash("Course already completed ✅", "info")
         return redirect("/my-enrollments")
 
-    # 2️⃣ Get current streak info
+    # 2️⃣ Mark as completed
     cursor.execute("""
-        SELECT streak, last_active_date
-        FROM users
+        UPDATE enrollments
+        SET completed=1, completed_at=NOW()
         WHERE id=%s
-    """, (session["user_id"],))
-
-    user = cursor.fetchone()
-
-    today = date.today()
-    new_streak = 1  # default
-
-    if user["last_active_date"]:
-        last_date = user["last_active_date"]
-
-        if last_date == today:
-            # already counted today
-            new_streak = user["streak"]
-
-        elif last_date == today - timedelta(days=1):
-            # consecutive day
-            new_streak = user["streak"] + 1
-
-        else:
-            # ❌ missed days → reset
-            new_streak = 1
-
-    # 3️⃣ Update streak in DB
-    cursor.execute("""
-        UPDATE users
-        SET streak=%s, last_active_date=%s
-        WHERE id=%s
-    """, (new_streak, today, session["user_id"]))
+    """, (enrollment_id,))
 
     conn.commit()
-    cursor.close()
-    conn.close()
 
-   # 🔥 award badges after completion
+    # 3️⃣ Award badges
     new_badges = award_badges(user_id)
 
-    if new_badges:
-        session["badge_toasts"] = new_badges
-
     flash("🎉 Course marked as completed!", "success")
-    for badge_name in new_badges:
-        flash(f"🏅 New badge unlocked: {badge_name}", "badge")
+    for badge in new_badges:
+        flash(f"🏅 New badge unlocked: {badge}", "badge")
 
-    today = datetime.utcnow().date()
-
-    cursor.execute("""
-    INSERT INTO user_streak_days (user_id, activity_date)
-    VALUES (%s, %s)
-    ON DUPLICATE KEY UPDATE activity_date = activity_date
-    """, (user_id, today))
+    cursor.close()
+    conn.close()
 
     return redirect("/my-enrollments")
 
