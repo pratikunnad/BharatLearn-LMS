@@ -142,9 +142,9 @@ body.dark .feature-card {
   box-shadow: 0 22px 48px rgba(0,0,0,0.15);
 }
 
-.feature-icon {
-  font-size: 42px;
-  margin-bottom: 14px;
+.feature-icon img {
+  width: 42px;
+  height: 42px;
 }
 
 .feature-card h3 {
@@ -194,7 +194,7 @@ body.dark .feature-card h3 {
     <h1>Learn Smarter with <span>BharatLearn</span></h1>
     <p>
       A modern learning platform built for clarity, progress,
-      and real‑world skills. Learn at your pace and grow with confidence.
+      and real-world skills. Learn at your pace and grow with confidence.
     </p>
     <div class="hero-actions">
       <a href="/courses" class="btn btn-primary">Explore Courses</a>
@@ -207,19 +207,25 @@ body.dark .feature-card h3 {
 <section class="features">
   <div class="container features-grid">
     <div class="feature-card">
-      <div class="feature-icon">📚</div>
+      <div class="feature-icon">
+        <img src="{{ url_for('static', filename='icons/courses.png') }}" alt="Courses Icon">
+      </div>
       <h3>Quality Courses</h3>
-      <p>Industry‑focused content designed for practical learning.</p>
+      <p>Industry-focused content designed for practical learning.</p>
     </div>
 
     <div class="feature-card">
-      <div class="feature-icon">👨‍🎓</div>
+      <div class="feature-icon">
+        <img src="{{ url_for('static', filename='icons/student.png') }}" alt="Student Icon">
+      </div>
       <h3>Student Friendly</h3>
-      <p>Clean, distraction‑free interface for better focus.</p>
+      <p>Clean, distraction-free interface for better focus.</p>
     </div>
 
     <div class="feature-card">
-      <div class="feature-icon">📈</div>
+      <div class="feature-icon">
+        <img src="{{ url_for('static', filename='icons/graph_icon.png') }}" alt="Graph Icon">
+      </div>
       <h3>Track Progress</h3>
       <p>Monitor learning progress and achievements easily.</p>
     </div>
