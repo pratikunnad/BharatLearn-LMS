@@ -227,27 +227,40 @@ def learner_dashboard():
     """, (user_id,))
     rows = cursor.fetchall()
 
-    # -------------------------------
-    # 5. Build streak_map  ✅ FIX
-    # -------------------------------
     streak_map = {}
     for r in rows:
         streak_map[r["activity_date"].strftime("%Y-%m-%d")] = r["is_frozen"]
 
     # -------------------------------
-    # 6. Calculate current streak
+    # 5. Fetch streak safely
     # -------------------------------
-    today = date.today()
+    today = datetime.now(timezone.utc).date()
+
+    cursor.execute("""
+        SELECT current_streak, last_activity_date
+        FROM learning_streaks
+        WHERE user_id = %s
+    """, (user_id,))
+
+    streak_data = cursor.fetchone()
+
+    # ✅ ALWAYS DEFINE BOTH VARIABLES
     current_streak = 0
-    check_day = today
+    display_streak = 0
 
-    while check_day.strftime("%Y-%m-%d") in streak_map:
-        if streak_map[check_day.strftime("%Y-%m-%d")] == 0:
-            current_streak += 1
-        check_day -= timedelta(days=1)
+    if streak_data:
+        current_streak = streak_data["current_streak"]
+        last_date = streak_data["last_activity_date"]
+
+        if last_date is None:
+            display_streak = 0
+        elif last_date == today or last_date == today - timedelta(days=1):
+            display_streak = current_streak
+        else:
+            display_streak = 0
 
     # -------------------------------
-    # 7. Calendar helpers
+    # 6. Calendar helpers
     # -------------------------------
     year = today.year
     month = today.month
@@ -261,11 +274,12 @@ def learner_dashboard():
         completed_courses=completed_courses,
         advanced_completed=advanced_completed,
         earned_badges=earned_badges,
-        current_streak=current_streak,
-        streak_map=streak_map,          # ✅ IMPORTANT
+        current_streak=current_streak,   # now always safe
+        display_streak=display_streak,
+        streak_map=streak_map,
         year=year,
         month=month,
-        first_weekday=first_weekday,    # ✅ for alignment
+        first_weekday=first_weekday,
         days_in_month=days_in_month
     )
 
@@ -683,13 +697,14 @@ def my_enrollments():
 
     return render_template("my_enrollments.html", courses=courses)
 
+
 def log_daily_activity(user_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    today = datetime.now(timezone.utc).date()
+    today = datetime.utcnow().date()
 
-    # 1️⃣ Check if already logged today
+    # 1️⃣ Check if activity already logged today
     cursor.execute("""
         SELECT id
         FROM learning_activity
@@ -701,7 +716,7 @@ def log_daily_activity(user_id):
     if already_logged:
         cursor.close()
         conn.close()
-        return  # ✅ Do nothing
+        return  # Already counted today
 
     # 2️⃣ Insert today's activity
     cursor.execute("""
@@ -709,7 +724,7 @@ def log_daily_activity(user_id):
         VALUES (%s, %s)
     """, (user_id, today))
 
-    # 3️⃣ Fetch last streak data
+    # 3️⃣ Fetch streak info
     cursor.execute("""
         SELECT current_streak, last_activity_date
         FROM learning_streaks
@@ -718,24 +733,29 @@ def log_daily_activity(user_id):
 
     streak = cursor.fetchone()
 
+    # 4️⃣ Calculate new streak
     if not streak:
-        # First time streak
+        # First activity ever
         cursor.execute("""
-            INSERT INTO learning_streaks (user_id, current_streak, last_activity_date)
-            VALUES (%s, 1, %s)
+            INSERT INTO learning_streaks 
+            (user_id, current_streak, last_activity_date, updated_at)
+            VALUES (%s, 1, %s, NOW())
         """, (user_id, today))
-
     else:
         last_date = streak["last_activity_date"]
 
         if last_date == today - timedelta(days=1):
             new_streak = streak["current_streak"] + 1
+        elif last_date == today:
+            new_streak = streak["current_streak"]
         else:
-            new_streak = 1  # reset streak
+            new_streak = 1
 
         cursor.execute("""
             UPDATE learning_streaks
-            SET current_streak = %s, last_activity_date = %s
+            SET current_streak = %s,
+                last_activity_date = %s,
+                updated_at = NOW()
             WHERE user_id = %s
         """, (new_streak, today, user_id))
 
@@ -812,7 +832,7 @@ def add_course():
         cursor.close()
         conn.close()
 
-        return redirect("/admin/dashboard")
+        return redirect("/admin/add-course")
 
     return render_template("add_course.html")
 
@@ -1122,20 +1142,13 @@ def visit_course(course_id):
         return redirect("/login")
 
     user_id = session["user_id"]
-    today = datetime.now(timezone.utc).date()
+
+    # ✅ This handles everything
+    log_daily_activity(user_id)
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # ✅ Log activity ONLY ONCE per day
-    cursor.execute("""
-        INSERT IGNORE INTO learning_activity (user_id, activity_date)
-        VALUES (%s, %s)
-    """, (user_id, today))
-
-    conn.commit()
-
-    # Redirect to actual course
     cursor.execute(
         "SELECT course_link FROM courses WHERE id=%s",
         (course_id,)
@@ -1146,8 +1159,6 @@ def visit_course(course_id):
     conn.close()
 
     return redirect(course["course_link"])
-
-
 
 @app.after_request
 def clear_badge_toasts(response):
