@@ -60,7 +60,7 @@ JavaScript
 
 MySQL
 
-## 🚀 Key Features
+## ----------------: Key Features :----------------
 
 User Authentication
 
@@ -72,7 +72,7 @@ Role-based Access (Admin / Learner)
 
 Session Management
 
-## 📚 Course Management
+## ---------------: Course Management :---------------
 
 Browse available courses
 
@@ -84,7 +84,7 @@ Unenroll from courses
 
 Visit external course links
 
-## ✅ Course Completion System
+## ---------------: Course Completion System :---------------
 
 Mark course as completed
 
@@ -94,7 +94,7 @@ Completion badge indicator
 
 Completion timestamp stored in database
 
-## 🔥 Learning Streak System
+## ---------------: Learning Streak System :---------------
 
 Tracks daily activity
 
@@ -108,7 +108,7 @@ Displays real-time streak on dashboard
 
 Monthly activity calendar view
 
-## 🏅 Badge System
+## -----------------------Badge System--------------------------
 
 **Earn badges for:**
 
