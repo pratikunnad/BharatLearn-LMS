@@ -1,8 +1,8 @@
-# 🇮🇳 BharatLearn – The Learning Management System
+# BharatLearn – The Learning Management System
 
-## A modern, gamified Learning Management System (LMS) built using Flask and MySQL to enhance student engagement and track learning progress effectively.
+## A modern, Learning Management System (LMS) built using Flask and MySQL to enhance student engagement and track learning progress effectively.
 
-## Project Overview
+## 📌 Project Overview
 
 **BharatLearn is a web-based Learning Management System designed to provide learners with a structured, engaging, and motivational learning environment.**
 
@@ -22,118 +22,118 @@
 
 The system also includes administrative functionalities for managing courses and users.
 
-## Objectives of the Project
+## 🎯 Objectives of the Project
 
-To design and develop a complete LMS using Flask.
+- To design and develop a complete LMS using Flask.
 
-To implement secure authentication and role-based access control.
+- To implement secure authentication and role-based access control.
 
-To integrate gamification elements like streaks and badges.
+- To integrate gamification elements like streaks and badges.
 
-To track user learning activity using database logic.
+- To track user learning activity using database logic.
 
-To create a clean and responsive user interface.
+- To create a clean and responsive user interface.
 
-To demonstrate real-world backend and database integration.
+- To demonstrate real-world backend and database integration.
 
 ## 🛠️ Tech Stack
 
 **🔹 Backend**
 
-Python
+- ``` Python ```
 
-Flask
+- ``` Flask ```
 
-MySQL
+- ``` MySQL ```
 
-Jinja2 Template Engine
+- ``` Jinja2 Template Engine ```
 
 **🔹 Frontend**
 
-HTML5
+- ``` HTML5 ```
 
-CSS3
+- ``` CSS3 ```
 
-JavaScript
+- ``` JavaScript ```
 
 **🔹 Database**
 
-MySQL
+- ``` MySQL ```
 
-## ----------------: Key Features :----------------
+## 🚀 Key Features
 
-User Authentication
+- User Authentication
 
-User Registration
+- User Registration
 
-Secure Login System
+- Secure Login System
 
-Role-based Access (Admin / Learner)
+- Role-based Access (Admin / Learner)
 
-Session Management
+- Session Management
 
-## ---------------: Course Management :---------------
+## 📚 Course Management
 
-Browse available courses
+- Browse available courses
 
-Filter courses by difficulty/source
+- Filter courses by difficulty/source
 
-Enroll in courses
+- Enroll in courses
 
-Unenroll from courses
+- Unenroll from courses
 
-Visit external course links
+- Visit external course links
 
-## ---------------: Course Completion System :---------------
+## ✅ Course Completion System
 
-Mark course as completed
+- Mark the course as completed
 
-Button auto-disables after completion
+- Button auto-disables after completion
 
-Completion badge indicator
+- Completion badge indicator
 
-Completion timestamp stored in database
+- Completion timestamp stored in the database
 
-## ---------------: Learning Streak System :---------------
+## 🔥 Learning Streak System
 
-Tracks daily activity
+- Tracks daily activity
 
-Prevents duplicate activity logging in one day
+- Prevents duplicate activity logging on one day
 
-Automatically increments streak for consecutive days
+- Automatically increments streak for consecutive days
 
-Resets streak if user skips a day
+- Resets streak if user skips a day
 
-Displays real-time streak on dashboard
+- Displays real-time streak on the dashboard
 
-Monthly activity calendar view
+- Monthly activity calendar view
 
-## -----------------------Badge System--------------------------
+## 🏅 Badge System
 
 **Earn badges for:**
 
-Course completion milestones
+- Course completion milestones
 
-Advanced course completion
+- Advanced course completion
 
-Streak achievements
+- Streak achievements
 
-Badge notifications using flash messages
+- Badge notifications using flash messages
 
-Stores earned badges in database
+- Stores earned badges in the database
 
 ## 📊 Learner Dashboard
-Total completed courses
+- Total completed courses
 
-Advanced courses completed
+- Advanced courses completed
 
-Earned badges display
+- Earned badges display
 
-Current learning streak
+- Current learning streak
 
-Calendar visualization
+- Calendar visualization
 
-Activity tracking system
+- Activity tracking system
 
 ## 🗂️ Project Structure
 ```
@@ -160,19 +160,19 @@ BharatLearn/
 
 ## 🗃️ Database Tables Used
 
-users
+- ``` users ```
 
-courses
+- ``` courses ```
 
-enrollments
+- ``` enrollments ```
 
-badges
+- ``` badges ```
 
-user_badges
+- ``` user_badges ```
 
-learning_activity
+- ``` learning_activity ```
 
-learning_streaks
+- ``` learning_streaks ```
 
 Each table is relationally connected to maintain proper LMS functionality.
 
@@ -201,13 +201,13 @@ pip install -r requirements.txt
 ```
 
 **4️⃣ Setup MySQL Database**
-```
-1. Create a database named bharatlearn
 
-2. Import the SQL schema
+``` 1. Create a database named BharatLearn ```
 
-3. Update database credentials inside app.py
-```
+``` 2. Import the SQL schema ```
+
+``` 3. Update database credentials inside app.py ```
+
 
 **5️⃣ Run the Application**
 ```
@@ -218,80 +218,81 @@ python app.py
 http://127.0.0.1:5000
 ```
 
-1. User Roles
+## 👨‍⚖️ User Roles
    
-2. Learner
+**👨‍💻 Learner**
    
-3. Enroll in courses
+- ``` Enroll in courses ```
 
-4. Track progress
+- ``` Track progress ```
 
-5. Maintain learning streak
+- ``` Maintain a learning streak ```
+ 
+- ``` Earn badges ```
 
-7.Earn badges
+- ``` View personalized dashboard ```
 
-8. View personalized dashboard
+**👨‍🏫 Admin**
 
-👨‍🏫 Admin
-Manage courses
+- ``` Manage courses ```
 
-Monitor enrollments
+- ``` Monitor enrollments ```
 
-Manage users
+- ``` Manage users ```
 
-🎮 Gamification Elements
-🔥 Daily Learning Streak
+## 🎮 Gamification Elements
 
-🏅 Achievement Badges
+- **🔥 Daily Learning Streak**
 
-✔ Course Completion Indicators
+- **🏅 Achievement Badges**
 
-📅 Activity Calendar
+- **✔ Course Completion Indicators**
+
+- **📅 Activity Calendar**
 
 These features motivate consistent and disciplined learning behavior.
 
-📈 Future Enhancements
-Email verification system
+## 📈 Future Enhancements
 
-Certificate generation after course completion
+- Email verification system
 
-Leaderboard system
+- BharatLearn Chatbot
 
-Course progress percentage tracking
+- Quiz System
 
-Password reset functionality
+- API-based course integration
 
-API-based course integration
+- Deployment with a custom domain
 
-Deployment with custom domain
+## 👨‍💻 Developed By
 
-👨‍💻 Developed By
-Akash Kusekar
+- **Pratik Unnad :** [![GitHub](https://img.shields.io/badge/@pratikunnad-%230077B5.svg?logo=github&logoColor=white)](https://github.com/pratikunnad)
 
-Pratik Unnad
+- **Akash Kusekar :** [![GitHub](https://img.shields.io/badge/@akashkusekar-%230077B5.svg?logo=github&logoColor=white)](https://github.com/akashkusekar)
 
 Academic Project – Learning Management System
 
-📜 License
-This project is developed for educational purposes only.
+## 📜 License
+``` This project is developed for educational purposes only. ```
 
-🌟 Conclusion
-BharatLearn demonstrates:
+## 🌟 Conclusion
 
-Full-stack web development
+**BharatLearn demonstrates:**
 
-Flask backend integration
+- Full-stack web development
 
-MySQL database management
+- Flask backend integration
 
-Authentication and session handling
+- MySQL database management
 
-CRUD operations
+- Authentication and session handling
 
-Streak logic implementation
+- CRUD operations
 
-Badge gamification system
+- Streak logic implementation
 
-Real-world LMS workflow implementation
+- Badge gamification system
 
-It reflects practical knowledge of building scalable and structured web applications.
+- Real-world LMS workflow implementation
+
+**--------------------: Thank You :--------------------**
