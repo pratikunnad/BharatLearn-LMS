@@ -1,6 +1,6 @@
 # BharatLearn – The Learning Management System
 
-## A modern, Learning Management System (LMS) built using Flask and MySQL to enhance student engagement and track learning progress effectively.
+**A modern, Learning Management System (LMS) built using Flask and MySQL to enhance student engagement and track learning progress effectively.**
 
 ## 📌 Project Overview
 
