@@ -207,45 +207,87 @@ body.dark .chart-card {
 <script>
 const isDark = document.body.classList.contains("dark");
 
-/* COURSE BAR CHART */
-const courseData = JSON.parse(document.getElementById("course-data").textContent);
+/* ================= COURSE HORIZONTAL BAR CHART ================= */
+
+const courseData = JSON.parse(
+  document.getElementById("course-data").textContent
+);
+
+// Limit title length (prevents messy UI)
+const courseLabels = courseData.map(c => 
+  c.title.length > 25 ? c.title.substring(0, 25) + "..." : c.title
+);
+
 new Chart(document.getElementById("courseChart"), {
   type: "bar",
   data: {
-    labels: courseData.map(c => c.title),
+    labels: courseLabels,
     datasets: [{
       label: "Enrollments",
       data: courseData.map(c => c.total),
-      backgroundColor: "#2563eb"
+      backgroundColor: "#2563eb",
+      borderRadius: 8,
+      barThickness: 18
     }]
   },
   options: {
+    indexAxis: "y",   // 👈 Makes it horizontal
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { display: false }
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: "#0f172a",
+        titleColor: "#ffffff",
+        bodyColor: "#ffffff"
+      }
     },
     scales: {
-      x: { ticks: { color: isDark ? "#e5e7eb" : "#0f172a" } },
-      y: { ticks: { color: isDark ? "#e5e7eb" : "#0f172a" } }
+      x: {
+        beginAtZero: true,
+        ticks: {
+          precision: 0,
+          color: isDark ? "#e5e7eb" : "#0f172a"
+        },
+        grid: {
+          color: isDark ? "#334155" : "#e5e7eb"
+        }
+      },
+      y: {
+        ticks: {
+          color: isDark ? "#e5e7eb" : "#0f172a"
+        },
+        grid: { display: false }
+      }
     }
   }
 });
 
-/* DIFFICULTY PIE CHART */
-const difficultyData = JSON.parse(document.getElementById("difficulty-data").textContent);
+/* ================= DIFFICULTY DOUGHNUT ================= */
+
+const difficultyData = JSON.parse(
+  document.getElementById("difficulty-data").textContent
+);
+
 new Chart(document.getElementById("difficultyChart"), {
   type: "doughnut",
   data: {
     labels: difficultyData.map(d => d.difficulty),
     datasets: [{
       data: difficultyData.map(d => d.total),
-      backgroundColor: ["#0a3d62", "#2563eb", "#38bdf8", "#22c55e"]
+      backgroundColor: ["#0a3d62", "#2563eb", "#38bdf8", "#22c55e"],
+      borderWidth: 0
     }]
   },
   options: {
+    cutout: "65%",
+    responsive: true,
     plugins: {
       legend: {
+        position: "bottom",
         labels: {
-          color: isDark ? "#e5e7eb" : "#0f172a"
+          color: isDark ? "#e5e7eb" : "#0f172a",
+          padding: 15
         }
       }
     }
