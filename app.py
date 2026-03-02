@@ -15,10 +15,12 @@ app.secret_key = "bharatlearn_secret_key"
 # --------------------
 def get_db_connection():
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="",          # put your MySQL password if any
-        database="lms_db"     # change if your DB name is different
+        host=os.environ.get("mysql.railway.internal"),
+        user=os.environ.get("root"),
+        password=os.environ.get("OzovYlCXSoNwiMHdJdInuOOuBLEvempI"),
+        database=os.environ.get("railway"),
+        port=os.environ.get("3306"),
+        ssl_disabled=False
     )
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -1422,5 +1424,5 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
     
