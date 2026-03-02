@@ -15,11 +15,11 @@ app.secret_key = "bharatlearn_secret_key"
 # --------------------
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.environ.get("turntable.proxy.rlwy.net"),
-        user=os.environ.get("root"),
-        password=os.environ.get("OzovYlCXSoNwiMHdJdInuOOuBLEvempI"),
-        database=os.environ.get("railway"),
-        port=os.environ.get("46671"),
+        MYSQL_HOST=os.getenv("turntable.proxy.rlwy.net"),
+        MYSQL_USER=os.getenv("root"),
+        MYSQL_PASSWORD=os.getenv("OzovYlCXSoNwiMHdJdInuOOuBLEvempI"),
+        MYSQL_DATABASE=os.getenv("railway"),
+        MYSQL_PORT=int(os.getenv("46671")),
         ssl_disabled=False
     )
 
