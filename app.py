@@ -15,12 +15,13 @@ app.secret_key = "bharatlearn_secret_key"
 # --------------------
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME"),
-        port=int(os.getenv("DB_PORT")),
-        ssl_disabled=True
+        host=os.getenv("MYSQLHOST"),
+        user=os.getenv("MYSQLUSER"),
+        password=os.getenv("MYSQLPASSWORD"),
+        database=os.getenv("MYSQLDATABASE"),
+        port=int(os.getenv("MYSQLPORT")),
+        ssl_disabled=False,
+        connection_timeout=10
     )
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -1426,11 +1427,6 @@ def logout():
 def db_test():
     try:
         conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT 1")
-        result = cursor.fetchone()
-        cursor.close()
-        conn.close()
         return "Database connected successfully!"
     except Exception as e:
         return str(e)
