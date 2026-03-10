@@ -15,14 +15,14 @@ app.secret_key = "bharatlearn_secret_key"
 # --------------------
 def get_db_connection():
     conn = mysql.connector.connect(
-        host=os.environ.get("MYSQLHOST"),
-        user=os.environ.get("MYSQLUSER"),
-        password=os.environ.get("MYSQLPASSWORD"),
-        database=os.environ.get("MYSQLDATABASE"),
-        port=int(os.environ.get("MYSQLPORT")),
-        ssl_verify_cert=False
+        host=os.getenv("MYSQLHOST"),
+        user=os.getenv("MYSQLUSER"),
+        password=os.getenv("MYSQLPASSWORD"),
+        database=os.getenv("MYSQLDATABASE"),
+        port=int(os.getenv("MYSQLPORT"))
     )
-    return conn
+
+    cursor = conn.cursor()
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
