@@ -179,48 +179,6 @@ BharatLearn/
 
 Each table is relationally connected to maintain proper LMS functionality.
 
-## ⚙️ Installation Guide
-
-**1️⃣ Clone the Repository**
-```
-git clone https://github.com/your-username/BharatLearn.git
-```
-```
-cd BharatLearn
-```
-
-**2️⃣ Create Virtual Environment**
-```
-python -m venv venv
-```
-**For Windows**
-```
-venv\Scripts\activate
-```
-
-**3️⃣ Install Dependencies**
-```
-pip install -r requirements.txt
-```
-
-**4️⃣ Setup MySQL Database**
-
-``` 1. Create a database named BharatLearn ```
-
-``` 2. Import the SQL schema ```
-
-``` 3. Update database credentials inside app.py ```
-
-
-**5️⃣ Run the Application**
-```
-python app.py
-```
-**Open browser and visit:**
-```
-http://127.0.0.1:5000
-```
-
 ## 👨‍⚖️ User Roles
    
 **👨‍💻 Learner**
